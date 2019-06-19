@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>PiLess BrewPi – Obi Wort Kenobi – Homebrewer, Father, Husband, Tinker</title>
+
+  <meta charset="utf-8" />
+<meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+
+
+<meta name="description" content="Its no secret that temperature control is a huge aspect of brewing beer successfully.  It can have dramatic side effects if you don’t keep the temperature in the yeasts range, or you may not be able to achieve flavors that you’re seeking from the yeast fermenting at a specific temperature.  Now, in my past life as @dotps1, I covered in detail how to make a BrewPi.  A temperature controller running with a Raspberry Pi and an Arduino board (that blog post can be found here, for now anyway, I’m not sure how long I will be keeping https://dotps1.github.io up).  The BrewPi is defiantly a solid temperature controller solution, that allows for many customization, and the ability to create temperature profiles, allowing for temperature ramp up and cold crashing.  And most importantly, it handles temperature swing.  Unfortunately, the BrewPi is no longer officially supported on the Raspberry Pi/Arduino configuration, and as you can see the branch hasn’t been touched in years, https://github.com/BrewPi/brewpi-www/tree/legacy.  I made this clear in my last walk through, which is over a year old now, and I had to fork the project and fix a bunch of dependency issues, that probably are already out of date.
+
+" />
+<meta property="og:description" content="Its no secret that temperature control is a huge aspect of brewing beer successfully.  It can have dramatic side effects if you don’t keep the temperature in the yeasts range, or you may not be able to achieve flavors that you’re seeking from the yeast fermenting at a specific temperature.  Now, in my past life as @dotps1, I covered in detail how to make a BrewPi.  A temperature controller running with a Raspberry Pi and an Arduino board (that blog post can be found here, for now anyway, I’m not sure how long I will be keeping https://dotps1.github.io up).  The BrewPi is defiantly a solid temperature controller solution, that allows for many customization, and the ability to create temperature profiles, allowing for temperature ramp up and cold crashing.  And most importantly, it handles temperature swing.  Unfortunately, the BrewPi is no longer officially supported on the Raspberry Pi/Arduino configuration, and as you can see the branch hasn’t been touched in years, https://github.com/BrewPi/brewpi-www/tree/legacy.  I made this clear in my last walk through, which is over a year old now, and I had to fork the project and fix a bunch of dependency issues, that probably are already out of date.
+
+" />
+
+<meta name="author" content="Obi Wort Kenobi" />
+
+
+<meta property="og:title" content="PiLess BrewPi" />
+<meta property="twitter:title" content="PiLess BrewPi" />
+
+  
+    
+
+
+
+
+
+
+  
+
+  <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  <link rel="stylesheet" type="text/css" href="/style.css" />
+  <link rel="alternate" type="application/rss+xml" title="Obi Wort Kenobi - Homebrewer, Father, Husband, Tinker"
+    href="/feed.xml" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+    integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+  <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+</head>
+
+<body>
+  <div class="wrapper-masthead">
+    <div class="container">
+      <header class="masthead clearfix">
+        <a href="/" class="site-avatar"><img src="https://github.com/obiwort.png?size=500" /></a>
+
+        <div class="site-info">
+          <h1 class="site-name"><a href="/">Obi Wort Kenobi</a></h1>
+          <p class="site-description">Homebrewer, Father, Husband, Tinker</p>
+        </div>
+
+        <nav>
+          <a href="/">Blog</a>
+          <a href="/about">About</a>
+          <a href="/search">Search</a>
+        </nav>
+      </header>
+    </div>
+  </div>
+
+  <div id="main" role="main" class="container">
+    <article class="post">
+  <h1>PiLess BrewPi</h1>
+
+  <div class="entry">
+    <p>Its no secret that temperature control is a huge aspect of brewing beer successfully.  It can have dramatic side effects if you don’t keep the temperature in the yeasts range, or you may not be able to achieve flavors that you’re seeking from the yeast fermenting at a specific temperature.  Now, in my past life as @dotps1, I covered in detail how to make a BrewPi.  A temperature controller running with a Raspberry Pi and an Arduino board (that blog post can be found <a href="https://dotps1.github.io/homebrewing/2018/01/22/brewing-your-own-brewpi.html">here</a>, for now anyway, I’m not sure how long I will be keeping https://dotps1.github.io up).  The BrewPi is defiantly a solid temperature controller solution, that allows for many customization, and the ability to create temperature profiles, allowing for temperature ramp up and cold crashing.  And most importantly, it handles temperature swing.  Unfortunately, the BrewPi is no longer officially supported on the Raspberry Pi/Arduino configuration, and as you can see the branch hasn’t been touched in years, https://github.com/BrewPi/brewpi-www/tree/legacy.  I made this clear in my last walk through, which is over a year old now, and I had to fork the project and fix a bunch of dependency issues, that probably are already out of date.</p>
+
+<h2 id="enter-the-piless-brewpi">Enter the PiLess BrewPi</h2>
+<p>So, theres another implementation of the BrewPi software out there, called <a href="https://github.com/vitotai/BrewPiLess">BrewPiLess</a>.  And the best part is, it doesn’t need a Raspberry Pi, or even an Arduino Controller!  And the project is actively developed, which means new features, and bug fixes.  One of the really great features the BrewPiLess has, is that it supports logging data to <a href="https://brewfather.com">BrewFather</a>.  There you can attach the device to a batch, and keep track of the temperature as the batch is fermenting, and all the data is stored in one place.</p>
+
+<p>I was able to get this up and running, oh, I’d say about 10x faster then I got the BrewPi up.  However, if you read my last blog on makeing a BrewPi, I housed everything in an outdoor sprinkler control box, it was huge and there where power cords and temperature probes hanging all over the place.  Well this time, I wanted something fully modular, where all the cords where removable, and much much smaller.  As small as absolutely possible.  I reached my goal, but if you want your <em>BPL</em> exactly the same as mine, you will need to solder some connections in this build, and have access to a 3D Printer for the enclosure.  These are not show stoppers, there is plenty of other ways to put everything together, this is just <em>my way</em> based on the things I regretted doing when I built my BrewPi, and features I wanted in this build.
+<img src="/images/2019-05-01-piless-brewpi/complete.jpg" alt="Complete" /></p>
+
+<h2 id="shopping-list">Shopping List</h2>
+<p><em>Most of this stuff comes in bulk, so find a buddy that wants one too, and split the cost!</em></p>
+<ul>
+  <li><a href="https://www.amazon.com/gp/product/B01IK9GEQG/ref=as_li_ss_tl?&amp;imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&amp;slotNum=0&amp;ie=UTF8&amp;psc=1&amp;linkCode=ll1&amp;tag=angrymrtom-20&amp;linkId=ff61ed8286632b653d985f627eba863a&amp;language=en_US">ESP8266 NodeMCU</a> (you don’t need two of these, but at that price, might as well, the second one is almost free)</li>
+  <li><a href="https://www.amazon.com/gp/product/B01MUATVXX/ref=as_li_ss_tl?&amp;imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&amp;slotNum=1&amp;ie=UTF8&amp;psc=1&amp;linkCode=ll1&amp;tag=angrymrtom-20&amp;linkId=2a9b300b40efe61b1e1152932375fff4&amp;language=en_US">Two Channel Relay Module</a></li>
+  <li><a href="https://www.amazon.com/gp/product/B01GPUMP9C/ref=as_li_ss_tl?&amp;imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&amp;slotNum=2&amp;ie=UTF8&amp;psc=1&amp;linkCode=ll1&amp;tag=angrymrtom-20&amp;linkId=3c5ac9a99e1f03a95b47641a4d335bfd&amp;language=en_US">20x4 LCD Module</a> (this is optional if you would like a display on the controller)</li>
+  <li><a href="https://www.amazon.com/gp/product/B07CBS768L/ref=as_li_ss_tl?&amp;imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&amp;slotNum=3&amp;ie=UTF8&amp;psc=1&amp;linkCode=ll1&amp;tag=angrymrtom-20&amp;linkId=d23b9dcedf01b4de748275e0335f6fba&amp;language=en_US">AC-&gt;DC 5V PSU</a> (this acts a power supply unit inside the enclosure, powering all the componets, else you can power things with USB bricks, but that sounds like a mess)</li>
+  <li><a href="https://www.amazon.com/gp/product/B014EJY0JE/ref=as_li_ss_tl?&amp;imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&amp;slotNum=4&amp;ie=UTF8&amp;psc=1&amp;linkCode=ll1&amp;tag=angrymrtom-20&amp;linkId=ddc6d8cbb0138f9d6cc78bbadb54d151&amp;language=en_US">Mini XLR Male connectors (2 needed)</a> (these are optional allowing for the temperature probes to be disconnected from the enclosure)</li>
+  <li><a href="https://www.amazon.com/gp/product/B01J33CF48/ref=as_li_ss_tl?&amp;imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&amp;slotNum=5&amp;ie=UTF8&amp;psc=1&amp;linkCode=ll1&amp;tag=angrymrtom-20&amp;linkId=b7b3577fdfe015049dd8c4b80a6d0deb&amp;language=en_US">Mini XLR Female connectors (2 needed)</a> (these are optional allowing for the temperature probes to be disconnected from the enclosure)</li>
+  <li><a href="https://www.amazon.com/gp/product/B01M3URWIT/ref=as_li_ss_tl?&amp;imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&amp;slotNum=6&amp;ie=UTF8&amp;psc=1&amp;linkCode=ll1&amp;tag=angrymrtom-20&amp;linkId=2fca3cda54bc73b3e8f4a0194eda161b&amp;language=en_US">AC 3-Pin Outlets (2 needed)</a></li>
+  <li><a href="https://www.amazon.com/gp/product/B00X73S52M/ref=as_li_ss_tl?&amp;imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&amp;slotNum=7&amp;ie=UTF8&amp;psc=1&amp;linkCode=ll1&amp;tag=angrymrtom-20&amp;linkId=8e68886aa9d3960dd3a2da2eaf8c285f&amp;language=en_US">3-Position Screw Terminal</a></li>
+  <li><a href="https://www.amazon.com/gp/product/B00NWO68JI/ref=as_li_ss_tl?&amp;imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&amp;slotNum=8&amp;ie=UTF8&amp;psc=1&amp;linkCode=ll1&amp;tag=angrymrtom-20&amp;linkId=46484c9900f8aeb9bc2abe0d1964eb1b&amp;language=en_US">AC Rocker Switch</a></li>
+  <li><a href="https://www.amazon.com/gp/product/B00EU70ZL8/ref=as_li_ss_tl?&amp;imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&amp;slotNum=9&amp;ie=UTF8&amp;psc=1&amp;linkCode=ll1&amp;tag=angrymrtom-20&amp;linkId=ff3a58618c96d064dba3139843a7809c&amp;language=en_US">DS18B20 Temperature Probes (2 needed)</a></li>
+  <li><a href="https://www.amazon.com/Projects-25EP5144K70-4-7k-Resistors-Pack/dp/B0185FC5OK/ref=as_li_ss_tl?keywords=4.7k+resistor&amp;qid=1556653428&amp;s=gateway&amp;sr=8-2-spons&amp;psc=1&amp;linkCode=ll1&amp;tag=angrymrtom-20&amp;linkId=021d72a211058cd98c5afe45fa38b360&amp;language=en_US">4.7k Resistor</a> (only 1 is needed, but good luck finding just 1 for sale)</li>
+  <li><a href="https://www.amazon.com/HiLetgo-Breadboard-Prototype-Assortment-Raspberry/dp/B077X7MKHN/ref=as_li_ss_tl?crid=3Q681FUGHK6V2&amp;keywords=female+to+female+jumper+wires&amp;qid=1556724289&amp;s=gateway&amp;sprefix=female+to+female+jum,aps,157&amp;sr=8-6&amp;linkCode=ll1&amp;tag=angrymrtom-20&amp;linkId=4474fd5023fb444fcc74105cd7115365&amp;language=en_US">Breadboard Jumpers</a> (really only need female jumpers for this project)</li>
+  <li>Misc screws, wire, shrink tube, and wire nuts/connectors</li>
+</ul>
+
+<h2 id="pro-tip">Pro Tip</h2>
+<p>I am going to suggest starting this project by printing the enclosure.  I am going to suggest this for a few reasons, first of all, most the customization I used in my build are only really needed if you are going to use my enclosure design.  Things like the plugs, XLR connections, AC Rocker Switch and the LCD are all going to work perfect in my enclosure,  Second, it takes a bit to print, and well, everything mounts in the enclosure, so you’re going to kinda need that part right away.  If you’re not going to use my design, you can probably skip this part, and just mock everything up so you can figure out how your going to house this contraption.</p>
+
+<p>The enclosure I designed is available on <a href="https://www.thingiverse.com/thing:3042974">Thingiverse</a>.  It is one of the first things I’ve designed, so I’m sure there are things that <em>could be done better</em> but it works well enough for what it is.  I’m not going to go into print settings for this as its out of the scope of this walk through.  So, if you’re going this route, download the stl and get it printing because it will take a bit, you can print the lid while you are assembling the rest of the BPL.</p>
+
+<h2 id="time-to-make-the-chimi-fing-changas">Time to make the chimi-f***ing-changas</h2>
+<p>So, the first thing I want to say about this system, is that its dealing with 110v AC power, you will be running that power to the AC-&gt;DC converter (the NodeMCU and LCD run on DC power), and to the relay module, which essentially turns on/off your power outlets, which will control your Heating and Cooling in your fermentation chamber.  I cannot over stress this enough, <strong>IF YOU ARE NOT COMFORTABLE WORKING WITH ELECTRICITY OR DON’T KNOW HOW BASIC ELECTRICAL WIRING WORKS, STOP WHAT YOU ARE DOING, PUT YOUR TOOLS DOWN, AND FIND SOMEONE WHO DOES</strong>!  Ok, with that being said, lets get down to business.</p>
+
+<h3 id="install-the-brewpiless-bin-on-the-esp8266-nodemcu">Install the BrewPiLess bin on the ESP8266 NodeMCU</h3>
+<ol>
+  <li>Download the BrewPiLess Repository:
+    <ul>
+      <li><code class="highlighter-rouge">git clone https://github.com/vitotai/BrewPiLess.git</code></li>
+    </ul>
+  </li>
+  <li>If you don’t have it installed, you will need to download and install <a href="https://code.visualstudio.com">VSCode</a>.</li>
+  <li>Open the repository in VSCode.  If you don’t have <a href="https://platformio.org/install/ide?install=vscode">Platform.io</a> installed, go to the extensions workspace and install it.
+    <ul>
+      <li>On my mac, it failed to install the first, and it was because <code class="highlighter-rouge">virtualenv</code> needed to be installed.  Completing the three steps listed in the <em>Perquisites</em> section <a href="http://docs.platformio.org/en/latest/installation.html#virtual-environment">here</a>, and then uninstall/reinstall the extension fixed the issue.</li>
+    </ul>
+  </li>
+  <li>Connect the NodeMCU to your computer via USB, and flash the bin to the board (make sure you are in the working directory of the repo):
+    <ul>
+      <li><code class="highlighter-rouge">command+shit+p</code>
+        <ul>
+          <li><code class="highlighter-rouge">&gt;PlatformIO: Build</code></li>
+          <li><code class="highlighter-rouge">&gt;PlatformIO: Upload</code></li>
+          <li><code class="highlighter-rouge">&gt;PlatformIO: Clean</code></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>After the flash is complete, the NodeMCU will begin broadcasting its own SSID, you need to connect to to this WiFi network to configure it to connect to your home WiFi.
+    <ul>
+      <li>Username: <code class="highlighter-rouge">brewpiless</code></li>
+      <li>Password: <code class="highlighter-rouge">brewpiless</code></li>
+      <li>Open a browser it should auto connect to a config page, where you can change the username, password, and the title.</li>
+      <li>Save the changes and on the next page enter you home wireless info.</li>
+      <li>After this is complete you can connect back to your home wifi.</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="soldering">Soldering</h3>
+<p>There are a few things to solder, and some need to be done before assembly:</p>
+<ol>
+  <li>Solder your wires to the AC-&gt;DC 5V PSU, you won’t be able to do this after its in the enclosure.
+    <ul>
+      <li>On the <strong>POWER IN</strong> side, you need 14-16 AWG wire, basically the same wire thats in the walls of your house, I clipped an old Molex computer cable and stole wire from that.  This wire needs to be heavier gauge because it will have the 110v that is coming from your house to it, then will convert that to 5v DC.</li>
+      <li>On the <strong>POWER OUT</strong> side, you need <strong>THREE</strong> Hot and Ground leads.  These will power the NodeMCU, LCD and Relay.  Just clip one end of the breadboard jumper wires for this.</li>
+      <li>you can either solder the wire right to the board, or there is screw terminals that you could get as well, that you would solder to the board, and then you can screw the wires into the terminals, the choice is yours.</li>
+    </ul>
+  </li>
+  <li>The temperature probes need to be soldered to the female XLR connectors, the wire to pin layout don’t matter really, just as long as you do both of them the same.
+    <ul>
+      <li>Unscrew the connector, put the plastic housing over the temperature probe wire, and solder the three wires from the probe to the three pin cups on the connector.</li>
+      <li>Repeat this step for the other temperature probe.</li>
+      <li>One thing I did was cut one probe a bit shorter then the other, for two reasons. First, the probe to monitor the fridge temperature didn’t need to be 6’ long.  Second, it makes it easier for me to keep track of which probe is for the chamber temperature and which is for the beer temperature.</li>
+    </ul>
+  </li>
+  <li>While you have your solder gear out, might as well solder the wires to the male fittings as well.
+    <ul>
+      <li>Sacrifice a few jumper wires for this, I would recommend using the same colors as the wires that where in the temperature probes so you can keep every thing lined up. The connectors are keyed so they can only go together one way.</li>
+      <li>leave about 2-3 inches (cut a jumper in half) of wire, these will connect to the three position screw terminal that is directly behind the connectors in the enclosure (see the <em>layout</em> image below).</li>
+      <li>Solder the wires to the pin cups, again, be sure your wire colors match up, your basically just making a pass thru connection in the enclosure, that is detachable if need be.</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="assembly">Assembly</h3>
+<p>Wiring diagram:
+<img src="/images/2019-05-01-piless-brewpi/wiring.jpg" alt="Wiring" />
+Layout diagram (I wasn’t able to find a 3D model of the AC-DC 5V PSU, that goes in with the Power IN facing way from the the LCD in the big empty space):
+<img src="/images/2019-05-01-piless-brewpi/layout.png" alt="Layout" /></p>
+<ol>
+  <li>At this point, you can start putting all the pieces in the enclosure.
+    <ul>
+      <li>Place each board on its mounting posts, I used old computer motherboard screws to hold them down.</li>
+      <li>The three position screw terminal I glued to the post.</li>
+    </ul>
+  </li>
+  <li>Use the diagram above to connect all the jumpers.
+    <ul>
+      <li>The power for the NodeMCU will be supplied from the AC-&gt;DC 5V PSU to the 5V pin on the board.</li>
+      <li>Connect a ground lead from the AC-&gt;DC 5V PSU to any ground on the NodeMCU board.</li>
+      <li>In the diagram it shows the 5V pin is used to power the relay module, but that is assuming the NodeMCU is being powered VIA the USB port.  Which is not the case, the 5V (maybe also labeled ‘Vin’) pin on the board will be used to power the NodeMCU itself, and then you can use one of the 3 power leads from the AC-&gt;DC 5V PSU to power the relay module.</li>
+      <li>Be sure to add the resistor in the three position screw terminal when wiring in the temperature probes.</li>
+    </ul>
+  </li>
+  <li>Next wire in the power switch and the outlets.
+    <ul>
+      <li>AC Rocker switch wiring digram:
+ <img src="/images/2019-05-01-piless-brewpi/switch_wiring.jpg" alt="Switch Wiring" /></li>
+      <li>From the power switch you will have three leads, 1 to the AC-&gt;DC 5V PSU, and 1 for each outlet. I used lever action wire nuts for this connection because there is 4 14AWG wires connecting at this point.</li>
+      <li>The Relay acts as a switch to complete the circuit, so the hot goes in, and the back out to outlet, and the naturel goes directly to the outlet.</li>
+    </ul>
+  </li>
+</ol>
+
+<p>There really isn’t much more I can say about the wiring of this, all the information needed is in the diagram, there is more then one way to skin a cat, so just make sure your wiring is following the diagram and you’ll be fine.  One thing to note, my fridge that I have plugged in the cooling outlet must draw a lot of amps, because the power switch comes with a 5 amp fuse, and when it turned on it, blew that, I had to replace it with a 10 amp fuse.
+<img src="/images/2019-05-01-piless-brewpi/front_wiring.jpg" alt="Front Wiring" />
+<img src="/images/2019-05-01-piless-brewpi/rear_wiring.jpg" alt="Rear Wiring" /></p>
+
+<h2 id="brewpiless-configuration">BrewPiLess Configuration</h2>
+<p>Once everything is up an running, there isn’t much left to do.  Just need to set which plug is the hot and cold, and which probes are the chamber, and the beer.</p>
+<ol>
+  <li>Connect to your BrewPiLess via a web browser at http://brewpiless.local (or whatever you named it in the setup screen.)</li>
+  <li>Go to the <code class="highlighter-rouge">Device Setup</code> screen on the top right corner.
+    <ul>
+      <li>Be sure to click the <code class="highlighter-rouge">Erase EEPROM</code> button at the top to be sure everything is reset.</li>
+      <li>Click <code class="highlighter-rouge">Refresh Device List</code> on the top load all your devices.</li>
+      <li>You have to manually select a <code class="highlighter-rouge">Device</code> slot for each probe and plug, but these are arbitrary, they just have to be unique.</li>
+      <li>The temperature probes will have an <code class="highlighter-rouge">Address</code> value.</li>
+      <li>Setup 4 devices:
+        <ul>
+          <li>Chamber Temp</li>
+          <li>Beer Temp</li>
+          <li>Chamber Heater</li>
+          <li>Chamber Cooler</li>
+        </ul>
+      </li>
+      <li>I am not sure if there is a better way to then trial and error to identify which is which, for the probes you can just hold in your hand and the value will change on the display.  For the plugs you will need to actually set a <code class="highlighter-rouge">Beer</code> or <code class="highlighter-rouge">Fridge</code> temperature value and then one or the other will turn on.</li>
+    </ul>
+  </li>
+  <li>Once your get everything setup, I would recommend backing up the configuration from the <code class="highlighter-rouge">Device Setup</code> screen incase you ever need to reload or rebuild, then you won’t have to play the guessing game on which device is which.</li>
+</ol>
+
+<h2 id="extra-credit">Extra Credit</h2>
+<p>If your like me, you are going to want to change the temperature units from C to F, because the NodeMCU has such little amount of space, there is no room for webpages to handle customization.  Instead, you do it with commands:</p>
+<ol>
+  <li>Navigate to http://brewpiless.local/testcmd.htm</li>
+  <li>Issue this command:
+    <ul>
+      <li><code class="highlighter-rouge">j{"tempFormat":"F"}</code></li>
+    </ul>
+  </li>
+  <li>If your getting in the Kveik craze, and want to ferment hot AF, the you need to increase the <code class="highlighter-rouge">tempSetMax</code> value:
+    <ul>
+      <li><code class="highlighter-rouge">j{"tempSetMax":"90.0"}</code></li>
+    </ul>
+  </li>
+</ol>
+
+<p>There is plenty of customizing you can do, just check out the BrewPiLess wiki: https://github.com/vitotai/BrewPiLess/wiki</p>
+
+<h2 id="time-for-a-cold-one">Time for a Cold One</h2>
+<p>Whew, you did it!  Nice work!  Go pour yourself a cold one, I know I’m going too, sorry if I missed anything, this was a pretty intense walk through.  Cheers!</p>
+
+  </div>
+
+  <div>Tags: 
+    
+      
+      <a href="/tag/homebrewing"><code class="highligher-rouge"><nobr>homebrewing</nobr></code>&nbsp;</a>
+    
+      
+      <a href="/tag/raspberrypi"><code class="highligher-rouge"><nobr>raspberrypi</nobr></code>&nbsp;</a>
+    
+      
+      <a href="/tag/3dprinting"><code class="highligher-rouge"><nobr>3dprinting</nobr></code>&nbsp;</a>
+    
+  </div>
+
+  
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+
+	    var disqus_shortname = 'obiwort-github-io';
+
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+
+
+  <div class="date">
+    Written on May  1, 2019
+  </div>
+</article>
+
+  </div>
+
+  <div class="wrapper-footer">
+    <div class="container">
+      <footer class="footer">
+        <!-- Add the Email icon to footer if _config.yml has the email value specified. -->
+
+
+<!-- Add the Facebook icon to footer if _config.yml has the facebook value specified. -->
+
+
+<!-- Add the Flickr icon to footer if _config.yml has the flickr value specified. -->
+
+
+<!-- Add the GitHub icon to footer if _config.yml has the github value specified. -->
+
+    <a href="https://github.com/obiwort" target="_blank"><i class="fab fa-github fa-lg"></i></a>
+
+
+<!-- Add the Instagram icon to footer if _config.yml has the email value specified. -->
+
+    <a href="https://instagram.com/obiwort" target="_blank"><i class="fab fa-instagram fa-lg"></i></a>
+
+
+<!-- Add the LinkedIn icon to footer if _config.yml has the linkedin value specified. -->
+
+
+<!-- Add the Twitter icon to footer if _config.yml has the twitter value specified. -->
+
+    <a href="https://www.twitter.com/obiwort" target="_blank"><i class="fab fa-twitter fa-lg"></i></a>
+
+
+<!-- Add the Stack Overflow icon to footer if _config.yml has the stackoverflow value specified. -->
+
+
+<!-- Add the YouTube icon to footer if _config.yml has the youtube value specified. -->
+
+
+<!-- Add the Reddit icon to footer if _config.yml has the reddit value specified. -->
+
+    <a href="https://www.reddit.com/user/obiwort" target="_blank"><i class="fab fa-reddit fa-lg"></i></a>
+
+
+<!-- Add the Beer icon to footer if _config.yml has the taplistio value specified. -->
+
+    <a href="https://taplist.io/taplist-963267" target="_blank"><i class="fas fa-beer fa-lg"></i></a>
+
+
+<!-- Add the Drafting Compass icon to footer if _config.yml has the thingiverse value specified. -->
+
+    <a href="https://www.thingiverse.com/obiwort/designs" target="_blank"><i class="fas fa-drafting-compass fa-lg"></i></a>
+
+
+<!-- Always add the rss feed icon. -->
+<a href="/feed.xml"><i class="fas fa-rss fa-lg"></i></a>
+
+      </footer>
+    </div>
+  </div>
+
+  
+<!-- Google Analytics -->
+<script>
+	window.ga = window.ga || function () { (ga.q = ga.q || []).push(arguments) }; ga.l = +new Date;
+	// ga() objects ...
+	ga('create', 'UA-138412539-1', 'auto');
+	ga('send', 'pageview', {
+		'page': '/piless-brewpi/',
+		'title': 'PiLess BrewPi'
+});
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+</body>
+
+</html>

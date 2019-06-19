@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2019-06-19T15:40:52+00:00</updated><id>http://0.0.0.0:4000/feed.xml</id><title type="html">Obi Wort Kenobi</title><subtitle>Homebrewer, Father, Husband, Tinker</subtitle><entry><title type="html">Using BLTouch with Klipper and the Ender3</title><link href="http://0.0.0.0:4000/using-bltouch-with-klipper-and-the-ender3/" rel="alternate" type="text/html" title="Using BLTouch with Klipper and the Ender3" /><published>2019-06-04T00:00:00+00:00</published><updated>2019-06-04T00:00:00+00:00</updated><id>http://0.0.0.0:4000/using-bltouch-with-klipper-and-the-ender3</id><content type="html" xml:base="http://0.0.0.0:4000/using-bltouch-with-klipper-and-the-ender3/">&lt;p&gt;I have been 3D printing for about a year now, its had its ups and downs, good times and bad.  Some times its the greatest thing, and sometimes I’m glad I don’t keep a baseball bat near my 3D Printer, because I may not still be the owner of one if I did.  I know all printers are different and everyone has their reasons for why or what they do and use for the build surface.  I have the &lt;a href=&quot;https://www.amazon.com/Comgrow-Creality-Ender-Aluminum-220x220x250mm/dp/B07BR3F9N6/ref=sr_1_1_sspa?keywords=ender+3&amp;amp;qid=1559158769&amp;amp;s=gateway&amp;amp;sr=8-1-spons&amp;amp;psc=1&quot;&gt;Ender3&lt;/a&gt;, its a great entry level printer for the price and I have spit out some amazing prints.  But one the most notorious issues with the Ender3 is the warped bed.  It seems like everyone has reported this issue.  And I think one thing all 3D Printer Hobbyist could agree on, is the first layer is one of the most important parts of the print.  And when you printing around .2mm layer hight, if the build surface isn’t perfect you’re going to have problems, especially with larger prints.&lt;/p&gt;
+
+&lt;p&gt;There are a few things you could do about this, such as, just deal with it, replace the bed with something higher grade, or add a new surface, such as a piece of glass.  I chose to use a sensor on the hot end.  I went with the &lt;a href=&quot;https://www.amazon.com/BLTouch-Leveling-Printer-Official-Authorization/dp/B07GVCX74T/ref=sr_1_4?keywords=bltouch&amp;amp;qid=1559158792&amp;amp;s=gateway&amp;amp;sr=8-4&quot;&gt;BLTouch&lt;/a&gt; sensor.  It’s pretty much just a probe, that will make a &lt;em&gt;mesh&lt;/em&gt; of your build surface and allow for your Z axis to compensate for the imperfect surface with very small up and down Z axis movements.&lt;/p&gt;
+
+&lt;p&gt;Now, I know there is a lot of YouTube videos out there on how to setup and use a BLTouch sensor, but, everything I found when I was setting mine up, was with using the Marlin firmware. Either Vanilla Marlin or the TH3D flavor.  Well, to complicate things even more, I am using &lt;a href=&quot;https://github.com/KevinOConnor/klipper&quot;&gt;Klipper&lt;/a&gt;.  I’m not going to dive into much about Klipper in this blog post, as its not really the focus.  Either you are already using Klipper and you know what it is, so keep reading, or go research Klipper and see if its for you.  Because these settings will &lt;strong&gt;NOT&lt;/strong&gt; work with any flavor of the Marlin firmware.&lt;/p&gt;
+
+&lt;h2 id=&quot;values-youll-need&quot;&gt;Values You’ll Need&lt;/h2&gt;
+&lt;p&gt;There are values you need when setting up your BLTouch, namely the X and Y offsets from the nozzle to the BLTouch, you can either measure these or, if you are using third party mods on your hot end, a lot of the designers will specify these values.  I am using the &lt;a href=&quot;https://www.thingiverse.com/thing:2759439&quot;&gt;Bullseye Cooling Fan Duct&lt;/a&gt; and the designer has provided the offset values on the Thingiverse page.  Using the Bullseye Fan Duct and the provided mount, the offsets are &lt;code class=&quot;highlighter-rouge&quot;&gt;X -42, Y -5&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Next, you will need to know your bed size, the bed that ships with the Ender3 is &lt;code class=&quot;highlighter-rouge&quot;&gt;220x220mm&lt;/code&gt;.  You need to know this for creating a bed mesh, which is what the BLTouch will build when probing.&lt;/p&gt;
+
+&lt;h2 id=&quot;get-configuring&quot;&gt;Get Configuring&lt;/h2&gt;
+&lt;p&gt;Here are the settings you need to add or update on in your Klipper &lt;code class=&quot;highlighter-rouge&quot;&gt;printer.cfg&lt;/code&gt;:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;You need to change the &lt;code class=&quot;highlighter-rouge&quot;&gt;endstop_pin&lt;/code&gt; value to use a virtual endstop, this is in the &lt;code class=&quot;highlighter-rouge&quot;&gt;z_stepper&lt;/code&gt; section.
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;endstop_pin: probe:z_virtual_endstop&lt;/code&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;You need to allow the Z Axis to go below the ‘0’ mark for negative warp, this can be done by editing the &lt;code class=&quot;highlighter-rouge&quot;&gt;position_min&lt;/code&gt; value, also in the &lt;code class=&quot;highlighter-rouge&quot;&gt;z_stepper&lt;/code&gt; section.
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;position_min: -3&lt;/code&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;You need to define the &lt;code class=&quot;highlighter-rouge&quot;&gt;[bltouch]&lt;/code&gt; section and values in the configuration file (a section is defined with square brackets, this section does not exist in the Ender3 printer.cfg by default, so you will need manually create it).  You can see that the X and Y offsets are the values I got from the Thingiverse page.
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[bltouch]
+sensor_pin: ^PC4
+control_pin: PA4
+x_offset: -47.0
+y_offset: -5.0
+z_offset: 1.65
+speed: 5.0
+samples: 2
+sample_retract_dist: 8.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;ul&gt;
+      &lt;li&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;samples&lt;/code&gt; value is how many times it checks each location in the bed mesh, more samples will take longer.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Next, the &lt;code class=&quot;highlighter-rouge&quot;&gt;[bed_mesh]&lt;/code&gt; section needs to be manually defined.
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[bed_mesh]
+speed: 80
+horizontal_move_z: 5
+min_point: 50,30
+max_point: 230,230
+probe_count: 5,5
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;ul&gt;
+      &lt;li&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;probe_count&lt;/code&gt; is how many samples its going to take, &lt;code class=&quot;highlighter-rouge&quot;&gt;5,5&lt;/code&gt; is a &lt;code class=&quot;highlighter-rouge&quot;&gt;5x5&lt;/code&gt; grid, a bigger grid will take longer, but may be more accurate.&lt;/li&gt;
+      &lt;li&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;min_point&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;max_point&lt;/code&gt; is how big your bed is, with the &lt;code class=&quot;highlighter-rouge&quot;&gt;220x220mm&lt;/code&gt; build plate, &lt;code class=&quot;highlighter-rouge&quot;&gt;230x230mm&lt;/code&gt; is about as large as you can go.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Now, add the &lt;code class=&quot;highlighter-rouge&quot;&gt;[homing_override]&lt;/code&gt; section.  You can do what ever you want here, I am just setting the Z axis to home in the middle of the bed.
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[homing_override]
+set_position_z:0
+gcode:
+ G1 Z10 F600
+ G28 X Y
+ G1 X166 Y120 F6000
+ G28 Z
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;ul&gt;
+      &lt;li&gt;PRO TIP: gcode sections in the printer.cfg need to be 4 spaced or you will get errors.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;There is one last thing to do, and that is configure your start and end gcode sequences to tell klipper to generate the bed mesh and use it.  This command is &lt;code class=&quot;highlighter-rouge&quot;&gt;BED_MESH_CALIBRATE&lt;/code&gt; called after &lt;code class=&quot;highlighter-rouge&quot;&gt;G28&lt;/code&gt; (the homing override).  Now, here is what I do, I keep my start and end gcode sequences in the Klipper printer.cfg as &lt;code class=&quot;highlighter-rouge&quot;&gt;gcode_macro&lt;/code&gt;s.  This allows me to use multiple slicers and keep my start and end gcode the same.  I have them mapped to &lt;code class=&quot;highlighter-rouge&quot;&gt;START_PRINT&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;END_PRINT&lt;/code&gt;, then in any slicer i am using, I can just put those in and let Klipper handle the sequences.  I have included my printer.cfg at the bottom of this page so you take a look at my start up and end print gcode.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;configure-the-z-offset&quot;&gt;Configure The Z Offset&lt;/h2&gt;
+&lt;p&gt;So, for me this was the hardest part, I had the probe working, and at least stopping from crashing into the bed, but, I couldn’t figure out how to actually make the printer know the space from the probe being triggered, to the bottom of the nozzle.  Which is obviously crucial for the hotend to know how much lower to go past the point where the BLTouch is triggered and be the perfect height above the bed to start printing.  Well, its actually really simple.  At least thats how I feel about it now that I know how to do it.  And after figuring it out, the only time I have had to re-calibrate my Z offset is when I replace the nozzle.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Go into your printer.cfg and change the &lt;code class=&quot;highlighter-rouge&quot;&gt;z_offset&lt;/code&gt; to 10 in the &lt;code class=&quot;highlighter-rouge&quot;&gt;[bltouch]&lt;/code&gt; section.  This number is completely arbitrary.  Just need a value there, and one that will be easy to do math with later.&lt;/li&gt;
+  &lt;li&gt;Home the printer, &lt;code class=&quot;highlighter-rouge&quot;&gt;G28&lt;/code&gt;.  as long as your &lt;code class=&quot;highlighter-rouge&quot;&gt;[bltouch]&lt;/code&gt; settings are correct, the BLTouch pin should engage, and the Z axis should lower and stop, once its triggered.  I kept my finger on the power button at this point to stop the hotend from crashing into the bed if need be.&lt;/li&gt;
+  &lt;li&gt;Next tell the printer to go into &lt;code class=&quot;highlighter-rouge&quot;&gt;Relative Position&lt;/code&gt; mode: &lt;code class=&quot;highlighter-rouge&quot;&gt;G91&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Now move the hotend over the spot the BLTouch probed to home the bed: &lt;code class=&quot;highlighter-rouge&quot;&gt;G1 X-47&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Get a piece of paper and get ready to bed level like you always do, lower the Z axis by -.05 until the nozzle scrapes the paper.  You can do this with the display control, or I use &lt;a href=&quot;https://itunes.apple.com/us/app/octopod-for-octoprint/id1412557625?mt=8&quot;&gt;OctoPod&lt;/a&gt; on my iOS device.&lt;/li&gt;
+  &lt;li&gt;Once the Z axis is where it needs to be, you can run &lt;code class=&quot;highlighter-rouge&quot;&gt;GET_POSISTION&lt;/code&gt; in the terminal and then just do the math:
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[printer.cfg [bltouch] z_offset] - [z value from GET_POSITION] = z_offset&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;IE: 10 - 8.5 = 1.5&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Replace your the &lt;code class=&quot;highlighter-rouge&quot;&gt;z_offset&lt;/code&gt; value in the &lt;code class=&quot;highlighter-rouge&quot;&gt;[bltouch]&lt;/code&gt; section with your new calculated value.&lt;/li&gt;
+  &lt;li&gt;Print and be happy as your first layer runs perfect!&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;I actually left my printer off for about 4 weeks recently, turned it on and fired off a print, first layer still layed perfect.  Cheers!&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;update&quot;&gt;Update&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;20190609 - A recent Klipper update moved the &lt;code class=&quot;highlighter-rouge&quot;&gt;samples: 2&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;sample_retract_distance: 8.0&lt;/code&gt; from the &lt;code class=&quot;highlighter-rouge&quot;&gt;[bed_mesh]&lt;/code&gt; section to the &lt;code class=&quot;highlighter-rouge&quot;&gt;[bltouch]&lt;/code&gt; section.  I have updated this article to reflect those changes.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;my-ender3-klipper-printercfg&quot;&gt;My Ender3 Klipper printer.cfg&lt;/h3&gt;
+
+&lt;script src=&quot;https://gist.github.com/88172c35ec1b6291ab7ad867a997c5a5.js&quot;&gt; &lt;/script&gt;</content><author><name></name></author><category term="3dprinting" /><category term="3dprinting" /><category term="klipper" /><summary type="html">I have been 3D printing for about a year now, its had its ups and downs, good times and bad. Some times its the greatest thing, and sometimes I’m glad I don’t keep a baseball bat near my 3D Printer, because I may not still be the owner of one if I did. I know all printers are different and everyone has their reasons for why or what they do and use for the build surface. I have the Ender3, its a great entry level printer for the price and I have spit out some amazing prints. But one the most notorious issues with the Ender3 is the warped bed. It seems like everyone has reported this issue. And I think one thing all 3D Printer Hobbyist could agree on, is the first layer is one of the most important parts of the print. And when you printing around .2mm layer hight, if the build surface isn’t perfect you’re going to have problems, especially with larger prints.</summary></entry><entry><title type="html">Klean Yer Keezer Lines</title><link href="http://0.0.0.0:4000/klean-yer-keezer-lines/" rel="alternate" type="text/html" title="Klean Yer Keezer Lines" /><published>2019-05-09T00:00:00+00:00</published><updated>2019-05-09T00:00:00+00:00</updated><id>http://0.0.0.0:4000/klean-yer-keezer-lines</id><content type="html" xml:base="http://0.0.0.0:4000/klean-yer-keezer-lines/">&lt;p&gt;I’m not sure out there who needs to hear this, but clean your beer lines!  After a while of beer sitting, lines begin to stain and leave flavors that will be picked up by other beers.  I mean who wants to have a lingering coffee porter in your NEIPA?  No one, thats who.  There is no &lt;em&gt;one size fits all&lt;/em&gt; for how often you should clean your lines, it depends a lot on things like how long the beer has been siting in them, how often are they used, and what style of beer.  In the past, I would just replace the lines every 6 months.  There is a few things wrong with doing this, first of all, its costly, second of all, its a pain in that ass, and third, six months between cleaning/replacing is too long IMO.  Now I am rinsing lines every other month.  Maybe that is &lt;em&gt;too&lt;/em&gt; often, but after you see how easy it is to do, I could do it even more often and not really mind.&lt;/p&gt;
+
+&lt;h2 id=&quot;build-it&quot;&gt;Build It&lt;/h2&gt;
+&lt;p&gt;So, the most important part of this build, is the pump.  The good news is, if you built a keg washer based on my last post (&lt;a href=&quot;/cip-diy-keg-washer/&quot;&gt;CIP DIY Keg Washer&lt;/a&gt;), then you already have a pump that will work perfect for this.  That pump has the power to push cleaner through 4 taps, each with 10’ of beverage line.  If you have more then 4 taps, either you’ll have to do it in sections, or you &lt;em&gt;may&lt;/em&gt; need a more powerful pump.&lt;/p&gt;
+
+&lt;p&gt;Here is the basic premise of this &lt;em&gt;line cleaner&lt;/em&gt;, you are going to pump cleaner &lt;em&gt;INTO&lt;/em&gt; &lt;em&gt;tap #1&lt;/em&gt;, then connect that line to the tap line next to it, so the cleaner will be coming &lt;em&gt;OUT&lt;/em&gt; &lt;em&gt;tap #2&lt;/em&gt;.  Then you connect &lt;em&gt;tap #2&lt;/em&gt; to &lt;em&gt;tap #3&lt;/em&gt;, and again, connect &lt;em&gt;tap #3&lt;/em&gt; and &lt;em&gt;tap #4&lt;/em&gt; lines together, and this will cause the cleaner to come out &lt;em&gt;tap #4&lt;/em&gt;, and back into the the bucket that the pump is in, allowing for the cleaner to be continuously recirculated through all taps and lines.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;TLDR&lt;/strong&gt; Connect everything together in a way allowing for cleaner to be pumped into &lt;em&gt;tap #1&lt;/em&gt; and come out &lt;em&gt;tap #4&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;A key component of this will be hooking beverage line to beverage line.  Which means you need a custom fitting allowing for disconnect to connect to disconnect.  If you have old kegs lying around, I guess you could steal pieces from that.  You &lt;em&gt;could&lt;/em&gt; buy posts, but that would way more expensive then just replacing the lines regularly.  Im sure you already know what I did…of course, I designed something that could be 3D printed (&lt;a href=&quot;https://www.thingiverse.com/thing:3517302&quot;&gt;Thingiverse link&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/2019-05-09-klean-yer-keezer-lines/coupler.png&quot; alt=&quot;Coupler&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I’m actually pretty proud of this design, it was pretty in depth to make, and I got to learn some really interesting things with &lt;a href=&quot;https://www.autodesk.com/products/fusion-360/overview#banner&quot;&gt;Fustion360&lt;/a&gt; (something similar, not designed by me, but the same concept for ball locks can be found &lt;a href=&quot;https://www.thingiverse.com/thing:2684969&quot;&gt;here&lt;/a&gt;).  I printed two of these, allowing me to connect pin lock to pin lock disconnects together.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/2019-05-09-klean-yer-keezer-lines/connection.jpg&quot; alt=&quot;Connection&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I had to get some rubber O-rings for them, #10 faucet O-rings from my local hardware store.  I don’t normally discuss print settings for things because there is so many variables, but one thing I will say, is print these at 100% infill as pressurized liquid will be flowing through them.  Or, if you don’t want to go the route of connecting beer lines together via the disconnects, if the barbs on your disconnects are removable, the you could remove the disconnect and use a pressure fitting to connect them.  I like the way I have it, because its also cleaning the disconnects this way.&lt;/p&gt;
+
+&lt;p&gt;Outside of those two major things, the only other parts you need is a barb to go in place of your CIP Ball on your keg washer (see previous post), some hose or tubing, I just use the same silicone tube I use when kegging, and some actual &lt;a href=&quot;https://www.amazon.com/BLC-Beverage-System-Cleaner-32/dp/B074D9DV5P/ref=as_li_ss_tl?keywords=BLC&amp;amp;qid=1557427040&amp;amp;s=gateway&amp;amp;sr=8-8&amp;amp;linkCode=ll1&amp;amp;tag=angrymrtom-20&amp;amp;linkId=58d1d4dbeb3cff87ea25734dea8043ca&amp;amp;language=en_US&quot;&gt;BLC (Beer Line Cleaner)&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;use-it&quot;&gt;Use It&lt;/h2&gt;
+&lt;p&gt;After you have all together, the rest is easy, mix up enough BLC in a bucket to submerge your pump, run your pump into tap #1, connect tap #1 line to tap #2 line, connect tap #2 to tap #3, I just used a small piece of silicone tube for this, then connect tap #3 line to tap #4 line.  &lt;strong&gt;BE SURE TO OPEN ALL YOUR TAPS!&lt;/strong&gt;  Turn the pump on and let the liquid flow though your keezers veins, and come out tap #4.  Now, my taps are close enough together I can do this with a five gallon bucket, but you may have to get creative if thats not the case for you.&lt;/p&gt;
+
+&lt;p&gt;Thats pretty much it, let that recirculate for 15-20 minutes.  Empty the bucket and fill with hot clean water, and rinse for 10 minutes.  I usually rinse for 5 minutes, empty the bucket, fill again with hot clean water, and rinse another 5.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/2019-05-09-klean-yer-keezer-lines/cleaning.jpg&quot; alt=&quot;Cleaning&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Thats it.  And I’m sure the patrons of your homemade beer will have much praise to give on how fresh and clean your homebrew has become.  Cheers!&lt;/p&gt;</content><author><name></name></author><category term="homebrewing" /><category term="keezer" /><category term="diy" /><category term="3dprinting" /><summary type="html">I’m not sure out there who needs to hear this, but clean your beer lines! After a while of beer sitting, lines begin to stain and leave flavors that will be picked up by other beers. I mean who wants to have a lingering coffee porter in your NEIPA? No one, thats who. There is no one size fits all for how often you should clean your lines, it depends a lot on things like how long the beer has been siting in them, how often are they used, and what style of beer. In the past, I would just replace the lines every 6 months. There is a few things wrong with doing this, first of all, its costly, second of all, its a pain in that ass, and third, six months between cleaning/replacing is too long IMO. Now I am rinsing lines every other month. Maybe that is too often, but after you see how easy it is to do, I could do it even more often and not really mind.</summary></entry><entry><title type="html">CIP DIY Keg Washer</title><link href="http://0.0.0.0:4000/cip-diy-keg-washer/" rel="alternate" type="text/html" title="CIP DIY Keg Washer" /><published>2019-05-07T00:00:00+00:00</published><updated>2019-05-07T00:00:00+00:00</updated><id>http://0.0.0.0:4000/cip-diy-keg-washer</id><content type="html" xml:base="http://0.0.0.0:4000/cip-diy-keg-washer/">&lt;p&gt;Ok Ok, its time for an easy build, no software, no programing, no CLI (command line interface) this one is cake, you don’t even need any tools, just some time (and money), and it will make washing your kegs easy peasy.  And, in a later post, I’ll show you how to easily turn this washer into a keezer beer line cleaner!&lt;/p&gt;
+
+&lt;p&gt;So, frankly, F washing kegs!  I mean if you are going to do it right you need to disassemble, remove the dip tube, wash, wash, rinse, rinse, blah blah.  Ain’t no one got time for that!  I’ve got a nice little build here that doesn’t break the bank and works pretty damn well.  lets get to it!&lt;/p&gt;
+
+&lt;p&gt;Ok, down to business, this really doesn’t even need a build walk through but, I’m gonna give a little one, because……the pump works great to clean your beer lines as well (post to come) so I hope you buy one.  This list going to be a little lack luster, because I bought some of it at my local hardware.  But the few things you can get online are:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.com/gp/product/B01CGAD986/ref=as_li_ss_tl?ie=UTF8&amp;amp;psc=1&amp;amp;linkCode=ll1&amp;amp;tag=angrymrtom-20&amp;amp;linkId=415e15d0626c3c407ba5a1d0f2ce8f40&amp;amp;language=en_US&quot;&gt;Submersible Pump&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.com/gp/product/B073GHFP6J/ref=as_li_ss_tl?ie=UTF8&amp;amp;psc=1&amp;amp;linkCode=ll1&amp;amp;tag=angrymrtom-20&amp;amp;linkId=30708afa5c6c33959c77ed331c9eb103&amp;amp;language=en_US&quot;&gt;CIP Spray Ball&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.com/PERA-TJ085-Pin-Lock-MFL/dp/B0768ZGGMZ/ref=as_li_ss_tl?crid=1OUJTDXM32JT7&amp;amp;keywords=pin+lock+liquid+disconnect&amp;amp;qid=1557278413&amp;amp;s=gateway&amp;amp;sprefix=pin+lock+li,tools,152&amp;amp;sr=8-9&amp;amp;linkCode=ll1&amp;amp;tag=angrymrtom-20&amp;amp;linkId=36141ca90d43d3696893cc34f079bfba&amp;amp;language=en_US&quot;&gt;Liquid Keg Disconnect (I use pin lock)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Some hose or tube im sure you have laying around, only need like 6”.  Size is variable as the pump comes with multiple barbs.&lt;/li&gt;
+  &lt;li&gt;A bucket.&lt;/li&gt;
+  &lt;li&gt;I used under ground sprinkler 1/2” NPT PVC (this is what I got at my locale hardware).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So, this build is pretty flipping easy.  Basically, you just need a PVC tube up from the pump outlet, with the CIP Ball on top, now I added a T at the bottom, used a 6” tube, a T, and a 16” tube, and used a barb that comes with the pump and a short piece of hose to the liquid disconnect to shoot cleaner/rinse up the dip tube as well.  Then the concept is straight forward, just fill a bucket with some water and oxyclean, put your &lt;em&gt;keg cleaner&lt;/em&gt; in there and shoot hot oxyclean through the keg for a while and then switch it with clean hot water and rinse!&lt;/p&gt;
+
+&lt;p&gt;Boom, a keg cleaner.  For me, I use old 7.75gal kegs as fermenters, so I use this to clean them as well.  Works really good.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/2019-05-07-cip-diy-keg-washer/washer.jpg&quot; alt=&quot;Washer&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;cake!  easy peasy build!  BEER TIME!&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;sources&quot;&gt;Sources&lt;/h3&gt;
+&lt;p&gt;https://beer.thegremlyn.com/2017/03/15/i-built-a-keg-washer-you-should-too/&lt;/p&gt;</content><author><name></name></author><category term="homebrewing" /><category term="keezer" /><category term="diy" /><summary type="html">Ok Ok, its time for an easy build, no software, no programing, no CLI (command line interface) this one is cake, you don’t even need any tools, just some time (and money), and it will make washing your kegs easy peasy. And, in a later post, I’ll show you how to easily turn this washer into a keezer beer line cleaner!</summary></entry><entry><title type="html">PiLess BrewPi</title><link href="http://0.0.0.0:4000/piless-brewpi/" rel="alternate" type="text/html" title="PiLess BrewPi" /><published>2019-05-01T00:00:00+00:00</published><updated>2019-05-01T00:00:00+00:00</updated><id>http://0.0.0.0:4000/piless-brewpi</id><content type="html" xml:base="http://0.0.0.0:4000/piless-brewpi/">&lt;p&gt;Its no secret that temperature control is a huge aspect of brewing beer successfully.  It can have dramatic side effects if you don’t keep the temperature in the yeasts range, or you may not be able to achieve flavors that you’re seeking from the yeast fermenting at a specific temperature.  Now, in my past life as @dotps1, I covered in detail how to make a BrewPi.  A temperature controller running with a Raspberry Pi and an Arduino board (that blog post can be found &lt;a href=&quot;https://dotps1.github.io/homebrewing/2018/01/22/brewing-your-own-brewpi.html&quot;&gt;here&lt;/a&gt;, for now anyway, I’m not sure how long I will be keeping https://dotps1.github.io up).  The BrewPi is defiantly a solid temperature controller solution, that allows for many customization, and the ability to create temperature profiles, allowing for temperature ramp up and cold crashing.  And most importantly, it handles temperature swing.  Unfortunately, the BrewPi is no longer officially supported on the Raspberry Pi/Arduino configuration, and as you can see the branch hasn’t been touched in years, https://github.com/BrewPi/brewpi-www/tree/legacy.  I made this clear in my last walk through, which is over a year old now, and I had to fork the project and fix a bunch of dependency issues, that probably are already out of date.&lt;/p&gt;
+
+&lt;h2 id=&quot;enter-the-piless-brewpi&quot;&gt;Enter the PiLess BrewPi&lt;/h2&gt;
+&lt;p&gt;So, theres another implementation of the BrewPi software out there, called &lt;a href=&quot;https://github.com/vitotai/BrewPiLess&quot;&gt;BrewPiLess&lt;/a&gt;.  And the best part is, it doesn’t need a Raspberry Pi, or even an Arduino Controller!  And the project is actively developed, which means new features, and bug fixes.  One of the really great features the BrewPiLess has, is that it supports logging data to &lt;a href=&quot;https://brewfather.com&quot;&gt;BrewFather&lt;/a&gt;.  There you can attach the device to a batch, and keep track of the temperature as the batch is fermenting, and all the data is stored in one place.&lt;/p&gt;
+
+&lt;p&gt;I was able to get this up and running, oh, I’d say about 10x faster then I got the BrewPi up.  However, if you read my last blog on makeing a BrewPi, I housed everything in an outdoor sprinkler control box, it was huge and there where power cords and temperature probes hanging all over the place.  Well this time, I wanted something fully modular, where all the cords where removable, and much much smaller.  As small as absolutely possible.  I reached my goal, but if you want your &lt;em&gt;BPL&lt;/em&gt; exactly the same as mine, you will need to solder some connections in this build, and have access to a 3D Printer for the enclosure.  These are not show stoppers, there is plenty of other ways to put everything together, this is just &lt;em&gt;my way&lt;/em&gt; based on the things I regretted doing when I built my BrewPi, and features I wanted in this build.
+&lt;img src=&quot;/images/2019-05-01-piless-brewpi/complete.jpg&quot; alt=&quot;Complete&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;shopping-list&quot;&gt;Shopping List&lt;/h2&gt;
+&lt;p&gt;&lt;em&gt;Most of this stuff comes in bulk, so find a buddy that wants one too, and split the cost!&lt;/em&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.com/gp/product/B01IK9GEQG/ref=as_li_ss_tl?&amp;amp;imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&amp;amp;slotNum=0&amp;amp;ie=UTF8&amp;amp;psc=1&amp;amp;linkCode=ll1&amp;amp;tag=angrymrtom-20&amp;amp;linkId=ff61ed8286632b653d985f627eba863a&amp;amp;language=en_US&quot;&gt;ESP8266 NodeMCU&lt;/a&gt; (you don’t need two of these, but at that price, might as well, the second one is almost free)&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.com/gp/product/B01MUATVXX/ref=as_li_ss_tl?&amp;amp;imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&amp;amp;slotNum=1&amp;amp;ie=UTF8&amp;amp;psc=1&amp;amp;linkCode=ll1&amp;amp;tag=angrymrtom-20&amp;amp;linkId=2a9b300b40efe61b1e1152932375fff4&amp;amp;language=en_US&quot;&gt;Two Channel Relay Module&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.com/gp/product/B01GPUMP9C/ref=as_li_ss_tl?&amp;amp;imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&amp;amp;slotNum=2&amp;amp;ie=UTF8&amp;amp;psc=1&amp;amp;linkCode=ll1&amp;amp;tag=angrymrtom-20&amp;amp;linkId=3c5ac9a99e1f03a95b47641a4d335bfd&amp;amp;language=en_US&quot;&gt;20x4 LCD Module&lt;/a&gt; (this is optional if you would like a display on the controller)&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.com/gp/product/B07CBS768L/ref=as_li_ss_tl?&amp;amp;imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&amp;amp;slotNum=3&amp;amp;ie=UTF8&amp;amp;psc=1&amp;amp;linkCode=ll1&amp;amp;tag=angrymrtom-20&amp;amp;linkId=d23b9dcedf01b4de748275e0335f6fba&amp;amp;language=en_US&quot;&gt;AC-&amp;gt;DC 5V PSU&lt;/a&gt; (this acts a power supply unit inside the enclosure, powering all the componets, else you can power things with USB bricks, but that sounds like a mess)&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.com/gp/product/B014EJY0JE/ref=as_li_ss_tl?&amp;amp;imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&amp;amp;slotNum=4&amp;amp;ie=UTF8&amp;amp;psc=1&amp;amp;linkCode=ll1&amp;amp;tag=angrymrtom-20&amp;amp;linkId=ddc6d8cbb0138f9d6cc78bbadb54d151&amp;amp;language=en_US&quot;&gt;Mini XLR Male connectors (2 needed)&lt;/a&gt; (these are optional allowing for the temperature probes to be disconnected from the enclosure)&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.com/gp/product/B01J33CF48/ref=as_li_ss_tl?&amp;amp;imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&amp;amp;slotNum=5&amp;amp;ie=UTF8&amp;amp;psc=1&amp;amp;linkCode=ll1&amp;amp;tag=angrymrtom-20&amp;amp;linkId=b7b3577fdfe015049dd8c4b80a6d0deb&amp;amp;language=en_US&quot;&gt;Mini XLR Female connectors (2 needed)&lt;/a&gt; (these are optional allowing for the temperature probes to be disconnected from the enclosure)&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.com/gp/product/B01M3URWIT/ref=as_li_ss_tl?&amp;amp;imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&amp;amp;slotNum=6&amp;amp;ie=UTF8&amp;amp;psc=1&amp;amp;linkCode=ll1&amp;amp;tag=angrymrtom-20&amp;amp;linkId=2fca3cda54bc73b3e8f4a0194eda161b&amp;amp;language=en_US&quot;&gt;AC 3-Pin Outlets (2 needed)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.com/gp/product/B00X73S52M/ref=as_li_ss_tl?&amp;amp;imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&amp;amp;slotNum=7&amp;amp;ie=UTF8&amp;amp;psc=1&amp;amp;linkCode=ll1&amp;amp;tag=angrymrtom-20&amp;amp;linkId=8e68886aa9d3960dd3a2da2eaf8c285f&amp;amp;language=en_US&quot;&gt;3-Position Screw Terminal&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.com/gp/product/B00NWO68JI/ref=as_li_ss_tl?&amp;amp;imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&amp;amp;slotNum=8&amp;amp;ie=UTF8&amp;amp;psc=1&amp;amp;linkCode=ll1&amp;amp;tag=angrymrtom-20&amp;amp;linkId=46484c9900f8aeb9bc2abe0d1964eb1b&amp;amp;language=en_US&quot;&gt;AC Rocker Switch&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.com/gp/product/B00EU70ZL8/ref=as_li_ss_tl?&amp;amp;imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&amp;amp;slotNum=9&amp;amp;ie=UTF8&amp;amp;psc=1&amp;amp;linkCode=ll1&amp;amp;tag=angrymrtom-20&amp;amp;linkId=ff3a58618c96d064dba3139843a7809c&amp;amp;language=en_US&quot;&gt;DS18B20 Temperature Probes (2 needed)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.com/Projects-25EP5144K70-4-7k-Resistors-Pack/dp/B0185FC5OK/ref=as_li_ss_tl?keywords=4.7k+resistor&amp;amp;qid=1556653428&amp;amp;s=gateway&amp;amp;sr=8-2-spons&amp;amp;psc=1&amp;amp;linkCode=ll1&amp;amp;tag=angrymrtom-20&amp;amp;linkId=021d72a211058cd98c5afe45fa38b360&amp;amp;language=en_US&quot;&gt;4.7k Resistor&lt;/a&gt; (only 1 is needed, but good luck finding just 1 for sale)&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.com/HiLetgo-Breadboard-Prototype-Assortment-Raspberry/dp/B077X7MKHN/ref=as_li_ss_tl?crid=3Q681FUGHK6V2&amp;amp;keywords=female+to+female+jumper+wires&amp;amp;qid=1556724289&amp;amp;s=gateway&amp;amp;sprefix=female+to+female+jum,aps,157&amp;amp;sr=8-6&amp;amp;linkCode=ll1&amp;amp;tag=angrymrtom-20&amp;amp;linkId=4474fd5023fb444fcc74105cd7115365&amp;amp;language=en_US&quot;&gt;Breadboard Jumpers&lt;/a&gt; (really only need female jumpers for this project)&lt;/li&gt;
+  &lt;li&gt;Misc screws, wire, shrink tube, and wire nuts/connectors&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;pro-tip&quot;&gt;Pro Tip&lt;/h2&gt;
+&lt;p&gt;I am going to suggest starting this project by printing the enclosure.  I am going to suggest this for a few reasons, first of all, most the customization I used in my build are only really needed if you are going to use my enclosure design.  Things like the plugs, XLR connections, AC Rocker Switch and the LCD are all going to work perfect in my enclosure,  Second, it takes a bit to print, and well, everything mounts in the enclosure, so you’re going to kinda need that part right away.  If you’re not going to use my design, you can probably skip this part, and just mock everything up so you can figure out how your going to house this contraption.&lt;/p&gt;
+
+&lt;p&gt;The enclosure I designed is available on &lt;a href=&quot;https://www.thingiverse.com/thing:3042974&quot;&gt;Thingiverse&lt;/a&gt;.  It is one of the first things I’ve designed, so I’m sure there are things that &lt;em&gt;could be done better&lt;/em&gt; but it works well enough for what it is.  I’m not going to go into print settings for this as its out of the scope of this walk through.  So, if you’re going this route, download the stl and get it printing because it will take a bit, you can print the lid while you are assembling the rest of the BPL.&lt;/p&gt;
+
+&lt;h2 id=&quot;time-to-make-the-chimi-fing-changas&quot;&gt;Time to make the chimi-f***ing-changas&lt;/h2&gt;
+&lt;p&gt;So, the first thing I want to say about this system, is that its dealing with 110v AC power, you will be running that power to the AC-&amp;gt;DC converter (the NodeMCU and LCD run on DC power), and to the relay module, which essentially turns on/off your power outlets, which will control your Heating and Cooling in your fermentation chamber.  I cannot over stress this enough, &lt;strong&gt;IF YOU ARE NOT COMFORTABLE WORKING WITH ELECTRICITY OR DON’T KNOW HOW BASIC ELECTRICAL WIRING WORKS, STOP WHAT YOU ARE DOING, PUT YOUR TOOLS DOWN, AND FIND SOMEONE WHO DOES&lt;/strong&gt;!  Ok, with that being said, lets get down to business.&lt;/p&gt;
+
+&lt;h3 id=&quot;install-the-brewpiless-bin-on-the-esp8266-nodemcu&quot;&gt;Install the BrewPiLess bin on the ESP8266 NodeMCU&lt;/h3&gt;
+&lt;ol&gt;
+  &lt;li&gt;Download the BrewPiLess Repository:
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;git clone https://github.com/vitotai/BrewPiLess.git&lt;/code&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;If you don’t have it installed, you will need to download and install &lt;a href=&quot;https://code.visualstudio.com&quot;&gt;VSCode&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;Open the repository in VSCode.  If you don’t have &lt;a href=&quot;https://platformio.org/install/ide?install=vscode&quot;&gt;Platform.io&lt;/a&gt; installed, go to the extensions workspace and install it.
+    &lt;ul&gt;
+      &lt;li&gt;On my mac, it failed to install the first, and it was because &lt;code class=&quot;highlighter-rouge&quot;&gt;virtualenv&lt;/code&gt; needed to be installed.  Completing the three steps listed in the &lt;em&gt;Perquisites&lt;/em&gt; section &lt;a href=&quot;http://docs.platformio.org/en/latest/installation.html#virtual-environment&quot;&gt;here&lt;/a&gt;, and then uninstall/reinstall the extension fixed the issue.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Connect the NodeMCU to your computer via USB, and flash the bin to the board (make sure you are in the working directory of the repo):
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;command+shit+p&lt;/code&gt;
+        &lt;ul&gt;
+          &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;PlatformIO: Build&lt;/code&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;PlatformIO: Upload&lt;/code&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;PlatformIO: Clean&lt;/code&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;After the flash is complete, the NodeMCU will begin broadcasting its own SSID, you need to connect to to this WiFi network to configure it to connect to your home WiFi.
+    &lt;ul&gt;
+      &lt;li&gt;Username: &lt;code class=&quot;highlighter-rouge&quot;&gt;brewpiless&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;Password: &lt;code class=&quot;highlighter-rouge&quot;&gt;brewpiless&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;Open a browser it should auto connect to a config page, where you can change the username, password, and the title.&lt;/li&gt;
+      &lt;li&gt;Save the changes and on the next page enter you home wireless info.&lt;/li&gt;
+      &lt;li&gt;After this is complete you can connect back to your home wifi.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;soldering&quot;&gt;Soldering&lt;/h3&gt;
+&lt;p&gt;There are a few things to solder, and some need to be done before assembly:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Solder your wires to the AC-&amp;gt;DC 5V PSU, you won’t be able to do this after its in the enclosure.
+    &lt;ul&gt;
+      &lt;li&gt;On the &lt;strong&gt;POWER IN&lt;/strong&gt; side, you need 14-16 AWG wire, basically the same wire thats in the walls of your house, I clipped an old Molex computer cable and stole wire from that.  This wire needs to be heavier gauge because it will have the 110v that is coming from your house to it, then will convert that to 5v DC.&lt;/li&gt;
+      &lt;li&gt;On the &lt;strong&gt;POWER OUT&lt;/strong&gt; side, you need &lt;strong&gt;THREE&lt;/strong&gt; Hot and Ground leads.  These will power the NodeMCU, LCD and Relay.  Just clip one end of the breadboard jumper wires for this.&lt;/li&gt;
+      &lt;li&gt;you can either solder the wire right to the board, or there is screw terminals that you could get as well, that you would solder to the board, and then you can screw the wires into the terminals, the choice is yours.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;The temperature probes need to be soldered to the female XLR connectors, the wire to pin layout don’t matter really, just as long as you do both of them the same.
+    &lt;ul&gt;
+      &lt;li&gt;Unscrew the connector, put the plastic housing over the temperature probe wire, and solder the three wires from the probe to the three pin cups on the connector.&lt;/li&gt;
+      &lt;li&gt;Repeat this step for the other temperature probe.&lt;/li&gt;
+      &lt;li&gt;One thing I did was cut one probe a bit shorter then the other, for two reasons. First, the probe to monitor the fridge temperature didn’t need to be 6’ long.  Second, it makes it easier for me to keep track of which probe is for the chamber temperature and which is for the beer temperature.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;While you have your solder gear out, might as well solder the wires to the male fittings as well.
+    &lt;ul&gt;
+      &lt;li&gt;Sacrifice a few jumper wires for this, I would recommend using the same colors as the wires that where in the temperature probes so you can keep every thing lined up. The connectors are keyed so they can only go together one way.&lt;/li&gt;
+      &lt;li&gt;leave about 2-3 inches (cut a jumper in half) of wire, these will connect to the three position screw terminal that is directly behind the connectors in the enclosure (see the &lt;em&gt;layout&lt;/em&gt; image below).&lt;/li&gt;
+      &lt;li&gt;Solder the wires to the pin cups, again, be sure your wire colors match up, your basically just making a pass thru connection in the enclosure, that is detachable if need be.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;assembly&quot;&gt;Assembly&lt;/h3&gt;
+&lt;p&gt;Wiring diagram:
+&lt;img src=&quot;/images/2019-05-01-piless-brewpi/wiring.jpg&quot; alt=&quot;Wiring&quot; /&gt;
+Layout diagram (I wasn’t able to find a 3D model of the AC-DC 5V PSU, that goes in with the Power IN facing way from the the LCD in the big empty space):
+&lt;img src=&quot;/images/2019-05-01-piless-brewpi/layout.png&quot; alt=&quot;Layout&quot; /&gt;&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;At this point, you can start putting all the pieces in the enclosure.
+    &lt;ul&gt;
+      &lt;li&gt;Place each board on its mounting posts, I used old computer motherboard screws to hold them down.&lt;/li&gt;
+      &lt;li&gt;The three position screw terminal I glued to the post.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Use the diagram above to connect all the jumpers.
+    &lt;ul&gt;
+      &lt;li&gt;The power for the NodeMCU will be supplied from the AC-&amp;gt;DC 5V PSU to the 5V pin on the board.&lt;/li&gt;
+      &lt;li&gt;Connect a ground lead from the AC-&amp;gt;DC 5V PSU to any ground on the NodeMCU board.&lt;/li&gt;
+      &lt;li&gt;In the diagram it shows the 5V pin is used to power the relay module, but that is assuming the NodeMCU is being powered VIA the USB port.  Which is not the case, the 5V (maybe also labeled ‘Vin’) pin on the board will be used to power the NodeMCU itself, and then you can use one of the 3 power leads from the AC-&amp;gt;DC 5V PSU to power the relay module.&lt;/li&gt;
+      &lt;li&gt;Be sure to add the resistor in the three position screw terminal when wiring in the temperature probes.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Next wire in the power switch and the outlets.
+    &lt;ul&gt;
+      &lt;li&gt;AC Rocker switch wiring digram:
+ &lt;img src=&quot;/images/2019-05-01-piless-brewpi/switch_wiring.jpg&quot; alt=&quot;Switch Wiring&quot; /&gt;&lt;/li&gt;
+      &lt;li&gt;From the power switch you will have three leads, 1 to the AC-&amp;gt;DC 5V PSU, and 1 for each outlet. I used lever action wire nuts for this connection because there is 4 14AWG wires connecting at this point.&lt;/li&gt;
+      &lt;li&gt;The Relay acts as a switch to complete the circuit, so the hot goes in, and the back out to outlet, and the naturel goes directly to the outlet.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;There really isn’t much more I can say about the wiring of this, all the information needed is in the diagram, there is more then one way to skin a cat, so just make sure your wiring is following the diagram and you’ll be fine.  One thing to note, my fridge that I have plugged in the cooling outlet must draw a lot of amps, because the power switch comes with a 5 amp fuse, and when it turned on it, blew that, I had to replace it with a 10 amp fuse.
+&lt;img src=&quot;/images/2019-05-01-piless-brewpi/front_wiring.jpg&quot; alt=&quot;Front Wiring&quot; /&gt;
+&lt;img src=&quot;/images/2019-05-01-piless-brewpi/rear_wiring.jpg&quot; alt=&quot;Rear Wiring&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;brewpiless-configuration&quot;&gt;BrewPiLess Configuration&lt;/h2&gt;
+&lt;p&gt;Once everything is up an running, there isn’t much left to do.  Just need to set which plug is the hot and cold, and which probes are the chamber, and the beer.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Connect to your BrewPiLess via a web browser at http://brewpiless.local (or whatever you named it in the setup screen.)&lt;/li&gt;
+  &lt;li&gt;Go to the &lt;code class=&quot;highlighter-rouge&quot;&gt;Device Setup&lt;/code&gt; screen on the top right corner.
+    &lt;ul&gt;
+      &lt;li&gt;Be sure to click the &lt;code class=&quot;highlighter-rouge&quot;&gt;Erase EEPROM&lt;/code&gt; button at the top to be sure everything is reset.&lt;/li&gt;
+      &lt;li&gt;Click &lt;code class=&quot;highlighter-rouge&quot;&gt;Refresh Device List&lt;/code&gt; on the top load all your devices.&lt;/li&gt;
+      &lt;li&gt;You have to manually select a &lt;code class=&quot;highlighter-rouge&quot;&gt;Device&lt;/code&gt; slot for each probe and plug, but these are arbitrary, they just have to be unique.&lt;/li&gt;
+      &lt;li&gt;The temperature probes will have an &lt;code class=&quot;highlighter-rouge&quot;&gt;Address&lt;/code&gt; value.&lt;/li&gt;
+      &lt;li&gt;Setup 4 devices:
+        &lt;ul&gt;
+          &lt;li&gt;Chamber Temp&lt;/li&gt;
+          &lt;li&gt;Beer Temp&lt;/li&gt;
+          &lt;li&gt;Chamber Heater&lt;/li&gt;
+          &lt;li&gt;Chamber Cooler&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;I am not sure if there is a better way to then trial and error to identify which is which, for the probes you can just hold in your hand and the value will change on the display.  For the plugs you will need to actually set a &lt;code class=&quot;highlighter-rouge&quot;&gt;Beer&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;Fridge&lt;/code&gt; temperature value and then one or the other will turn on.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Once your get everything setup, I would recommend backing up the configuration from the &lt;code class=&quot;highlighter-rouge&quot;&gt;Device Setup&lt;/code&gt; screen incase you ever need to reload or rebuild, then you won’t have to play the guessing game on which device is which.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;extra-credit&quot;&gt;Extra Credit&lt;/h2&gt;
+&lt;p&gt;If your like me, you are going to want to change the temperature units from C to F, because the NodeMCU has such little amount of space, there is no room for webpages to handle customization.  Instead, you do it with commands:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Navigate to http://brewpiless.local/testcmd.htm&lt;/li&gt;
+  &lt;li&gt;Issue this command:
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;j{&quot;tempFormat&quot;:&quot;F&quot;}&lt;/code&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;If your getting in the Kveik craze, and want to ferment hot AF, the you need to increase the &lt;code class=&quot;highlighter-rouge&quot;&gt;tempSetMax&lt;/code&gt; value:
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;j{&quot;tempSetMax&quot;:&quot;90.0&quot;}&lt;/code&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;There is plenty of customizing you can do, just check out the BrewPiLess wiki: https://github.com/vitotai/BrewPiLess/wiki&lt;/p&gt;
+
+&lt;h2 id=&quot;time-for-a-cold-one&quot;&gt;Time for a Cold One&lt;/h2&gt;
+&lt;p&gt;Whew, you did it!  Nice work!  Go pour yourself a cold one, I know I’m going too, sorry if I missed anything, this was a pretty intense walk through.  Cheers!&lt;/p&gt;</content><author><name></name></author><category term="homebrewing" /><category term="homebrewing" /><category term="raspberrypi" /><category term="3dprinting" /><summary type="html">Its no secret that temperature control is a huge aspect of brewing beer successfully. It can have dramatic side effects if you don’t keep the temperature in the yeasts range, or you may not be able to achieve flavors that you’re seeking from the yeast fermenting at a specific temperature. Now, in my past life as @dotps1, I covered in detail how to make a BrewPi. A temperature controller running with a Raspberry Pi and an Arduino board (that blog post can be found here, for now anyway, I’m not sure how long I will be keeping https://dotps1.github.io up). The BrewPi is defiantly a solid temperature controller solution, that allows for many customization, and the ability to create temperature profiles, allowing for temperature ramp up and cold crashing. And most importantly, it handles temperature swing. Unfortunately, the BrewPi is no longer officially supported on the Raspberry Pi/Arduino configuration, and as you can see the branch hasn’t been touched in years, https://github.com/BrewPi/brewpi-www/tree/legacy. I made this clear in my last walk through, which is over a year old now, and I had to fork the project and fix a bunch of dependency issues, that probably are already out of date.</summary></entry><entry><title type="html">Taplist Pi Zero</title><link href="http://0.0.0.0:4000/taplist-pi-zero/" rel="alternate" type="text/html" title="Taplist Pi Zero" /><published>2019-04-26T00:00:00+00:00</published><updated>2019-04-26T00:00:00+00:00</updated><id>http://0.0.0.0:4000/taplist-pi-zero</id><content type="html" xml:base="http://0.0.0.0:4000/taplist-pi-zero/">&lt;p&gt;So, if in your homebrew life, you’ve moved on past bottling (because its it f***ing terrible) and are kegging your ferments, you’ve probably already come up with some way to label or mark your taps so you know what tap is pouring what beverage.  I know there is &lt;em&gt;a lot&lt;/em&gt; of articles out there on this topic, but, I wanted to share my experience on the matter, and hopefully, it can save you some time, and money.&lt;/p&gt;
+
+&lt;p&gt;As you can probably tell, I’m a bit of a tech nerd, so obviously I wanted digital signage.  I mean there is several options out there to do this manually.  Tap handles with black board surfaces you can write on with chalk, or even black board spray paint, you could paint on your kegerator or keezer.  Or maybe make some other type of labels that hang on the taps or whatever.  But I didn’t want anything like that, I wanted an actual taplist.  One of the main reasons this was even remotely cost feasible for me, is I had an extra 22” LCD monitor laying around.  If you have to buy a monitor to pull this off, then this walk through probably isn’t for you, but if not here is a list of things you’ll need:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.com/gp/product/B01L3IU6XS/ref=as_li_qf_asin_il_tl?ie=UTF8&amp;amp;tag=angrymrtom-20&amp;amp;creative=9325&amp;amp;linkCode=as2&amp;amp;creativeASIN=B01L3IU6XS&amp;amp;linkId=5ad8ce250e1079a1dbff8a6f1cba3d0d&quot;&gt;Raspberry Pi Zero&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.com/gp/product/B0012Y2LLE/ref=as_li_qf_asin_il_tl?ie=UTF8&amp;amp;tag=angrymrtom-20&amp;amp;creative=9325&amp;amp;linkCode=as2&amp;amp;creativeASIN=B0012Y2LLE&amp;amp;linkId=ee9d9d3e68054a23ab63d1f02537e85e&quot;&gt;MicroSD Card (8GB minimum)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.com/gp/product/B00GF9T3I0/ref=as_li_qf_asin_il_tl?ie=UTF8&amp;amp;tag=angrymrtom-20&amp;amp;creative=9325&amp;amp;linkCode=as2&amp;amp;creativeASIN=B00GF9T3I0&amp;amp;linkId=0d85b67b54f9a9ee66e63ae36f2a1b7c&quot;&gt;1.2A Minimum Power Supply (basically any old cell phone charger)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.com/gp/product/B01KRKO4MM/ref=as_li_qf_asin_il_tl?ie=UTF8&amp;amp;tag=angrymrtom-20&amp;amp;creative=9325&amp;amp;linkCode=as2&amp;amp;creativeASIN=B01KRKO4MM&amp;amp;linkId=a1915b0866bd47fda46a792c390f5334&quot;&gt;HDMI Cable (mini HDMI to what ever interface is on the display)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.com/gp/product/B01HP636I4/ref=as_li_qf_asin_il_tl?ie=UTF8&amp;amp;tag=angrymrtom-20&amp;amp;creative=9325&amp;amp;linkCode=as2&amp;amp;creativeASIN=B01HP636I4&amp;amp;linkId=ab3467b15878cbe5c1780d9c252cd551&quot;&gt;Raspberry Pi Zero Case (optional, you could also 3D print this too)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The first time I did this, I used a Raspberry Pi 3, which is probably over kill for hardware to make a taplist, especially when all we are going to do is display a web page.  A few months ago, I need a Raspberry Pi for another project, and when I looked to buy one, they are like $30, however, at the time, I found a Raspberry Pi Zero for $5 &lt;em&gt;(at the time of this writing it is ~$15)&lt;/em&gt;.  It doesn’t have near the hardware resources, but again, we are just going to be displaying a webpage.  &lt;em&gt;(Also, with taplist.io, you can use a kindle fire stick, I haven’t ever set it up with that, but I do know that there instructions on the product page on how to set one up.)&lt;/em&gt;  So, lets get started.&lt;/p&gt;
+
+&lt;h2 id=&quot;taplistio&quot;&gt;taplist.io&lt;/h2&gt;
+&lt;p&gt;The premise of this digital taplist, uses a free product (for personal use) called &lt;a href=&quot;https://taplist.io&quot;&gt;Taplist.io&lt;/a&gt;.  You will need to create an account, and from there, you can create taps, build your beverage database, create kegs, attach kegs to taps.  I’m not going to go into very much detail on this part because there is so many variables, and so much customization you can do with it.  what ever you customize under the “Look And Feel” section of your dashboard, is what will be displayed on the final product when you are finished.  The other nice part is you get an online taplist you can share with anyone (you can find mine at the bottom of this page, by clicking the “beer mug” icon).&lt;/p&gt;
+
+&lt;h2 id=&quot;setting-up-the-raspberry-pi-zero&quot;&gt;Setting up the Raspberry Pi Zero&lt;/h2&gt;
+&lt;p&gt;For the first part of this build, we need to install and configure the Raspberry Pi Zero, we will be installing the latest version of &lt;a href=&quot;https://www.raspbian.org&quot;&gt;Raspbian Stretch Lite&lt;/a&gt;.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Download the latest img for &lt;strong&gt;Raspbian Stretch Lite&lt;/strong&gt; &lt;a href=&quot;https://www.raspberrypi.org/downloads/raspbian/&quot;&gt;here&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;Open the &lt;code class=&quot;highlighter-rouge&quot;&gt;Disk Utility&lt;/code&gt; app:
+    &lt;ul&gt;
+      &lt;li&gt;Press &lt;code class=&quot;highlighter-rouge&quot;&gt;CMD+SPACE&lt;/code&gt; to open the &lt;code class=&quot;highlighter-rouge&quot;&gt;Spotlight&lt;/code&gt; application.&lt;/li&gt;
+      &lt;li&gt;In the search bar type &lt;code class=&quot;highlighter-rouge&quot;&gt;Disk Utility&lt;/code&gt;.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;In the top left had corner, select &lt;code class=&quot;highlighter-rouge&quot;&gt;View&lt;/code&gt;, and be sure &lt;code class=&quot;highlighter-rouge&quot;&gt;Show All Devices&lt;/code&gt; is selected.&lt;/li&gt;
+  &lt;li&gt;Next, you will need to be sure the SD card is formated with the &lt;a href=&quot;https://en.wikipedia.org/wiki/Design_of_the_FAT_file_system&quot;&gt;FAT&lt;/a&gt; file system.
+    &lt;ul&gt;
+      &lt;li&gt;Select the SD drive in the left pane.&lt;/li&gt;
+      &lt;li&gt;Select &lt;code class=&quot;highlighter-rouge&quot;&gt;Erase&lt;/code&gt; from the top.&lt;/li&gt;
+      &lt;li&gt;Make sure you pick &lt;code class=&quot;highlighter-rouge&quot;&gt;FAT (MS-DOS)&lt;/code&gt; for the file system, and &lt;code class=&quot;highlighter-rouge&quot;&gt;MBR (Master Boot Record)&lt;/code&gt; for the partition.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;THIS WILL ERASE THE ENTIRE SD CARD, SO BE SURE YOU HAVE SAVED ANYTHING YOU WANT TO EVER SEE AGAIN!&lt;/strong&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Open a &lt;code class=&quot;highlighter-rouge&quot;&gt;terminal&lt;/code&gt; using the &lt;code class=&quot;highlighter-rouge&quot;&gt;Spotlight&lt;/code&gt; tool (see step 2) and type &lt;code class=&quot;highlighter-rouge&quot;&gt;Terminal&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;In the &lt;code class=&quot;highlighter-rouge&quot;&gt;terminal&lt;/code&gt; application, find your disk number by running &lt;code class=&quot;highlighter-rouge&quot;&gt;diskutil list&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Note your disk number, it will be in the format of &lt;code class=&quot;highlighter-rouge&quot;&gt;/dev/disk2&lt;/code&gt;, it may not actually be the number &lt;code class=&quot;highlighter-rouge&quot;&gt;2&lt;/code&gt;, just look at the size of the disk and make sure its the correct one.&lt;/li&gt;
+  &lt;li&gt;Unmount the disk with &lt;code class=&quot;highlighter-rouge&quot;&gt;diskutil unmountDisk /dev/disk2&lt;/code&gt;, again, replace &lt;code class=&quot;highlighter-rouge&quot;&gt;2&lt;/code&gt; with number of your SD card.&lt;/li&gt;
+  &lt;li&gt;write the image to the SD Card with &lt;code class=&quot;highlighter-rouge&quot;&gt;dd&lt;/code&gt;:
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sudo dd bs=1m if=Downloads/raspbian-stretch-lite.img of=/dev/rdisk4 conv=sync&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;Replace &lt;code class=&quot;highlighter-rouge&quot;&gt;Downloads/raspbian-stretch-lite.img&lt;/code&gt; with the path to the &lt;code class=&quot;highlighter-rouge&quot;&gt;.img&lt;/code&gt; file you downloaded in step 1.&lt;/li&gt;
+      &lt;li&gt;Again, replace &lt;code class=&quot;highlighter-rouge&quot;&gt;rdisk4&lt;/code&gt; with the disk number you found in step 7.&lt;/li&gt;
+      &lt;li&gt;This may take some time, took my system about 10 minutes on an 8GB SD Card with a Thunderbolt SD Card Reader.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;configuring-raspbian-lite-stretch&quot;&gt;Configuring Raspbian Lite Stretch&lt;/h2&gt;
+&lt;p&gt;After the img is done writing to the SD card, its time to being configuring Raspbian.  Because the Raspberry Pi Zero has such little hardware, we are going to try to keep this as minimal as possible.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;SSH is disabled by default, so to enable it, you need to create an empty file called &lt;code class=&quot;highlighter-rouge&quot;&gt;ssh&lt;/code&gt;:
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;touch /Volumes/boot/ssh&lt;/code&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Next, you need to append &lt;code class=&quot;highlighter-rouge&quot;&gt;dtoverlay=dwc2&lt;/code&gt; to the end of &lt;code class=&quot;highlighter-rouge&quot;&gt;/Volumes/boot/config.txt&lt;/code&gt;.  You can do this either with &lt;code class=&quot;highlighter-rouge&quot;&gt;textEdit&lt;/code&gt; or with a terminal editor.&lt;/li&gt;
+  &lt;li&gt;This next step is a little tricky, first open &lt;code class=&quot;highlighter-rouge&quot;&gt;/Volumes/boot/cmdline.txt&lt;/code&gt;, and located the text &lt;code class=&quot;highlighter-rouge&quot;&gt;rootwait&lt;/code&gt;, immediately after that, add a space, and then this text: &lt;code class=&quot;highlighter-rouge&quot;&gt;modules-load=dwc2,g_ether&lt;/code&gt;.  So it should look like this:
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;rootwait modules-load=dwc2,g_ether&lt;/code&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Now go ahead and eject the SD card and then load it into the Raspberry Pi Zero and plug in the power.  It will take about 60 seconds to boot up, then connect it to your computer.&lt;/li&gt;
+  &lt;li&gt;Next, go to &lt;code class=&quot;highlighter-rouge&quot;&gt;System Preferences &amp;gt; Network&lt;/code&gt; and you will see a new device called &lt;code class=&quot;highlighter-rouge&quot;&gt;RNDIS/Ethernet Gadget&lt;/code&gt;.  &lt;img src=&quot;/images/2019-04-26-taplist-pi-zero/network.png&quot; alt=&quot;Network&quot; /&gt;  This is the Raspberry Pi Zero, you can share your internet connection to it, which will then all you to SSH to the device.&lt;/li&gt;
+  &lt;li&gt;Go to &lt;code class=&quot;highlighter-rouge&quot;&gt;System Preferences &amp;gt; Sharing&lt;/code&gt; and enable internet sharing for the &lt;code class=&quot;highlighter-rouge&quot;&gt;RNDIS/Ethernet Gadget&lt;/code&gt;. &lt;img src=&quot;/images/2019-04-26-taplist-pi-zero/sharing.png&quot; alt=&quot;Sharing&quot; /&gt;&lt;/li&gt;
+  &lt;li&gt;You should now beable to &lt;code class=&quot;highlighter-rouge&quot;&gt;ssh&lt;/code&gt; to the Raspberry Pi Zero:
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ssh pi@raspberrypi.local&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;Default password is &lt;code class=&quot;highlighter-rouge&quot;&gt;raspberry&lt;/code&gt;.&lt;/li&gt;
+      &lt;li&gt;Type &lt;code class=&quot;highlighter-rouge&quot;&gt;yes&lt;/code&gt; to accept the certificate thumbprint.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;After you are connected, there are a few things that need to be set, run &lt;code class=&quot;highlighter-rouge&quot;&gt;raspi-config&lt;/code&gt; and update the following:
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;CHANGE THE DEFAULT PASSWORD&lt;/strong&gt; else anyone can now &lt;code class=&quot;highlighter-rouge&quot;&gt;ssh&lt;/code&gt; to your taplist board with the default credentials!&lt;/li&gt;
+      &lt;li&gt;Under &lt;code class=&quot;highlighter-rouge&quot;&gt;Boot Options&lt;/code&gt; select &lt;code class=&quot;highlighter-rouge&quot;&gt;Desktop/CLI&lt;/code&gt; and then select &lt;code class=&quot;highlighter-rouge&quot;&gt;Console Autologin&lt;/code&gt;.&lt;/li&gt;
+      &lt;li&gt;Lastly configure the wifi.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;You are now connected to your wifi, and can update the system:
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sudo apt-get update -y&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sudo apt-get upgrade -y&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sudo apt-get dist-upgrade -y&lt;/code&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Now, install the minimum X Server Environment for Chromium:
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sudo apt-get install --no-install-recommends xserver-xorg x11-xserver-utils xinit openbox&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sudo apt-get install --no-install-recommends chromium-browser&lt;/code&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;You need to configure the auto start commands, and to do this, you will have to use a terminal based editor, like &lt;code class=&quot;highlighter-rouge&quot;&gt;nano&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;vi&lt;/code&gt;.  I prefer &lt;code class=&quot;highlighter-rouge&quot;&gt;nano&lt;/code&gt;:
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sudo nano /etc/xdg/openbox/autostart&lt;/code&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Replace the entire contents of the file with this:&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# Disable any form of screen saver / screen blanking / power management
+xset s off
+xset s noblank
+xset -dpms
+
+# Allow quitting the X server with CTRL-ATL-Backspace
+setxkbmap -option terminate:ctrl_alt_bksp
+
+# Start Chromium in kiosk mode
+sed -i 's/&quot;exited_cleanly&quot;:false/&quot;exited_cleanly&quot;:true/' ~/.config/chromium/'Local State'
+sed -i 's/&quot;exited_cleanly&quot;:false/&quot;exited_cleanly&quot;:true/; s/&quot;exit_type&quot;:&quot;[^&quot;]\+&quot;/&quot;exit_type&quot;:&quot;Normal&quot;/' ~/.config/chromium/Default/Preferences
+chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;You need to configure X Server to autostart and boot and load the display web page.
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;nano ~/.bash_profile&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;Add this to the file: &lt;code class=&quot;highlighter-rouge&quot;&gt;[[ -z $DISPLAY &amp;amp;&amp;amp; $XDG_VTNR -eq 1 ]] &amp;amp;&amp;amp; startx -- -nocursor&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;Save and close the file.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Lastly shut you Raspberry Pi Zero down &lt;code class=&quot;highlighter-rouge&quot;&gt;sudo shutdown now&lt;/code&gt; and go attach it to your monitor.  You do not need to attach any peripherals, on its next boot, it will autologin as the &lt;code class=&quot;highlighter-rouge&quot;&gt;Pi&lt;/code&gt; user, and start up &lt;code class=&quot;highlighter-rouge&quot;&gt;Chromium&lt;/code&gt; and navigate to https://www.taplist.io/display.  The very first time this boots, there will be a code on the screen that you need to go to https://taplist.io/activate and enter in.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;WHEW!  Thats it, hopefully you made it this far, and ended up with something like this &lt;img src=&quot;/images/2019-04-26-taplist-pi-zero/taplist.jpg&quot; alt=&quot;Taplist&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Cheers!&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;sources&quot;&gt;Sources&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;https://brandonb.ca/raspberry-pi-zero-w-headless-setup-on-macos&lt;/li&gt;
+  &lt;li&gt;https://bdking71.wordpress.com/2018/11/06/setup-an-information-kiosk-using-a-raspberry-pi-zero-w/&lt;/li&gt;
+  &lt;li&gt;https://taplist.io/help/raspberry-pi-setup&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><category term="homebrewing" /><category term="homebrewing" /><category term="raspberrypi" /><category term="keezer" /><summary type="html">So, if in your homebrew life, you’ve moved on past bottling (because its it f***ing terrible) and are kegging your ferments, you’ve probably already come up with some way to label or mark your taps so you know what tap is pouring what beverage. I know there is a lot of articles out there on this topic, but, I wanted to share my experience on the matter, and hopefully, it can save you some time, and money.</summary></entry><entry><title type="html">Mixed Ferm NEIPA (First Attempt)</title><link href="http://0.0.0.0:4000/mixed-ferm-neipa-first-attempt/" rel="alternate" type="text/html" title="Mixed Ferm NEIPA (First Attempt)" /><published>2019-04-17T00:00:00+00:00</published><updated>2019-04-17T00:00:00+00:00</updated><id>http://0.0.0.0:4000/mixed-ferm-neipa-first-attempt</id><content type="html" xml:base="http://0.0.0.0:4000/mixed-ferm-neipa-first-attempt/">&lt;p&gt;So, my thought process on this was pretty simple, I have been reading a bit on doing an all &lt;a href=&quot;http://www.milkthefunk.com/wiki/Brettanomyces&quot;&gt;Brettanomyces&lt;/a&gt; fermented &lt;a href=&quot;http://dev.bjcp.org/beer-styles/21b-specialty-ipa-new-england-ipa/&quot;&gt;NEIPA&lt;/a&gt;.  I started reading on &lt;a href=&quot;www.milkthefunk.com/wiki&quot;&gt;Milk The Funk&lt;/a&gt; about different strains of Brett.  The &lt;a href=&quot;http://www.milkthefunk.com/wiki/White_Labs&quot;&gt;Brett Claussenii&lt;/a&gt; strain from White Labs caught my eye.  Especially based on the flavor profile:&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;Fruity, pineapple. Wine grape-like aroma, with light wood-like, floral, and citrus aromas. More fruit forward in the flavor, clean aftertaste with little to no “funk”.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Upon my initial research on &lt;em&gt;MTF&lt;/em&gt; there where a few bullet points that just made an all brett NEIPA sound perfect:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Light fruit characteristics.&lt;/li&gt;
+  &lt;li&gt;A longer lasting hop aroma and flavor due to Brett’s ability to constantly metabolize micro-oxygenation.&lt;/li&gt;
+  &lt;li&gt;Perceived bitterness may be quite a bit lower than the same wort fermented with a clean ale yeast.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;These are all things, to me, that seem to lend perfect to a NEIPA.  So, I went about planing a brewday.  Was looking a for a pretty simple grain bill, and I went about a hop bill based on a recent NEIPA I had from &lt;a href=&quot;https://www.arvonbrewingco.com&quot;&gt;Arvon Brewing&lt;/a&gt;, called Jurassic Haze that was amazing.  Here is my &lt;a href=&quot;https://share.brewfather.app/WJYYaXb9ubyGwB&quot;&gt;Brewfather Recipe&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I picked up some WLP 645 from my LHBS, made a starter, and based on some reading I did you want to let it spin for a bit longer then a regular starter on the stir plate.  I let it go for about 6 days, then crashed it for 2 days.&lt;/p&gt;
+
+&lt;p&gt;On to brew day.  Long story short, brew day went perfect, hit all my numbers, pH and everything.  Let it cool to about 75F, as the temp range of the brett was 70F-85F.  I pitched the brett, set my BrewPiLess to raise the temp from 75F to 85F over 14 days and then I started the waiting game.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Brewday Whirlpool:&lt;/em&gt;
+&lt;img src=&quot;/images/2019-04-17-mixed-ferm-neipa-first-attempt/whirlpool.jpg&quot; alt=&quot;Whirlpool&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Now this beer was a little pricey, the 6 gallons of wort was probably about 70-ish dollars, so I was watching pretty close to make sure fermentation took off, especially being a completely new yeast method to me.  Anyway, after day 1, nothing.  After day 2, nothing.  No krausen, no CO2, nothing.  Im starting to get worried.  Well, I went back to MTF and did a bit more reading, guess what, brett C, does &lt;em&gt;NOT&lt;/em&gt; attenuate wort well when pitched solo, like, it only attenuates 20%!  Long story short, if your WLP645 fully attenuates, its contaminated with sacc, see &lt;a href=&quot;http://brettanomycesproject.com/dissertation/pure-culture-fermentation/impact-of-pitching-rate/&quot;&gt;this&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;DAMNIT!  FML!&lt;/p&gt;
+
+&lt;p&gt;So, being, the person I am, I panicked, not knowing what else to do, I decided to pitch some sacc yeast.  I mean what else could I do?  I really didn’t want the wort to get infected and waste all of it.  So, I called my LHBS, They had some Omega Labs Tropical Ale yeast &lt;a href=&quot;https://omegayeast.com/yeast/ales/tropical-ipa&quot;&gt;OYL-200&lt;/a&gt;.  This is a great yeast, it was actually formally classified as a brett.  Its great for both IPAs and NEIPAs, and well, its &lt;em&gt;brett-ish&lt;/em&gt;.  And it has a temp range of 70F-85F, perfection!  So I pitched that in at about 52ish hours post brett C. pitch.&lt;/p&gt;
+
+&lt;p&gt;Within 12 hours, thing was bubbling like a tommy gun, I’m sure it helped it was at about 77F by this time.  Now, I also decided to make another small change this batch, no biotransform hops.  Now, incase you are not aware, at the start of the NEIPA craze, it was common practice to pitch dry hops at the peak of fermentation, about 24-72 hour in.  Well, this has since been “proven” wrong and wasteful of hops as all the aroma is taken out with the CO2.  So I decided to pass on this step, instead trying to dry hop closer to packaging.  Well, this damn thing bubbled for almost 2.5 weeks, and dropped to 1.005 on my first hydrometer reading, then I waited another 4 days, and it was at 1.004 (which I’m calling terminal gravity), so I added 3.5oz of hops, let it sit another three days, kegged, crashed and carbed.  The finished product is very good, to be honest, a little wierd, but a one of a kind.  lots of pineapple, honestly a lot of funk from the brett, very fruity, surprisingly full bodied, and over all, a very solid drinker!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/2019-04-17-mixed-ferm-neipa-first-attempt/beer.jpg&quot; alt=&quot;Beer&quot; /&gt;&lt;/p&gt;</content><author><name></name></author><category term="homebrewing" /><category term="homebrewing" /><summary type="html">So, my thought process on this was pretty simple, I have been reading a bit on doing an all Brettanomyces fermented NEIPA. I started reading on Milk The Funk about different strains of Brett. The Brett Claussenii strain from White Labs caught my eye. Especially based on the flavor profile: Fruity, pineapple. Wine grape-like aroma, with light wood-like, floral, and citrus aromas. More fruit forward in the flavor, clean aftertaste with little to no “funk”.</summary></entry></feed>

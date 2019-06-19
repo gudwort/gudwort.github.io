@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Using BLTouch with Klipper and the Ender3 – Obi Wort Kenobi – Homebrewer, Father, Husband, Tinker</title>
+
+  <meta charset="utf-8" />
+<meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+
+
+<meta name="description" content="I have been 3D printing for about a year now, its had its ups and downs, good times and bad.  Some times its the greatest thing, and sometimes I’m glad I don’t keep a baseball bat near my 3D Printer, because I may not still be the owner of one if I did.  I know all printers are different and everyone has their reasons for why or what they do and use for the build surface.  I have the Ender3, its a great entry level printer for the price and I have spit out some amazing prints.  But one the most notorious issues with the Ender3 is the warped bed.  It seems like everyone has reported this issue.  And I think one thing all 3D Printer Hobbyist could agree on, is the first layer is one of the most important parts of the print.  And when you printing around .2mm layer hight, if the build surface isn’t perfect you’re going to have problems, especially with larger prints.
+
+" />
+<meta property="og:description" content="I have been 3D printing for about a year now, its had its ups and downs, good times and bad.  Some times its the greatest thing, and sometimes I’m glad I don’t keep a baseball bat near my 3D Printer, because I may not still be the owner of one if I did.  I know all printers are different and everyone has their reasons for why or what they do and use for the build surface.  I have the Ender3, its a great entry level printer for the price and I have spit out some amazing prints.  But one the most notorious issues with the Ender3 is the warped bed.  It seems like everyone has reported this issue.  And I think one thing all 3D Printer Hobbyist could agree on, is the first layer is one of the most important parts of the print.  And when you printing around .2mm layer hight, if the build surface isn’t perfect you’re going to have problems, especially with larger prints.
+
+" />
+
+<meta name="author" content="Obi Wort Kenobi" />
+
+
+<meta property="og:title" content="Using BLTouch with Klipper and the Ender3" />
+<meta property="twitter:title" content="Using BLTouch with Klipper and the Ender3" />
+
+  
+    
+
+
+
+
+
+
+  
+
+  <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  <link rel="stylesheet" type="text/css" href="/style.css" />
+  <link rel="alternate" type="application/rss+xml" title="Obi Wort Kenobi - Homebrewer, Father, Husband, Tinker"
+    href="/feed.xml" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+    integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+  <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+</head>
+
+<body>
+  <div class="wrapper-masthead">
+    <div class="container">
+      <header class="masthead clearfix">
+        <a href="/" class="site-avatar"><img src="https://github.com/obiwort.png?size=500" /></a>
+
+        <div class="site-info">
+          <h1 class="site-name"><a href="/">Obi Wort Kenobi</a></h1>
+          <p class="site-description">Homebrewer, Father, Husband, Tinker</p>
+        </div>
+
+        <nav>
+          <a href="/">Blog</a>
+          <a href="/about">About</a>
+          <a href="/search">Search</a>
+        </nav>
+      </header>
+    </div>
+  </div>
+
+  <div id="main" role="main" class="container">
+    <article class="post">
+  <h1>Using BLTouch with Klipper and the Ender3</h1>
+
+  <div class="entry">
+    <p>I have been 3D printing for about a year now, its had its ups and downs, good times and bad.  Some times its the greatest thing, and sometimes I’m glad I don’t keep a baseball bat near my 3D Printer, because I may not still be the owner of one if I did.  I know all printers are different and everyone has their reasons for why or what they do and use for the build surface.  I have the <a href="https://www.amazon.com/Comgrow-Creality-Ender-Aluminum-220x220x250mm/dp/B07BR3F9N6/ref=sr_1_1_sspa?keywords=ender+3&amp;qid=1559158769&amp;s=gateway&amp;sr=8-1-spons&amp;psc=1">Ender3</a>, its a great entry level printer for the price and I have spit out some amazing prints.  But one the most notorious issues with the Ender3 is the warped bed.  It seems like everyone has reported this issue.  And I think one thing all 3D Printer Hobbyist could agree on, is the first layer is one of the most important parts of the print.  And when you printing around .2mm layer hight, if the build surface isn’t perfect you’re going to have problems, especially with larger prints.</p>
+
+<p>There are a few things you could do about this, such as, just deal with it, replace the bed with something higher grade, or add a new surface, such as a piece of glass.  I chose to use a sensor on the hot end.  I went with the <a href="https://www.amazon.com/BLTouch-Leveling-Printer-Official-Authorization/dp/B07GVCX74T/ref=sr_1_4?keywords=bltouch&amp;qid=1559158792&amp;s=gateway&amp;sr=8-4">BLTouch</a> sensor.  It’s pretty much just a probe, that will make a <em>mesh</em> of your build surface and allow for your Z axis to compensate for the imperfect surface with very small up and down Z axis movements.</p>
+
+<p>Now, I know there is a lot of YouTube videos out there on how to setup and use a BLTouch sensor, but, everything I found when I was setting mine up, was with using the Marlin firmware. Either Vanilla Marlin or the TH3D flavor.  Well, to complicate things even more, I am using <a href="https://github.com/KevinOConnor/klipper">Klipper</a>.  I’m not going to dive into much about Klipper in this blog post, as its not really the focus.  Either you are already using Klipper and you know what it is, so keep reading, or go research Klipper and see if its for you.  Because these settings will <strong>NOT</strong> work with any flavor of the Marlin firmware.</p>
+
+<h2 id="values-youll-need">Values You’ll Need</h2>
+<p>There are values you need when setting up your BLTouch, namely the X and Y offsets from the nozzle to the BLTouch, you can either measure these or, if you are using third party mods on your hot end, a lot of the designers will specify these values.  I am using the <a href="https://www.thingiverse.com/thing:2759439">Bullseye Cooling Fan Duct</a> and the designer has provided the offset values on the Thingiverse page.  Using the Bullseye Fan Duct and the provided mount, the offsets are <code class="highlighter-rouge">X -42, Y -5</code>.</p>
+
+<p>Next, you will need to know your bed size, the bed that ships with the Ender3 is <code class="highlighter-rouge">220x220mm</code>.  You need to know this for creating a bed mesh, which is what the BLTouch will build when probing.</p>
+
+<h2 id="get-configuring">Get Configuring</h2>
+<p>Here are the settings you need to add or update on in your Klipper <code class="highlighter-rouge">printer.cfg</code>:</p>
+<ol>
+  <li>You need to change the <code class="highlighter-rouge">endstop_pin</code> value to use a virtual endstop, this is in the <code class="highlighter-rouge">z_stepper</code> section.
+    <ul>
+      <li><code class="highlighter-rouge">endstop_pin: probe:z_virtual_endstop</code></li>
+    </ul>
+  </li>
+  <li>You need to allow the Z Axis to go below the ‘0’ mark for negative warp, this can be done by editing the <code class="highlighter-rouge">position_min</code> value, also in the <code class="highlighter-rouge">z_stepper</code> section.
+    <ul>
+      <li><code class="highlighter-rouge">position_min: -3</code></li>
+    </ul>
+  </li>
+  <li>You need to define the <code class="highlighter-rouge">[bltouch]</code> section and values in the configuration file (a section is defined with square brackets, this section does not exist in the Ender3 printer.cfg by default, so you will need manually create it).  You can see that the X and Y offsets are the values I got from the Thingiverse page.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[bltouch]
+sensor_pin: ^PC4
+control_pin: PA4
+x_offset: -47.0
+y_offset: -5.0
+z_offset: 1.65
+speed: 5.0
+samples: 2
+sample_retract_dist: 8.0
+</code></pre></div>    </div>
+    <ul>
+      <li>The <code class="highlighter-rouge">samples</code> value is how many times it checks each location in the bed mesh, more samples will take longer.</li>
+    </ul>
+  </li>
+  <li>Next, the <code class="highlighter-rouge">[bed_mesh]</code> section needs to be manually defined.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[bed_mesh]
+speed: 80
+horizontal_move_z: 5
+min_point: 50,30
+max_point: 230,230
+probe_count: 5,5
+</code></pre></div>    </div>
+    <ul>
+      <li>The <code class="highlighter-rouge">probe_count</code> is how many samples its going to take, <code class="highlighter-rouge">5,5</code> is a <code class="highlighter-rouge">5x5</code> grid, a bigger grid will take longer, but may be more accurate.</li>
+      <li>The <code class="highlighter-rouge">min_point</code> and <code class="highlighter-rouge">max_point</code> is how big your bed is, with the <code class="highlighter-rouge">220x220mm</code> build plate, <code class="highlighter-rouge">230x230mm</code> is about as large as you can go.</li>
+    </ul>
+  </li>
+  <li>Now, add the <code class="highlighter-rouge">[homing_override]</code> section.  You can do what ever you want here, I am just setting the Z axis to home in the middle of the bed.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[homing_override]
+set_position_z:0
+gcode:
+ G1 Z10 F600
+ G28 X Y
+ G1 X166 Y120 F6000
+ G28 Z
+</code></pre></div>    </div>
+    <ul>
+      <li>PRO TIP: gcode sections in the printer.cfg need to be 4 spaced or you will get errors.</li>
+    </ul>
+  </li>
+  <li>There is one last thing to do, and that is configure your start and end gcode sequences to tell klipper to generate the bed mesh and use it.  This command is <code class="highlighter-rouge">BED_MESH_CALIBRATE</code> called after <code class="highlighter-rouge">G28</code> (the homing override).  Now, here is what I do, I keep my start and end gcode sequences in the Klipper printer.cfg as <code class="highlighter-rouge">gcode_macro</code>s.  This allows me to use multiple slicers and keep my start and end gcode the same.  I have them mapped to <code class="highlighter-rouge">START_PRINT</code> and <code class="highlighter-rouge">END_PRINT</code>, then in any slicer i am using, I can just put those in and let Klipper handle the sequences.  I have included my printer.cfg at the bottom of this page so you take a look at my start up and end print gcode.</li>
+</ol>
+
+<h2 id="configure-the-z-offset">Configure The Z Offset</h2>
+<p>So, for me this was the hardest part, I had the probe working, and at least stopping from crashing into the bed, but, I couldn’t figure out how to actually make the printer know the space from the probe being triggered, to the bottom of the nozzle.  Which is obviously crucial for the hotend to know how much lower to go past the point where the BLTouch is triggered and be the perfect height above the bed to start printing.  Well, its actually really simple.  At least thats how I feel about it now that I know how to do it.  And after figuring it out, the only time I have had to re-calibrate my Z offset is when I replace the nozzle.</p>
+
+<ol>
+  <li>Go into your printer.cfg and change the <code class="highlighter-rouge">z_offset</code> to 10 in the <code class="highlighter-rouge">[bltouch]</code> section.  This number is completely arbitrary.  Just need a value there, and one that will be easy to do math with later.</li>
+  <li>Home the printer, <code class="highlighter-rouge">G28</code>.  as long as your <code class="highlighter-rouge">[bltouch]</code> settings are correct, the BLTouch pin should engage, and the Z axis should lower and stop, once its triggered.  I kept my finger on the power button at this point to stop the hotend from crashing into the bed if need be.</li>
+  <li>Next tell the printer to go into <code class="highlighter-rouge">Relative Position</code> mode: <code class="highlighter-rouge">G91</code></li>
+  <li>Now move the hotend over the spot the BLTouch probed to home the bed: <code class="highlighter-rouge">G1 X-47</code></li>
+  <li>Get a piece of paper and get ready to bed level like you always do, lower the Z axis by -.05 until the nozzle scrapes the paper.  You can do this with the display control, or I use <a href="https://itunes.apple.com/us/app/octopod-for-octoprint/id1412557625?mt=8">OctoPod</a> on my iOS device.</li>
+  <li>Once the Z axis is where it needs to be, you can run <code class="highlighter-rouge">GET_POSISTION</code> in the terminal and then just do the math:
+    <ul>
+      <li><code class="highlighter-rouge">[printer.cfg [bltouch] z_offset] - [z value from GET_POSITION] = z_offset</code></li>
+      <li>IE: 10 - 8.5 = 1.5</li>
+    </ul>
+  </li>
+  <li>Replace your the <code class="highlighter-rouge">z_offset</code> value in the <code class="highlighter-rouge">[bltouch]</code> section with your new calculated value.</li>
+  <li>Print and be happy as your first layer runs perfect!</li>
+</ol>
+
+<p>I actually left my printer off for about 4 weeks recently, turned it on and fired off a print, first layer still layed perfect.  Cheers!</p>
+
+<hr />
+
+<h3 id="update">Update</h3>
+<ul>
+  <li>20190609 - A recent Klipper update moved the <code class="highlighter-rouge">samples: 2</code> and <code class="highlighter-rouge">sample_retract_distance: 8.0</code> from the <code class="highlighter-rouge">[bed_mesh]</code> section to the <code class="highlighter-rouge">[bltouch]</code> section.  I have updated this article to reflect those changes.</li>
+</ul>
+
+<hr />
+
+<h3 id="my-ender3-klipper-printercfg">My Ender3 Klipper printer.cfg</h3>
+
+<script src="https://gist.github.com/88172c35ec1b6291ab7ad867a997c5a5.js"> </script>
+
+
+  </div>
+
+  <div>Tags: 
+    
+      
+      <a href="/tag/3dprinting"><code class="highligher-rouge"><nobr>3dprinting</nobr></code>&nbsp;</a>
+    
+      
+      <a href="/tag/klipper"><code class="highligher-rouge"><nobr>klipper</nobr></code>&nbsp;</a>
+    
+  </div>
+
+  
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+
+	    var disqus_shortname = 'obiwort-github-io';
+
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+
+
+  <div class="date">
+    Written on June  4, 2019
+  </div>
+</article>
+
+  </div>
+
+  <div class="wrapper-footer">
+    <div class="container">
+      <footer class="footer">
+        <!-- Add the Email icon to footer if _config.yml has the email value specified. -->
+
+
+<!-- Add the Facebook icon to footer if _config.yml has the facebook value specified. -->
+
+
+<!-- Add the Flickr icon to footer if _config.yml has the flickr value specified. -->
+
+
+<!-- Add the GitHub icon to footer if _config.yml has the github value specified. -->
+
+    <a href="https://github.com/obiwort" target="_blank"><i class="fab fa-github fa-lg"></i></a>
+
+
+<!-- Add the Instagram icon to footer if _config.yml has the email value specified. -->
+
+    <a href="https://instagram.com/obiwort" target="_blank"><i class="fab fa-instagram fa-lg"></i></a>
+
+
+<!-- Add the LinkedIn icon to footer if _config.yml has the linkedin value specified. -->
+
+
+<!-- Add the Twitter icon to footer if _config.yml has the twitter value specified. -->
+
+    <a href="https://www.twitter.com/obiwort" target="_blank"><i class="fab fa-twitter fa-lg"></i></a>
+
+
+<!-- Add the Stack Overflow icon to footer if _config.yml has the stackoverflow value specified. -->
+
+
+<!-- Add the YouTube icon to footer if _config.yml has the youtube value specified. -->
+
+
+<!-- Add the Reddit icon to footer if _config.yml has the reddit value specified. -->
+
+    <a href="https://www.reddit.com/user/obiwort" target="_blank"><i class="fab fa-reddit fa-lg"></i></a>
+
+
+<!-- Add the Beer icon to footer if _config.yml has the taplistio value specified. -->
+
+    <a href="https://taplist.io/taplist-963267" target="_blank"><i class="fas fa-beer fa-lg"></i></a>
+
+
+<!-- Add the Drafting Compass icon to footer if _config.yml has the thingiverse value specified. -->
+
+    <a href="https://www.thingiverse.com/obiwort/designs" target="_blank"><i class="fas fa-drafting-compass fa-lg"></i></a>
+
+
+<!-- Always add the rss feed icon. -->
+<a href="/feed.xml"><i class="fas fa-rss fa-lg"></i></a>
+
+      </footer>
+    </div>
+  </div>
+
+  
+<!-- Google Analytics -->
+<script>
+	window.ga = window.ga || function () { (ga.q = ga.q || []).push(arguments) }; ga.l = +new Date;
+	// ga() objects ...
+	ga('create', 'UA-138412539-1', 'auto');
+	ga('send', 'pageview', {
+		'page': '/using-bltouch-with-klipper-and-the-ender3/',
+		'title': 'Using BLTouch with Klipper and the Ender3'
+});
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+</body>
+
+</html>

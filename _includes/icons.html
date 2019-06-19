@@ -1,0 +1,62 @@
+<!-- Add the Email icon to footer if _config.yml has the email value specified. -->
+{% if site.footer-links.email %}
+    <a href="mailto:{{ site.footer-links.email }}"><i class="fas fa-envelope fa-lg" target="_blank"></i></a>
+{% endif %}
+
+<!-- Add the Facebook icon to footer if _config.yml has the facebook value specified. -->
+{% if site.footer-links.facebook %}
+    <a href="https://www.facebook.com/{{ site.footer-links.facebook }}" target="_blank"><i class="fab fa-facebook fa-lg"></i></a>
+{% endif %}
+
+<!-- Add the Flickr icon to footer if _config.yml has the flickr value specified. -->
+{% if site.footer-links.flickr %}
+    <a href="https://www.flickr.com/{{ site.footer-links.flickr }}" target="_blank"><i class="fab fa-flickr fa-lg"></i></a>
+{% endif %}
+
+<!-- Add the GitHub icon to footer if _config.yml has the github value specified. -->
+{% if site.footer-links.github %}
+    <a href="https://github.com/{{ site.footer-links.github }}" target="_blank"><i class="fab fa-github fa-lg"></i></a>
+{% endif %}
+
+<!-- Add the Instagram icon to footer if _config.yml has the email value specified. -->
+{% if site.footer-links.instagram %}
+    <a href="https://instagram.com/{{ site.footer-links.instagram }}" target="_blank"><i class="fab fa-instagram fa-lg"></i></a>
+{% endif %}
+
+<!-- Add the LinkedIn icon to footer if _config.yml has the linkedin value specified. -->
+{% if site.footer-links.linkedin %}
+    <a href="https://www.linkedin.com/in/{{ site.footer-links.linkedin }}" target="_blank"><i class="fab fa-linkedin-in fa-lg"></i></a>
+{% endif %}
+
+<!-- Add the Twitter icon to footer if _config.yml has the twitter value specified. -->
+{% if site.footer-links.twitter %}
+    <a href="https://www.twitter.com/{{ site.footer-links.twitter }}" target="_blank"><i class="fab fa-twitter fa-lg"></i></a>
+{% endif %}
+
+<!-- Add the Stack Overflow icon to footer if _config.yml has the stackoverflow value specified. -->
+{% if site.footer-links.stackoverflow %}
+    <a href="http://stackoverflow.com/{{ site.footer-links.stackoverflow }}" target="_blank"><i class="fab fa-stack-overflow fa-lg"></i></a>
+{% endif %}
+
+<!-- Add the YouTube icon to footer if _config.yml has the youtube value specified. -->
+{% if site.footer-links.youtube %}
+    <a href="https://youtube.com/{{ site.footer-links.youtube }}" target="_blank"><i class="fab fa-youtube fa-lg"></i></a>
+{% endif %}
+
+<!-- Add the Reddit icon to footer if _config.yml has the reddit value specified. -->
+{% if site.footer-links.reddit %}
+    <a href="https://www.reddit.com/user/{{ site.footer-links.reddit }}" target="_blank"><i class="fab fa-reddit fa-lg"></i></a>
+{% endif %}
+
+<!-- Add the Beer icon to footer if _config.yml has the taplistio value specified. -->
+{% if site.footer-links.taplistio %}
+    <a href="https://taplist.io/taplist-{{ site.footer-links.taplistio }}" target="_blank"><i class="fas fa-beer fa-lg"></i></a>
+{% endif %}
+
+<!-- Add the Drafting Compass icon to footer if _config.yml has the thingiverse value specified. -->
+{% if site.footer-links.thingiverse %}
+    <a href="https://www.thingiverse.com/{{ site.footer-links.thingiverse }}/designs" target="_blank"><i class="fas fa-drafting-compass fa-lg"></i></a>
+{% endif %}
+
+<!-- Always add the rss feed icon. -->
+<a href="{{ site.baseurl }}/feed.xml"><i class="fas fa-rss fa-lg"></i></a>
