@@ -12,7 +12,7 @@ So, frankly, F washing kegs!  I mean if you are going to do it right you need to
 
 Ok, down to business, this really doesn't even need a build walk through but, I'm gonna give a little one, because......the pump works great to clean your beer lines as well (post to come) so I hope you buy one.  This list going to be a little lack luster, because I bought some of it at my local hardware.  But the few things you can get online are:
 * [Submersible Pump](https://www.amazon.com/gp/product/B01CGAD986/ref=ppx_od_dt_b_asin_title_s01?ie=UTF8&psc=1)
-* [CIP Spray Ball](https://www.amazon.com/gp/product/B073GHFP6J/ref=ppx_od_dt_b_asin_title_s00?ie=UTF8&psc=1
+* [CIP Spray Ball](https://www.amazon.com/gp/product/B073GHFP6J/ref=ppx_od_dt_b_asin_title_s00?ie=UTF8&psc=1)
 * [Liquid Keg Disconnect (I use pin lock)](https://www.amazon.com/dp/B0768ZGGMZ/ref=cm_sw_r_tw_dp_U_x_LwTcDbJ8D4Q5R)
 * Some hose or tube im sure you have laying around, only need like 6".  Size is variable as the pump comes with multiple barbs.
 * A bucket.

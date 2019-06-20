@@ -16,7 +16,7 @@ I was able to get this up and running, oh, I'd say about 10x faster then I got t
 
 ## Shopping List
 _Most of this stuff comes in bulk, so find a buddy that wants one too, and split the cost!_
-* [ESP8266 NodeMCU](https://www.amazon.com/dp/B01IK9GEQG/ref=cm_sw_r_tw_dp_U_x_WnTcDb2X2FXPF (you don't need two of these, but at that price, might as well, the second one is almost free)
+* [ESP8266 NodeMCU](https://www.amazon.com/dp/B01IK9GEQG/ref=cm_sw_r_tw_dp_U_x_WnTcDb2X2FXPF) (you don't need two of these, but at that price, might as well, the second one is almost free)
 * [Two Channel Relay Module](https://www.amazon.com/dp/B01MUATVXX/ref=cm_sw_r_tw_dp_U_x_DoTcDb4Y1JCNS)
 * [20x4 LCD Module](https://www.amazon.com/dp/B01GPUMP9C/ref=cm_sw_r_tw_dp_U_x_YoTcDbT2EFX3H) (this is optional if you would like a display on the controller)
 * [AC->DC 5V PSU](https://www.amazon.com/dp/B07CBS768L/ref=cm_sw_r_tw_dp_U_x_jpTcDbF87A192) (this acts a power supply unit inside the enclosure, powering all the componets, else you can power things with USB bricks, but that sounds like a mess)
