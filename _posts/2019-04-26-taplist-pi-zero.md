@@ -10,11 +10,11 @@ So, if in your homebrew life, you've moved on past bottling (because its it f***
 
 As you can probably tell, I'm a bit of a tech nerd, so obviously I wanted digital signage.  I mean there is several options out there to do this manually.  Tap handles with black board surfaces you can write on with chalk, or even black board spray paint, you could paint on your kegerator or keezer.  Or maybe make some other type of labels that hang on the taps or whatever.  But I didn't want anything like that, I wanted an actual taplist.  One of the main reasons this was even remotely cost feasible for me, is I had an extra 22" LCD monitor laying around.  If you have to buy a monitor to pull this off, then this walk through probably isn't for you, but if not here is a list of things you'll need:
 
-* [Raspberry Pi Zero](https://www.amazon.com/gp/product/B01L3IU6XS/ref=as_li_qf_asin_il_tl?ie=UTF8&tag=angrymrtom-20&creative=9325&linkCode=as2&creativeASIN=B01L3IU6XS&linkId=5ad8ce250e1079a1dbff8a6f1cba3d0d)
-* [MicroSD Card (8GB minimum)](https://www.amazon.com/gp/product/B0012Y2LLE/ref=as_li_qf_asin_il_tl?ie=UTF8&tag=angrymrtom-20&creative=9325&linkCode=as2&creativeASIN=B0012Y2LLE&linkId=ee9d9d3e68054a23ab63d1f02537e85e)
-* [1.2A Minimum Power Supply (basically any old cell phone charger)](https://www.amazon.com/gp/product/B00GF9T3I0/ref=as_li_qf_asin_il_tl?ie=UTF8&tag=angrymrtom-20&creative=9325&linkCode=as2&creativeASIN=B00GF9T3I0&linkId=0d85b67b54f9a9ee66e63ae36f2a1b7c)
-* [HDMI Cable (mini HDMI to what ever interface is on the display)](https://www.amazon.com/gp/product/B01KRKO4MM/ref=as_li_qf_asin_il_tl?ie=UTF8&tag=angrymrtom-20&creative=9325&linkCode=as2&creativeASIN=B01KRKO4MM&linkId=a1915b0866bd47fda46a792c390f5334)
-* [Raspberry Pi Zero Case (optional, you could also 3D print this too)](https://www.amazon.com/gp/product/B01HP636I4/ref=as_li_qf_asin_il_tl?ie=UTF8&tag=angrymrtom-20&creative=9325&linkCode=as2&creativeASIN=B01HP636I4&linkId=ab3467b15878cbe5c1780d9c252cd551)
+* [Raspberry Pi Zero](https://www.amazon.com/dp/B01L3IU6XS/ref=cm_sw_em_r_mt_dp_U_ThTcDbZMH9BZH)
+* [MicroSD Card (8GB minimum)](https://www.amazon.com/dp/B0012Y2LLE/ref=cm_sw_r_tw_dp_U_x_pkTcDbVDX8D6S)
+* [1.2A Minimum Power Supply (basically any old cell phone charger)](https://www.amazon.com/dp/B00GF9T3I0/ref=cm_sw_r_tw_dp_U_x_ilTcDbRG7EJBP)
+* [HDMI Cable (mini HDMI to what ever interface is on the display)](https://www.amazon.com/dp/B01KRKO4MM/ref=cm_sw_r_tw_dp_U_x_LlTcDbCGQ2E0G)
+* [Raspberry Pi Zero Case (optional, you could also 3D print this too)](https://www.amazon.com/dp/B01HP636I4/ref=cm_sw_r_tw_dp_U_x_amTcDb197F49S)
 
 The first time I did this, I used a Raspberry Pi 3, which is probably over kill for hardware to make a taplist, especially when all we are going to do is display a web page.  A few months ago, I need a Raspberry Pi for another project, and when I looked to buy one, they are like $30, however, at the time, I found a Raspberry Pi Zero for $5 _(at the time of this writing it is ~$15)_.  It doesn't have near the hardware resources, but again, we are just going to be displaying a webpage.  _(Also, with taplist.io, you can use a kindle fire stick, I haven't ever set it up with that, but I do know that there instructions on the product page on how to set one up.)_  So, lets get started.
 

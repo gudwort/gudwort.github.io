@@ -11,9 +11,9 @@ Ok Ok, its time for an easy build, no software, no programing, no CLI (command l
 So, frankly, F washing kegs!  I mean if you are going to do it right you need to disassemble, remove the dip tube, wash, wash, rinse, rinse, blah blah.  Ain't no one got time for that!  I've got a nice little build here that doesn't break the bank and works pretty damn well.  lets get to it!
 
 Ok, down to business, this really doesn't even need a build walk through but, I'm gonna give a little one, because......the pump works great to clean your beer lines as well (post to come) so I hope you buy one.  This list going to be a little lack luster, because I bought some of it at my local hardware.  But the few things you can get online are:
-* [Submersible Pump](https://www.amazon.com/gp/product/B01CGAD986/ref=as_li_ss_tl?ie=UTF8&psc=1&linkCode=ll1&tag=angrymrtom-20&linkId=415e15d0626c3c407ba5a1d0f2ce8f40&language=en_US)
-* [CIP Spray Ball](https://www.amazon.com/gp/product/B073GHFP6J/ref=as_li_ss_tl?ie=UTF8&psc=1&linkCode=ll1&tag=angrymrtom-20&linkId=30708afa5c6c33959c77ed331c9eb103&language=en_US)
-* [Liquid Keg Disconnect (I use pin lock)](https://www.amazon.com/PERA-TJ085-Pin-Lock-MFL/dp/B0768ZGGMZ/ref=as_li_ss_tl?crid=1OUJTDXM32JT7&keywords=pin+lock+liquid+disconnect&qid=1557278413&s=gateway&sprefix=pin+lock+li,tools,152&sr=8-9&linkCode=ll1&tag=angrymrtom-20&linkId=36141ca90d43d3696893cc34f079bfba&language=en_US)
+* [Submersible Pump](https://www.amazon.com/gp/product/B01CGAD986/ref=ppx_od_dt_b_asin_title_s01?ie=UTF8&psc=1)
+* [CIP Spray Ball](https://www.amazon.com/gp/product/B073GHFP6J/ref=ppx_od_dt_b_asin_title_s00?ie=UTF8&psc=1
+* [Liquid Keg Disconnect (I use pin lock)](https://www.amazon.com/dp/B0768ZGGMZ/ref=cm_sw_r_tw_dp_U_x_LwTcDbJ8D4Q5R)
 * Some hose or tube im sure you have laying around, only need like 6".  Size is variable as the pump comes with multiple barbs.
 * A bucket.
 * I used under ground sprinkler 1/2" NPT PVC (this is what I got at my locale hardware).

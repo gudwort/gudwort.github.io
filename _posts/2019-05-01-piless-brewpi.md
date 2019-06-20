@@ -16,18 +16,18 @@ I was able to get this up and running, oh, I'd say about 10x faster then I got t
 
 ## Shopping List
 _Most of this stuff comes in bulk, so find a buddy that wants one too, and split the cost!_
-* [ESP8266 NodeMCU](https://www.amazon.com/gp/product/B01IK9GEQG/ref=as_li_ss_tl?&imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&slotNum=0&ie=UTF8&psc=1&linkCode=ll1&tag=angrymrtom-20&linkId=ff61ed8286632b653d985f627eba863a&language=en_US) (you don't need two of these, but at that price, might as well, the second one is almost free)
-* [Two Channel Relay Module](https://www.amazon.com/gp/product/B01MUATVXX/ref=as_li_ss_tl?&imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&slotNum=1&ie=UTF8&psc=1&linkCode=ll1&tag=angrymrtom-20&linkId=2a9b300b40efe61b1e1152932375fff4&language=en_US)
-* [20x4 LCD Module](https://www.amazon.com/gp/product/B01GPUMP9C/ref=as_li_ss_tl?&imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&slotNum=2&ie=UTF8&psc=1&linkCode=ll1&tag=angrymrtom-20&linkId=3c5ac9a99e1f03a95b47641a4d335bfd&language=en_US) (this is optional if you would like a display on the controller)
-* [AC->DC 5V PSU](https://www.amazon.com/gp/product/B07CBS768L/ref=as_li_ss_tl?&imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&slotNum=3&ie=UTF8&psc=1&linkCode=ll1&tag=angrymrtom-20&linkId=d23b9dcedf01b4de748275e0335f6fba&language=en_US) (this acts a power supply unit inside the enclosure, powering all the componets, else you can power things with USB bricks, but that sounds like a mess)
-* [Mini XLR Male connectors (2 needed)](https://www.amazon.com/gp/product/B014EJY0JE/ref=as_li_ss_tl?&imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&slotNum=4&ie=UTF8&psc=1&linkCode=ll1&tag=angrymrtom-20&linkId=ddc6d8cbb0138f9d6cc78bbadb54d151&language=en_US) (these are optional allowing for the temperature probes to be disconnected from the enclosure)
-* [Mini XLR Female connectors (2 needed)](https://www.amazon.com/gp/product/B01J33CF48/ref=as_li_ss_tl?&imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&slotNum=5&ie=UTF8&psc=1&linkCode=ll1&tag=angrymrtom-20&linkId=b7b3577fdfe015049dd8c4b80a6d0deb&language=en_US) (these are optional allowing for the temperature probes to be disconnected from the enclosure)
-* [AC 3-Pin Outlets (2 needed)](https://www.amazon.com/gp/product/B01M3URWIT/ref=as_li_ss_tl?&imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&slotNum=6&ie=UTF8&psc=1&linkCode=ll1&tag=angrymrtom-20&linkId=2fca3cda54bc73b3e8f4a0194eda161b&language=en_US)
-* [3-Position Screw Terminal](https://www.amazon.com/gp/product/B00X73S52M/ref=as_li_ss_tl?&imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&slotNum=7&ie=UTF8&psc=1&linkCode=ll1&tag=angrymrtom-20&linkId=8e68886aa9d3960dd3a2da2eaf8c285f&language=en_US)
-* [AC Rocker Switch](https://www.amazon.com/gp/product/B00NWO68JI/ref=as_li_ss_tl?&imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&slotNum=8&ie=UTF8&psc=1&linkCode=ll1&tag=angrymrtom-20&linkId=46484c9900f8aeb9bc2abe0d1964eb1b&language=en_US)
-* [DS18B20 Temperature Probes (2 needed)](https://www.amazon.com/gp/product/B00EU70ZL8/ref=as_li_ss_tl?&imprToken=nLUZlu1.uJ1qUr1jcx9QNQ&slotNum=9&ie=UTF8&psc=1&linkCode=ll1&tag=angrymrtom-20&linkId=ff3a58618c96d064dba3139843a7809c&language=en_US)
-* [4.7k Resistor](https://www.amazon.com/Projects-25EP5144K70-4-7k-Resistors-Pack/dp/B0185FC5OK/ref=as_li_ss_tl?keywords=4.7k+resistor&qid=1556653428&s=gateway&sr=8-2-spons&psc=1&linkCode=ll1&tag=angrymrtom-20&linkId=021d72a211058cd98c5afe45fa38b360&language=en_US) (only 1 is needed, but good luck finding just 1 for sale)
-* [Breadboard Jumpers](https://www.amazon.com/HiLetgo-Breadboard-Prototype-Assortment-Raspberry/dp/B077X7MKHN/ref=as_li_ss_tl?crid=3Q681FUGHK6V2&keywords=female+to+female+jumper+wires&qid=1556724289&s=gateway&sprefix=female+to+female+jum,aps,157&sr=8-6&linkCode=ll1&tag=angrymrtom-20&linkId=4474fd5023fb444fcc74105cd7115365&language=en_US) (really only need female jumpers for this project)
+* [ESP8266 NodeMCU](https://www.amazon.com/dp/B01IK9GEQG/ref=cm_sw_r_tw_dp_U_x_WnTcDb2X2FXPF (you don't need two of these, but at that price, might as well, the second one is almost free)
+* [Two Channel Relay Module](https://www.amazon.com/dp/B01MUATVXX/ref=cm_sw_r_tw_dp_U_x_DoTcDb4Y1JCNS)
+* [20x4 LCD Module](https://www.amazon.com/dp/B01GPUMP9C/ref=cm_sw_r_tw_dp_U_x_YoTcDbT2EFX3H) (this is optional if you would like a display on the controller)
+* [AC->DC 5V PSU](https://www.amazon.com/dp/B07CBS768L/ref=cm_sw_r_tw_dp_U_x_jpTcDbF87A192) (this acts a power supply unit inside the enclosure, powering all the componets, else you can power things with USB bricks, but that sounds like a mess)
+* [Mini XLR Male connectors (2 needed)](https://www.amazon.com/dp/B014EJY0JE/ref=cm_sw_r_tw_dp_U_x_aqTcDbWWS21YC) (these are optional allowing for the temperature probes to be disconnected from the enclosure)
+* [Mini XLR Female connectors (2 needed)](https://www.amazon.com/dp/B01J33CF48/ref=cm_sw_r_tw_dp_U_x_DqTcDb4HBH9JT) (these are optional allowing for the temperature probes to be disconnected from the enclosure)
+* [AC 3-Pin Outlets (2 needed)](https://www.amazon.com/dp/B01M3URWIT/ref=cm_sw_r_tw_dp_U_x_vrTcDb8AKMAJF)
+* [3-Position Screw Terminal](https://www.amazon.com/dp/B00X73S52M/ref=cm_sw_r_tw_dp_U_x_TrTcDb1W0WM52)
+* [AC Rocker Switch](https://www.amazon.com/dp/B00NWO68JI/ref=cm_sw_r_tw_dp_U_x_csTcDbKZ6CYAG)
+* [DS18B20 Temperature Probes (2 needed)](https://www.amazon.com/dp/B00EU70ZL8/ref=cm_sw_r_tw_dp_U_x_BsTcDbMZ0JG19)
+* [4.7k Resistor](https://www.amazon.com/dp/B0185FC5OK/ref=cm_sw_em_r_mt_dp_U_6sTcDb4JWZDCA) (only 1 is needed, but good luck finding just 1 for sale)
+* [Breadboard Jumpers](https://www.amazon.com/dp/B077X7MKHN/ref=cm_sw_r_tw_dp_U_x_VtTcDbCVHGJZA) (really only need female jumpers for this project)
 * Misc screws, wire, shrink tube, and wire nuts/connectors
 
 ## Pro Tip
