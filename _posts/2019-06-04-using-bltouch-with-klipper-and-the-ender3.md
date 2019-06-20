@@ -86,4 +86,4 @@ I actually left my printer off for about 4 weeks recently, turned it on and fire
 
 ### My Ender3 Klipper printer.cfg
 
-{% gist 88172c35ec1b6291ab7ad867a997c5a5 %}
+{% gist bd4955ba105b653bb81680927b4d1f87 %}
