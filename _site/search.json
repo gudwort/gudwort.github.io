@@ -2,6 +2,17 @@
   
     {
     
+      "title"    : "Installing PKI SSL Certificate on HPE iLO",
+      "url"      : "/installing-pki-ssl-certificate-on-hpe-ilo/",
+      "category" : "powershell",
+      "tags"     : "powershell",
+      "date"     : "2019-07-25 00:00:00 +0000",
+      "description" : "Automating the process of creating a CSR and signing it with an Internal CA and installing it using PowerShell."
+      
+    } ,
+  
+    {
+    
       "title"    : "Using BLTouch with Klipper and the Ender3",
       "url"      : "/using-bltouch-with-klipper-and-the-ender3/",
       "category" : "3dprinting",
