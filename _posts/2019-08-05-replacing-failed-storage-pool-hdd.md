@@ -70,7 +70,7 @@ Get-PhysicalDisk | Disable-PhysicalDiskIdentification
 After the repair is complete, the last step is to remove the failed drive from the pool.  Remember, the repair has to fully complete before removing the failed drive from the pool, else data loss will occur.
 
 ```powershell
-Get-PhysicalDisk -Usage Retired | Remove-PhysicalDisk
+Remove-PhysicalDisk -StoragePoolFriendlyName MyStoragePool -PhysicalDisks ( Get-PhysicalDisk -Usage Retired )
 ```
 
 And thats it, good to go!  Cheers.
