@@ -2,6 +2,17 @@
   
     {
     
+      "title"    : "Replace Failed Storage Pool HDD",
+      "url"      : "/replacing-failed-storage-pool-hdd/",
+      "category" : "powershell",
+      "tags"     : "powershell, windows, server",
+      "date"     : "2019-08-05 00:00:00 +0000",
+      "description" : "Replacing a failed hard disk drive in Windows Server Storage Spaces Storage Pool."
+      
+    } ,
+  
+    {
+    
       "title"    : "Installing PKI SSL Certificate on HPE iLO",
       "url"      : "/installing-pki-ssl-certificate-on-hpe-ilo/",
       "category" : "powershell",

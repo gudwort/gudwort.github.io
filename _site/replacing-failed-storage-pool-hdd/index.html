@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Replace Failed Storage Pool HDD – tŏmōhulk – Homebrewer, Father, Husband, Tinker</title>
+
+  <meta charset="utf-8" />
+<meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+
+
+<meta name="description" content="In my day to day jobby, I manage multiple Hyper-V clusters, and these clusters use shared storage.  Most of the storage is a JBOD shelf with dual SAS connections to the hypervisor nodes.  Because the shelf is JBOD, Windows is the brains for the storage.  Enter Windows Storage Spaces.  This basically a Software RAID that you configure a pool of disks, and then you layer a VHD over that pool.  After a volume is created on the VHD, it can be used by the hosts.  These volumes can be added to Cluster Shared Volumes which allows the volume to move between host nodes, creating redundancy.  All the VMs hosted in the cluster, live on the CSV, making them Highly Available.
+
+" />
+<meta property="og:description" content="In my day to day jobby, I manage multiple Hyper-V clusters, and these clusters use shared storage.  Most of the storage is a JBOD shelf with dual SAS connections to the hypervisor nodes.  Because the shelf is JBOD, Windows is the brains for the storage.  Enter Windows Storage Spaces.  This basically a Software RAID that you configure a pool of disks, and then you layer a VHD over that pool.  After a volume is created on the VHD, it can be used by the hosts.  These volumes can be added to Cluster Shared Volumes which allows the volume to move between host nodes, creating redundancy.  All the VMs hosted in the cluster, live on the CSV, making them Highly Available.
+
+" />
+
+<meta name="author" content="tŏmōhulk" />
+
+
+<meta property="og:title" content="Replace Failed Storage Pool HDD" />
+<meta property="twitter:title" content="Replace Failed Storage Pool HDD" />
+
+  
+    
+
+
+
+
+
+
+  
+
+  <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  <link rel="stylesheet" type="text/css" href="/style.css" />
+  <link rel="alternate" type="application/rss+xml" title="tŏmōhulk - Homebrewer, Father, Husband, Tinker"
+    href="/feed.xml" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+    integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+  <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+</head>
+
+<body>
+  <div class="wrapper-masthead">
+    <div class="container">
+      <header class="masthead clearfix">
+        <a href="/" class="site-avatar"><img src="https://github.com/tomohulk.png?size=500" /></a>
+
+        <div class="site-info">
+          <h1 class="site-name"><a href="/">tŏmōhulk</a></h1>
+          <p class="site-description">Homebrewer, Father, Husband, Tinker</p>
+        </div>
+
+        <nav>
+          <a href="/">Blog</a>
+          <a href="/about">About</a>
+          <a href="/search">Search</a>
+        </nav>
+      </header>
+    </div>
+  </div>
+
+  <div id="main" role="main" class="container">
+    <article class="post">
+  <h1>Replace Failed Storage Pool HDD</h1>
+
+  <div class="entry">
+    <p>In my day to day jobby, I manage multiple Hyper-V clusters, and these clusters use shared storage.  Most of the storage is a JBOD shelf with dual SAS connections to the hypervisor nodes.  Because the shelf is JBOD, Windows is the <em>brains</em> for the storage.  Enter <a href="https://docs.microsoft.com/en-us/windows-server/storage/storage-spaces/overview">Windows Storage Spaces</a>.  This basically a Software RAID that you configure a <em>pool</em> of disks, and then you layer a VHD over that pool.  After a volume is created on the VHD, it can be used by the hosts.  These volumes can be added to <a href="https://docs.microsoft.com/en-us/windows-server/failover-clustering/failover-cluster-csvs">Cluster Shared Volumes</a> which allows the volume to move between host nodes, creating redundancy.  All the VMs hosted in the cluster, live on the CSV, making them Highly Available.</p>
+
+<p>As hardware always does, physical disks in the pool fail.  Most of the Microsoft docs on fixing this issue are quite cumbersome to follow, and even more so, they tend to deal with <a href="https://docs.microsoft.com/en-us/windows-server/storage/storage-spaces/storage-spaces-direct-overview">Storage Spaces Direct</a>, which is not the same technology.  So I thought I would make up a quick little walk through on replacing a failed HDD in a storage pool.  I have to do this about once a month, so this is just as much for me, as it is for you.</p>
+
+<p>In my configuration, I run Windows Server Core exclusively for Hypervisors, so we will tackling this with PowerShell, tbh, not really even sure how to do this with a GUI.</p>
+
+<h2 id="identifying-a-failed-hdd">Identifying a failed HDD</h2>
+<p>Identifying a failed HDD is pretty simple, it can be done with a simple PowerShell command:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Get-PhysicalDisk</span> | ? HealthStatus -ne <span class="s2">"Healthy"</span>
+</code></pre></div></div>
+
+<p>This will show you any disks that have failed, I typically use a 3-way mirror on my Storage Pools, so if that number is greater then 2, then well, might as well just start over.  Anyway, if the <code class="highlighter-rouge">Usage</code> property of the failed disk is not marked as <em>Retired</em>, you will need to mark it as such:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Get-PhysicalDisk</span> | ? HealthStatus -ne <span class="s2">"Healthy"</span> | <span class="nb">Set-PhysicalDisk</span> -Usage Retired
+</code></pre></div></div>
+
+<p>So, this next part tends to vary between JBOD models, but to actually <em>identify</em> the failed HDD for physical replacement, there are a few things you can do, first off, you can actually trigger the slots LED to indicate the failed drive:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># This command assumes you already completed the previous command and 'Retired' the failed disks.</span>
+<span class="nb">Get-PhysicalDisk</span> -Usage Retired | <span class="nb">Enable-PhysicalDiskIdentification</span>
+</code></pre></div></div>
+
+<p>You can also get the physical <code class="highlighter-rouge">SlotNumber</code>:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Get-PhysicalDisk</span> -Usage Retired | <span class="nb">select </span>SlotNumber
+</code></pre></div></div>
+
+<p>However, this number is 0 indexed so when looking at the JBOD shelf, be sure to start counting at 0.</p>
+
+<h2 id="replacing-the-hdd">Replacing the HDD</h2>
+<p>After you have identified the failed HDD and marked it as retired, you can now physically replace the drive.  In my experience, after the new drive is inserted and running <code class="highlighter-rouge">Get-PhysicalDisk</code> the new drive always hangs in a <code class="highlighter-rouge">Starting</code> Operational Status.  And because of this you cannot add it to the storage pool (notice the <code class="highlighter-rouge">CanPool</code> Property will be <code class="highlighter-rouge">False</code>).  This can be cleared up by Resetting the disk:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Get-PhysicalDisk</span> | ? OperationalStatus -eq <span class="s2">"Starting"</span> | <span class="nb">Reset-PhysicalDisk</span>
+</code></pre></div></div>
+
+<p>After this is complete, running the <code class="highlighter-rouge">Get-PhysicalDisk</code> will show the disk is <code class="highlighter-rouge">Healthy</code> and the <code class="highlighter-rouge">CanPool</code> property will be <code class="highlighter-rouge">True</code>.  Now, you need to identify the Storage Pool’s Friendly Name, this can be found by running the <code class="highlighter-rouge">Get-StoragePool</code> command.  Once you have the Friendly Name, you can add the new disk to the pool:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Add-PhysicalDisk</span> -StoragePoolFriendlyName MyStoragePool -PhysicalDisks <span class="o">(</span> <span class="nb">Get-PhysicalDisk</span> -CanPool:<span class="nv">$true</span> <span class="o">)</span>
+</code></pre></div></div>
+
+<p>Now that the drive is replaced, go ahead and repair the virtual disk:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Get-VirtualDisk</span> | ? HealthStatus -ne <span class="s2">"Healthy"</span> | <span class="nb">Repair-VirtualDisk</span>
+</code></pre></div></div>
+<p>This will take some time depending on how large the virtual disk is, resiliency settings, and hardware, but there will be a progress bar.  Or you can add the <code class="highlighter-rouge">-AsJob</code> switch to the <code class="highlighter-rouge">Repair-VirtualDisk</code> command and let it run in the background.  You can fetch the status with <code class="highlighter-rouge">Get-StorageJob</code>.</p>
+
+<p>Be sure to disable the LED identification:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># I always just run this on against all the disks, it won't hurt anything for the ones where its not enabled.</span>
+<span class="nb">Get-PhysicalDisk</span> | <span class="nb">Disable-PhysicalDiskIdentification</span>
+</code></pre></div></div>
+
+<p>After the repair is complete, the last step is to remove the failed drive from the pool.  Remember, the repair has to fully complete before removing the failed drive from the pool, else data loss will occur.</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Get-PhysicalDisk</span> -Usage Retired | <span class="nb">Remove-PhysicalDisk</span>
+</code></pre></div></div>
+
+<p>And thats it, good to go!  Cheers.</p>
+
+  </div>
+
+  <div>Tags: 
+    
+      
+      <a href="/tag/powershell"><code class="highligher-rouge"><nobr>powershell</nobr></code>&nbsp;</a>
+    
+      
+      <a href="/tag/windows"><code class="highligher-rouge"><nobr>windows</nobr></code>&nbsp;</a>
+    
+      
+      <a href="/tag/server"><code class="highligher-rouge"><nobr>server</nobr></code>&nbsp;</a>
+    
+  </div>
+
+  
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+
+	    var disqus_shortname = 'tomohulk';
+
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+
+
+  <div class="date">
+    Written on August  5, 2019
+  </div>
+</article>
+
+  </div>
+
+  <div class="wrapper-footer">
+    <div class="container">
+      <footer class="footer">
+        <!-- Add the Email icon to footer if _config.yml has the email value specified. -->
+
+
+<!-- Add the Facebook icon to footer if _config.yml has the facebook value specified. -->
+
+
+<!-- Add the Flickr icon to footer if _config.yml has the flickr value specified. -->
+
+
+<!-- Add the GitHub icon to footer if _config.yml has the github value specified. -->
+
+    <a href="https://github.com/tomohulk" target="_blank"><i class="fab fa-github fa-lg"></i></a>
+
+
+<!-- Add the Instagram icon to footer if _config.yml has the email value specified. -->
+
+    <a href="https://instagram.com/tomohulk" target="_blank"><i class="fab fa-instagram fa-lg"></i></a>
+
+
+<!-- Add the LinkedIn icon to footer if _config.yml has the linkedin value specified. -->
+
+
+<!-- Add the Twitter icon to footer if _config.yml has the twitter value specified. -->
+
+    <a href="https://www.twitter.com/tomohulk" target="_blank"><i class="fab fa-twitter fa-lg"></i></a>
+
+
+<!-- Add the Stack Overflow icon to footer if _config.yml has the stackoverflow value specified. -->
+
+    <a href="http://stackoverflow.com/users/691551/tomohulk" target="_blank"><i class="fab fa-stack-overflow fa-lg"></i></a>
+
+
+<!-- Add the YouTube icon to footer if _config.yml has the youtube value specified. -->
+
+    <a href="https://youtube.com/channel/UCdezPgvhJ605nxJYSrNXRGg" target="_blank"><i class="fab fa-youtube fa-lg"></i></a>
+
+
+<!-- Add the Reddit icon to footer if _config.yml has the reddit value specified. -->
+
+    <a href="https://www.reddit.com/user/tomohulk" target="_blank"><i class="fab fa-reddit fa-lg"></i></a>
+
+
+<!-- Add the Beer icon to footer if _config.yml has the taplistio value specified. -->
+
+    <a href="https://taplist.io/taplist-963267" target="_blank"><i class="fas fa-beer fa-lg"></i></a>
+
+
+<!-- Add the Drafting Compass icon to footer if _config.yml has the thingiverse value specified. -->
+
+    <a href="https://www.thingiverse.com/tomohulk/designs" target="_blank"><i class="fas fa-drafting-compass fa-lg"></i></a>
+
+
+<!-- Always add the rss feed icon. -->
+<a href="/feed.xml"><i class="fas fa-rss fa-lg"></i></a>
+
+      </footer>
+    </div>
+  </div>
+
+  
+<!-- Google Analytics -->
+<script>
+	window.ga = window.ga || function () { (ga.q = ga.q || []).push(arguments) }; ga.l = +new Date;
+	// ga() objects ...
+	ga('create', 'UA-142482838-1', 'auto');
+	ga('send', 'pageview', {
+		'page': '/replacing-failed-storage-pool-hdd/',
+		'title': 'Replace Failed Storage Pool HDD'
+});
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+</body>
+
+</html>

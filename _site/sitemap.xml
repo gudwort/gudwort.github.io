@@ -8,6 +8,75 @@
 	
 		
 		<item>
+			<title>Replace Failed Storage Pool HDD</title>
+			<description>&lt;p&gt;In my day to day jobby, I manage multiple Hyper-V clusters, and these clusters use shared storage.  Most of the storage is a JBOD shelf with dual SAS connections to the hypervisor nodes.  Because the shelf is JBOD, Windows is the &lt;em&gt;brains&lt;/em&gt; for the storage.  Enter &lt;a href=&quot;https://docs.microsoft.com/en-us/windows-server/storage/storage-spaces/overview&quot;&gt;Windows Storage Spaces&lt;/a&gt;.  This basically a Software RAID that you configure a &lt;em&gt;pool&lt;/em&gt; of disks, and then you layer a VHD over that pool.  After a volume is created on the VHD, it can be used by the hosts.  These volumes can be added to &lt;a href=&quot;https://docs.microsoft.com/en-us/windows-server/failover-clustering/failover-cluster-csvs&quot;&gt;Cluster Shared Volumes&lt;/a&gt; which allows the volume to move between host nodes, creating redundancy.  All the VMs hosted in the cluster, live on the CSV, making them Highly Available.&lt;/p&gt;
+
+&lt;p&gt;As hardware always does, physical disks in the pool fail.  Most of the Microsoft docs on fixing this issue are quite cumbersome to follow, and even more so, they tend to deal with &lt;a href=&quot;https://docs.microsoft.com/en-us/windows-server/storage/storage-spaces/storage-spaces-direct-overview&quot;&gt;Storage Spaces Direct&lt;/a&gt;, which is not the same technology.  So I thought I would make up a quick little walk through on replacing a failed HDD in a storage pool.  I have to do this about once a month, so this is just as much for me, as it is for you.&lt;/p&gt;
+
+&lt;p&gt;In my configuration, I run Windows Server Core exclusively for Hypervisors, so we will tackling this with PowerShell, tbh, not really even sure how to do this with a GUI.&lt;/p&gt;
+
+&lt;h2 id=&quot;identifying-a-failed-hdd&quot;&gt;Identifying a failed HDD&lt;/h2&gt;
+&lt;p&gt;Identifying a failed HDD is pretty simple, it can be done with a simple PowerShell command:&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;Get-PhysicalDisk&lt;/span&gt; | ? HealthStatus -ne &lt;span class=&quot;s2&quot;&gt;&quot;Healthy&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This will show you any disks that have failed, I typically use a 3-way mirror on my Storage Pools, so if that number is greater then 2, then well, might as well just start over.  Anyway, if the &lt;code class=&quot;highlighter-rouge&quot;&gt;Usage&lt;/code&gt; property of the failed disk is not marked as &lt;em&gt;Retired&lt;/em&gt;, you will need to mark it as such:&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;Get-PhysicalDisk&lt;/span&gt; | ? HealthStatus -ne &lt;span class=&quot;s2&quot;&gt;&quot;Healthy&quot;&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;Set-PhysicalDisk&lt;/span&gt; -Usage Retired
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;So, this next part tends to vary between JBOD models, but to actually &lt;em&gt;identify&lt;/em&gt; the failed HDD for physical replacement, there are a few things you can do, first off, you can actually trigger the slots LED to indicate the failed drive:&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# This command assumes you already completed the previous command and 'Retired' the failed disks.&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;Get-PhysicalDisk&lt;/span&gt; -Usage Retired | &lt;span class=&quot;nb&quot;&gt;Enable-PhysicalDiskIdentification&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You can also get the physical &lt;code class=&quot;highlighter-rouge&quot;&gt;SlotNumber&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;Get-PhysicalDisk&lt;/span&gt; -Usage Retired | &lt;span class=&quot;nb&quot;&gt;select &lt;/span&gt;SlotNumber
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;However, this number is 0 indexed so when looking at the JBOD shelf, be sure to start counting at 0.&lt;/p&gt;
+
+&lt;h2 id=&quot;replacing-the-hdd&quot;&gt;Replacing the HDD&lt;/h2&gt;
+&lt;p&gt;After you have identified the failed HDD and marked it as retired, you can now physically replace the drive.  In my experience, after the new drive is inserted and running &lt;code class=&quot;highlighter-rouge&quot;&gt;Get-PhysicalDisk&lt;/code&gt; the new drive always hangs in a &lt;code class=&quot;highlighter-rouge&quot;&gt;Starting&lt;/code&gt; Operational Status.  And because of this you cannot add it to the storage pool (notice the &lt;code class=&quot;highlighter-rouge&quot;&gt;CanPool&lt;/code&gt; Property will be &lt;code class=&quot;highlighter-rouge&quot;&gt;False&lt;/code&gt;).  This can be cleared up by Resetting the disk:&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;Get-PhysicalDisk&lt;/span&gt; | ? OperationalStatus -eq &lt;span class=&quot;s2&quot;&gt;&quot;Starting&quot;&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;Reset-PhysicalDisk&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;After this is complete, running the &lt;code class=&quot;highlighter-rouge&quot;&gt;Get-PhysicalDisk&lt;/code&gt; will show the disk is &lt;code class=&quot;highlighter-rouge&quot;&gt;Healthy&lt;/code&gt; and the &lt;code class=&quot;highlighter-rouge&quot;&gt;CanPool&lt;/code&gt; property will be &lt;code class=&quot;highlighter-rouge&quot;&gt;True&lt;/code&gt;.  Now, you need to identify the Storage Pool’s Friendly Name, this can be found by running the &lt;code class=&quot;highlighter-rouge&quot;&gt;Get-StoragePool&lt;/code&gt; command.  Once you have the Friendly Name, you can add the new disk to the pool:&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;Add-PhysicalDisk&lt;/span&gt; -StoragePoolFriendlyName MyStoragePool -PhysicalDisks &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Get-PhysicalDisk&lt;/span&gt; -CanPool:&lt;span class=&quot;nv&quot;&gt;$true&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now that the drive is replaced, go ahead and repair the virtual disk:&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;Get-VirtualDisk&lt;/span&gt; | ? HealthStatus -ne &lt;span class=&quot;s2&quot;&gt;&quot;Healthy&quot;&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;Repair-VirtualDisk&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;This will take some time depending on how large the virtual disk is, resiliency settings, and hardware, but there will be a progress bar.  Or you can add the &lt;code class=&quot;highlighter-rouge&quot;&gt;-AsJob&lt;/code&gt; switch to the &lt;code class=&quot;highlighter-rouge&quot;&gt;Repair-VirtualDisk&lt;/code&gt; command and let it run in the background.  You can fetch the status with &lt;code class=&quot;highlighter-rouge&quot;&gt;Get-StorageJob&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Be sure to disable the LED identification:&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# I always just run this on against all the disks, it won't hurt anything for the ones where its not enabled.&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;Get-PhysicalDisk&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;Disable-PhysicalDiskIdentification&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;After the repair is complete, the last step is to remove the failed drive from the pool.  Remember, the repair has to fully complete before removing the failed drive from the pool, else data loss will occur.&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;Get-PhysicalDisk&lt;/span&gt; -Usage Retired | &lt;span class=&quot;nb&quot;&gt;Remove-PhysicalDisk&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And thats it, good to go!  Cheers.&lt;/p&gt;
+</description>
+			<pubDate>Mon, 05 Aug 2019 00:00:00 +0000</pubDate>
+			<link>http://0.0.0.0:4000/replacing-failed-storage-pool-hdd/</link>
+			<guid isPermaLink="true">http://0.0.0.0:4000/replacing-failed-storage-pool-hdd/</guid>
+		</item>
+		
+	
+		
+		<item>
 			<title>Installing PKI SSL Certificate on HPE iLO</title>
 			<description>&lt;p&gt;I work with HPE Systems almost exclusively, and as of late I have been getting very irritated with the browser warning about the self signed SSL cert that is installed on the HPE iLO by default.&lt;/p&gt;
 
@@ -764,6 +833,19 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
   
     &lt;article class=&quot;post&quot;&gt;
 
+      &lt;h1&gt;&lt;a href=&quot;/replacing-failed-storage-pool-hdd/&quot;&gt;Replace Failed Storage Pool HDD&lt;/a&gt;&lt;/h1&gt;
+
+      &lt;div class=&quot;entry&quot;&gt;
+        &lt;p&gt;In my day to day jobby, I manage multiple Hyper-V clusters, and these clusters use shared storage.  Most of the storage is a JBOD shelf with dual SAS connections to the hypervisor nodes.  Because the shelf is JBOD, Windows is the &lt;em&gt;brains&lt;/em&gt; for the storage.  Enter &lt;a href=&quot;https://docs.microsoft.com/en-us/windows-server/storage/storage-spaces/overview&quot;&gt;Windows Storage Spaces&lt;/a&gt;.  This basically a Software RAID that you configure a &lt;em&gt;pool&lt;/em&gt; of disks, and then you layer a VHD over that pool.  After a volume is created on the VHD, it can be used by the hosts.  These volumes can be added to &lt;a href=&quot;https://docs.microsoft.com/en-us/windows-server/failover-clustering/failover-cluster-csvs&quot;&gt;Cluster Shared Volumes&lt;/a&gt; which allows the volume to move between host nodes, creating redundancy.  All the VMs hosted in the cluster, live on the CSV, making them Highly Available.&lt;/p&gt;
+
+
+      &lt;/div&gt;
+
+      &lt;a href=&quot;/replacing-failed-storage-pool-hdd/&quot; class=&quot;read-more&quot;&gt;Read More&lt;/a&gt;
+    &lt;/article&gt;
+  
+    &lt;article class=&quot;post&quot;&gt;
+
       &lt;h1&gt;&lt;a href=&quot;/installing-pki-ssl-certificate-on-hpe-ilo/&quot;&gt;Installing PKI SSL Certificate on HPE iLO&lt;/a&gt;&lt;/h1&gt;
 
       &lt;div class=&quot;entry&quot;&gt;
@@ -786,19 +868,6 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &lt;/div&gt;
 
       &lt;a href=&quot;/using-bltouch-with-klipper-and-the-ender3/&quot; class=&quot;read-more&quot;&gt;Read More&lt;/a&gt;
-    &lt;/article&gt;
-  
-    &lt;article class=&quot;post&quot;&gt;
-
-      &lt;h1&gt;&lt;a href=&quot;/klean-yer-keezer-lines/&quot;&gt;Klean Yer Keezer Lines&lt;/a&gt;&lt;/h1&gt;
-
-      &lt;div class=&quot;entry&quot;&gt;
-        &lt;p&gt;I’m not sure out there who needs to hear this, but clean your beer lines!  After a while of beer sitting, lines begin to stain and leave flavors that will be picked up by other beers.  I mean who wants to have a lingering coffee porter in your NEIPA?  No one, thats who.  There is no &lt;em&gt;one size fits all&lt;/em&gt; for how often you should clean your lines, it depends a lot on things like how long the beer has been siting in them, how often are they used, and what style of beer.  In the past, I would just replace the lines every 6 months.  There is a few things wrong with doing this, first of all, its costly, second of all, its a pain in that ass, and third, six months between cleaning/replacing is too long IMO.  Now I am rinsing lines every other month.  Maybe that is &lt;em&gt;too&lt;/em&gt; often, but after you see how easy it is to do, I could do it even more often and not really mind.&lt;/p&gt;
-
-
-      &lt;/div&gt;
-
-      &lt;a href=&quot;/klean-yer-keezer-lines/&quot; class=&quot;read-more&quot;&gt;Read More&lt;/a&gt;
     &lt;/article&gt;
   
 
@@ -876,6 +945,17 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
 			<item>
 				<title></title>
 				<description>[
+  
+    {
+    
+      &quot;title&quot;    : &quot;Replace Failed Storage Pool HDD&quot;,
+      &quot;url&quot;      : &quot;/replacing-failed-storage-pool-hdd/&quot;,
+      &quot;category&quot; : &quot;powershell&quot;,
+      &quot;tags&quot;     : &quot;powershell, windows, server&quot;,
+      &quot;date&quot;     : &quot;2019-08-05 00:00:00 +0000&quot;,
+      &quot;description&quot; : &quot;Replacing a failed hard disk drive in Windows Server Storage Spaces Storage Pool.&quot;
+      
+    } ,
   
     {
     
@@ -997,9 +1077,13 @@ SimpleJekyllSearch({
 
 &lt;p&gt;&lt;a href=&quot;/tag/raspberrypi&quot;&gt;&lt;code class=&quot;highligher-rouge&quot;&gt;&lt;nobr&gt;raspberrypi&lt;/nobr&gt;&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
 
+&lt;p&gt;&lt;a href=&quot;/tag/powershell&quot;&gt;&lt;code class=&quot;highligher-rouge&quot;&gt;&lt;nobr&gt;powershell&lt;/nobr&gt;&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+
 &lt;p&gt;&lt;a href=&quot;/tag/diy&quot;&gt;&lt;code class=&quot;highligher-rouge&quot;&gt;&lt;nobr&gt;diy&lt;/nobr&gt;&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;/tag/powershell&quot;&gt;&lt;code class=&quot;highligher-rouge&quot;&gt;&lt;nobr&gt;powershell&lt;/nobr&gt;&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/tag/windows&quot;&gt;&lt;code class=&quot;highligher-rouge&quot;&gt;&lt;nobr&gt;windows&lt;/nobr&gt;&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/tag/server&quot;&gt;&lt;code class=&quot;highligher-rouge&quot;&gt;&lt;nobr&gt;server&lt;/nobr&gt;&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;/tag/klipper&quot;&gt;&lt;code class=&quot;highligher-rouge&quot;&gt;&lt;nobr&gt;klipper&lt;/nobr&gt;&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
 
@@ -1007,6 +1091,19 @@ SimpleJekyllSearch({
 				<pubDate></pubDate>
 				<link>http://0.0.0.0:4000/search/</link>
 				<guid isPermaLink="true">http://0.0.0.0:4000/search/</guid>
+			</item>
+			
+		
+	
+		
+			
+			<item>
+				<title>Tag: server</title>
+				<description>
+</description>
+				<pubDate></pubDate>
+				<link>http://0.0.0.0:4000/tag/server/</link>
+				<guid isPermaLink="true">http://0.0.0.0:4000/tag/server/</guid>
 			</item>
 			
 		
@@ -1322,6 +1419,18 @@ footer {
 				<pubDate></pubDate>
 				<link>http://0.0.0.0:4000/style.css</link>
 				<guid isPermaLink="true">http://0.0.0.0:4000/style.css</guid>
+			</item>
+			
+		
+	
+		
+			
+			<item>
+				<title>Tag: windows</title>
+				<description></description>
+				<pubDate></pubDate>
+				<link>http://0.0.0.0:4000/tag/windows/</link>
+				<guid isPermaLink="true">http://0.0.0.0:4000/tag/windows/</guid>
 			</item>
 			
 		
