@@ -17,7 +17,7 @@
 
 " />
 
-<meta name="author" content="tŏmōhulk" />
+<meta name="author" content="" />
 
 
 <meta property="og:title" content="Replace Failed Storage Pool HDD" />
@@ -37,7 +37,7 @@
       <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
   <link rel="stylesheet" type="text/css" href="/style.css" />
-  <link rel="alternate" type="application/rss+xml" title="tŏmōhulk - Homebrewer, Father, Husband, Tinker"
+  <link rel="alternate" type="application/rss+xml" title=" - Homebrewer, Father, Husband, Tinker"
     href="/feed.xml" />
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
     integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
@@ -124,7 +124,7 @@
 
 <p>After the repair is complete, the last step is to remove the failed drive from the pool.  Remember, the repair has to fully complete before removing the failed drive from the pool, else data loss will occur.</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Get-PhysicalDisk</span> -Usage Retired | <span class="nb">Remove-PhysicalDisk</span>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Remove-PhysicalDisk</span> -StoragePoolFriendlyName MyStoragePool -PhysicalDisks <span class="o">(</span> <span class="nb">Get-PhysicalDisk</span> -Usage Retired <span class="o">)</span>
 </code></pre></div></div>
 
 <p>And thats it, good to go!  Cheers.</p>
@@ -134,13 +134,13 @@
   <div>Tags: 
     
       
-      <a href="/tag/powershell"><code class="highligher-rouge"><nobr>powershell</nobr></code>&nbsp;</a>
+      <a href="/tag/powershell"><code class="highlighter-rouge"><nobr>powershell</nobr></code>&nbsp;</a>
     
       
-      <a href="/tag/windows"><code class="highligher-rouge"><nobr>windows</nobr></code>&nbsp;</a>
+      <a href="/tag/windows"><code class="highlighter-rouge"><nobr>windows</nobr></code>&nbsp;</a>
     
       
-      <a href="/tag/server"><code class="highligher-rouge"><nobr>server</nobr></code>&nbsp;</a>
+      <a href="/tag/server"><code class="highlighter-rouge"><nobr>server</nobr></code>&nbsp;</a>
     
   </div>
 

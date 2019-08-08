@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
-	<title>tŏmōhulk</title>
+	<title></title>
 	<description>Homebrewer, Father, Husband, Tinker</description>
 	<link>http://0.0.0.0:4000</link>
 	<atom:link href="http://0.0.0.0:4000/search.xml" rel="self" type="application/rss+xml" />
@@ -64,7 +64,7 @@
 
 &lt;p&gt;After the repair is complete, the last step is to remove the failed drive from the pool.  Remember, the repair has to fully complete before removing the failed drive from the pool, else data loss will occur.&lt;/p&gt;
 
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;Get-PhysicalDisk&lt;/span&gt; -Usage Retired | &lt;span class=&quot;nb&quot;&gt;Remove-PhysicalDisk&lt;/span&gt;
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;Remove-PhysicalDisk&lt;/span&gt; -StoragePoolFriendlyName MyStoragePool -PhysicalDisks &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Get-PhysicalDisk&lt;/span&gt; -Usage Retired &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;And thats it, good to go!  Cheers.&lt;/p&gt;
@@ -880,7 +880,8 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
     
   
   &lt;/div&gt;
-&lt;/div&gt;</description>
+&lt;/div&gt;
+</description>
 				<pubDate></pubDate>
 				<link>http://0.0.0.0:4000/</link>
 				<guid isPermaLink="true">http://0.0.0.0:4000/</guid>
@@ -1069,23 +1070,23 @@ SimpleJekyllSearch({
 
 &lt;h3&gt;Tags&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&quot;/tag/keezer&quot;&gt;&lt;code class=&quot;highligher-rouge&quot;&gt;&lt;nobr&gt;keezer&lt;/nobr&gt;&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/tag/keezer&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;keezer&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;/tag/homebrewing&quot;&gt;&lt;code class=&quot;highligher-rouge&quot;&gt;&lt;nobr&gt;homebrewing&lt;/nobr&gt;&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/tag/homebrewing&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;homebrewing&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;/tag/3dprinting&quot;&gt;&lt;code class=&quot;highligher-rouge&quot;&gt;&lt;nobr&gt;3dprinting&lt;/nobr&gt;&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/tag/3dprinting&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;3dprinting&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;/tag/raspberrypi&quot;&gt;&lt;code class=&quot;highligher-rouge&quot;&gt;&lt;nobr&gt;raspberrypi&lt;/nobr&gt;&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/tag/raspberrypi&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;raspberrypi&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;/tag/powershell&quot;&gt;&lt;code class=&quot;highligher-rouge&quot;&gt;&lt;nobr&gt;powershell&lt;/nobr&gt;&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/tag/powershell&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;powershell&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;/tag/diy&quot;&gt;&lt;code class=&quot;highligher-rouge&quot;&gt;&lt;nobr&gt;diy&lt;/nobr&gt;&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/tag/diy&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;diy&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;/tag/windows&quot;&gt;&lt;code class=&quot;highligher-rouge&quot;&gt;&lt;nobr&gt;windows&lt;/nobr&gt;&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/tag/windows&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;windows&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;/tag/server&quot;&gt;&lt;code class=&quot;highligher-rouge&quot;&gt;&lt;nobr&gt;server&lt;/nobr&gt;&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/tag/server&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;server&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;/tag/klipper&quot;&gt;&lt;code class=&quot;highligher-rouge&quot;&gt;&lt;nobr&gt;klipper&lt;/nobr&gt;&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/tag/klipper&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;klipper&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
 
 </description>
 				<pubDate></pubDate>
@@ -1484,13 +1485,17 @@ footer {
   {% if paginator.total_pages &gt; 1 %}
     {% if paginator.previous_page %}
         &lt;a href=&quot;{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}&quot;&gt;Newer Posts&lt;/a&gt;
+        {% if paginator.next_page %}
+          | 
+        {% endif %}
     {% endif %}
     {% if paginator.next_page %}
         &lt;a href=&quot;{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}&quot;&gt;Older Posts&lt;/a&gt;
     {% endif %}
   {% endif %}
   &lt;/div&gt;
-&lt;/div&gt;</description>
+&lt;/div&gt;
+</description>
 				<pubDate></pubDate>
 				<link>http://0.0.0.0:4000/page2/</link>
 				<guid isPermaLink="true">http://0.0.0.0:4000/page2/</guid>
@@ -1521,13 +1526,17 @@ footer {
   {% if paginator.total_pages &gt; 1 %}
     {% if paginator.previous_page %}
         &lt;a href=&quot;{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}&quot;&gt;Newer Posts&lt;/a&gt;
+        {% if paginator.next_page %}
+          | 
+        {% endif %}
     {% endif %}
     {% if paginator.next_page %}
         &lt;a href=&quot;{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}&quot;&gt;Older Posts&lt;/a&gt;
     {% endif %}
   {% endif %}
   &lt;/div&gt;
-&lt;/div&gt;</description>
+&lt;/div&gt;
+</description>
 				<pubDate></pubDate>
 				<link>http://0.0.0.0:4000/page3/</link>
 				<guid isPermaLink="true">http://0.0.0.0:4000/page3/</guid>
