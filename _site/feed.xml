@@ -1,4 +1,75 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2019-08-08T17:49:54+00:00</updated><id>http://0.0.0.0:4000/feed.xml</id><title type="html">tŏmōhulk</title><subtitle>Homebrewer, Father, Husband, Tinker</subtitle><entry><title type="html">Replace Failed Storage Pool HDD</title><link href="http://0.0.0.0:4000/replacing-failed-storage-pool-hdd/" rel="alternate" type="text/html" title="Replace Failed Storage Pool HDD" /><published>2019-08-05T00:00:00+00:00</published><updated>2019-08-05T00:00:00+00:00</updated><id>http://0.0.0.0:4000/replacing-failed-storage-pool-hdd</id><content type="html" xml:base="http://0.0.0.0:4000/replacing-failed-storage-pool-hdd/">&lt;p&gt;In my day to day jobby, I manage multiple Hyper-V clusters, and these clusters use shared storage.  Most of the storage is a JBOD shelf with dual SAS connections to the hypervisor nodes.  Because the shelf is JBOD, Windows is the &lt;em&gt;brains&lt;/em&gt; for the storage.  Enter &lt;a href=&quot;https://docs.microsoft.com/en-us/windows-server/storage/storage-spaces/overview&quot;&gt;Windows Storage Spaces&lt;/a&gt;.  This basically a Software RAID that you configure a &lt;em&gt;pool&lt;/em&gt; of disks, and then you layer a VHD over that pool.  After a volume is created on the VHD, it can be used by the hosts.  These volumes can be added to &lt;a href=&quot;https://docs.microsoft.com/en-us/windows-server/failover-clustering/failover-cluster-csvs&quot;&gt;Cluster Shared Volumes&lt;/a&gt; which allows the volume to move between host nodes, creating redundancy.  All the VMs hosted in the cluster, live on the CSV, making them Highly Available.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2019-08-16T22:02:04+00:00</updated><id>http://0.0.0.0:4000/feed.xml</id><title type="html">tŏmōhulk</title><subtitle>Homebrewer, Father, Husband, Tinker</subtitle><entry><title type="html">Nobody Got Time For That</title><link href="http://0.0.0.0:4000/nobody-got-time-for-that/" rel="alternate" type="text/html" title="Nobody Got Time For That" /><published>2019-08-14T00:00:00+00:00</published><updated>2019-08-14T00:00:00+00:00</updated><id>http://0.0.0.0:4000/nobody-got-time-for-that</id><content type="html" xml:base="http://0.0.0.0:4000/nobody-got-time-for-that/">&lt;p&gt;I have been tinkering with NEIPAs for a while now, in theory, they shouldn’t be &lt;em&gt;too&lt;/em&gt; hard to make, and to get an OK one, they really aren’t.  But I wanted something better then just OK.  After about 10 attempts and lots of trial and error and even more picking the brains of the Homebrewing Slack team, I think I have finally done it, I mean just absolutely nailed it!  I personally think it all really came down to the water, but also, the now more readily available Kveik yeasts out there helped me as well.  Especially &lt;a href=&quot;https://omegayeast.com/yeast/norwegian-ales/voss-kveik&quot;&gt;Omega Voss&lt;/a&gt;, allowing to ferment at 90F+ you can turn beers around in 5-7 days.  And they are some of the best NEIPAs I’ve ever had, second to maybe &lt;a href=&quot;https://www.arvonbrewingco.com&quot;&gt;Arvon Brewing&lt;/a&gt;.  Anyway, I wanted to share my findings and what seems to really be working for me.  The best part is that the grain and water pretty much always stay the same, and you can just tinker with hops.&lt;/p&gt;
+
+&lt;h2 id=&quot;water&quot;&gt;Water&lt;/h2&gt;
+&lt;p&gt;OK, so first and foremost, the water.  In all my experimentation with these HaziBois, I have found that water seems to play the most important roll in what makes the hops &lt;em&gt;POP&lt;/em&gt;.  Here is my water chemistry (the report is about a year old, I am due to have it updated again):&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Ca: 41&lt;/li&gt;
+  &lt;li&gt;Mg: 12&lt;/li&gt;
+  &lt;li&gt;Na: 10&lt;/li&gt;
+  &lt;li&gt;Cl: 16&lt;/li&gt;
+  &lt;li&gt;SO4: 32&lt;/li&gt;
+  &lt;li&gt;HCO3: 135&lt;/li&gt;
+  &lt;li&gt;pH: 7.6&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I have heard lots of people talk about Sulfate to Chloride ratios and flaked adjuncts to produce this slick, soft, or pillowy mouthfeel that is pinnacle to a NEIPA.  After my experimenting, and trial and error, the best NEIPAs I am making I am going for a 1:1:1 ration of SO4:Cl:Ca, and I would ideally like to have them all at a 150ppm range, but, without cutting my water, I cannot get the numbers that high without getting my Mg and Na too high for my comfort range.  But, I am able to get them all to 135ppm and that seems to work just fine, so that what I have been using&lt;/p&gt;
+
+&lt;p&gt;Target NEIPA Water Profile:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Ca: 150&lt;/li&gt;
+  &lt;li&gt;Mg: 0&lt;/li&gt;
+  &lt;li&gt;Na: 0&lt;/li&gt;
+  &lt;li&gt;Cl: 150&lt;/li&gt;
+  &lt;li&gt;SO4: 150&lt;/li&gt;
+  &lt;li&gt;HCO3: 0&lt;/li&gt;
+  &lt;li&gt;pH: 5.4&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Actual NEIPA Water Profile After Treatment:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Ca: 136&lt;/li&gt;
+  &lt;li&gt;Mg: 20&lt;/li&gt;
+  &lt;li&gt;Na: 10&lt;/li&gt;
+  &lt;li&gt;Cl: 134&lt;/li&gt;
+  &lt;li&gt;SO4: 135&lt;/li&gt;
+  &lt;li&gt;HCO3: 135&lt;/li&gt;
+  &lt;li&gt;pH: 5.4 (takes me about 4.5mL of lactic)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I know I should probably cut my water with RO and get that hardness down, but to be honest, these batches are turning out so well, I don’t really feel the need to.  And thats just one more thing I would need to prep, the best part of this beer is that it is a short brew day, less steps and a super fast ferment.&lt;/p&gt;
+
+&lt;h2 id=&quot;mash&quot;&gt;Mash&lt;/h2&gt;
+&lt;p&gt;Grain bill:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;80% base malt, I personally use Rahr 2-row, I bet a Pilsen would be great too!&lt;/li&gt;
+  &lt;li&gt;20% White Wheat, I use Briess.&lt;/li&gt;
+  &lt;li&gt;1.33lb/qt grist (this is just a personal preference i use this number for everything).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Only other thing I really have to say about this is, mash high, like a stout.  I have been mashing at 156-157 for 45 minutes.  Leaving some residual sugar post ferment to help with mouthfeel and softness.  It seems to be working very well.  And to be frank, Voss Kveik is a madman, if you mash at 152, its going to finish sub 1.010, and be too dry for a NEIPA.&lt;/p&gt;
+
+&lt;h2 id=&quot;boil&quot;&gt;Boil&lt;/h2&gt;
+&lt;p&gt;F*** the boil, &lt;em&gt;Nobody Got Time For That&lt;/em&gt;.  Just bring the wort up to boil and insert your immersion chiller and start your whirlpool pump, and kill the flame.  I do this to sanitize everything.&lt;/p&gt;
+
+&lt;h2 id=&quot;whirlpool&quot;&gt;Whirlpool&lt;/h2&gt;
+&lt;p&gt;So after killing the flame, I turn on my chiller for about 1-2 minutes, this will bring the wort to 190ish.  Even after killing the flame, the temperature still seems to drop pretty quick to about 182ish.  Time to hop the piss out this thing.  I have been doing a half pound whirlpool only hop.  I use 4oz Citra, 2oz Mosiac, and 2oz tuttie fruity hop of your choice, I have done Amarillo, and El Dorado, and at the time of this writing, a batch with Azzaca is in the fermenter.  The El Dorado was amazing, one of the best NEIPAs I have ever had.&lt;/p&gt;
+
+&lt;p&gt;Now, I feel like my brew house is a bit prone to clogs during a heavy whirlpool, so I generally do it slowly.  I add the Citra over about a minute, then Mosaic, then whatever I’m, using for the last happy hop.  After this the temp is usually about 179.  I start my timer for a 20 minute whirlpool and turn on a very low flame, with my banjo burner I can hold a temp to a degree or two, so I do my best to hold at 180F.  usually by the time the 20 minutes has passed, its at 181-182.&lt;/p&gt;
+
+&lt;p&gt;After the whirlpool, chill to 100F, rack to fermenter.&lt;/p&gt;
+
+&lt;h2 id=&quot;ferment&quot;&gt;Ferment&lt;/h2&gt;
+&lt;p&gt;Heres the good stuff, &lt;em&gt;Voss is Boss&lt;/em&gt; set your temperature controller 90, And let it roll, you could probably go hotter if you wanted, I’ve heard of people pushing Voss over the 100F mark.  I also DO NOT make a starter for a 5 gallon batch with this yeast, trying to stress it a bit for some esters.&lt;/p&gt;
+
+&lt;h2 id=&quot;dry-hop&quot;&gt;Dry Hop&lt;/h2&gt;
+&lt;p&gt;I do everything in 24 hour increments.  24 hours after pitch, I do a dry hop, 2oz Citra, 1oz, Mosaic, 1oz same hop I used to finish the whirlpool.  48 hours post pitch, hit with that hop dosage again, totalling one pound of hops.  By 48 hours, the primary ferment will have already completed (again &lt;em&gt;Voss is Boss&lt;/em&gt;).  Let it sit for atleast another 24 hours for hop utilization, but ideally I target 48 hours.  So a four day total ferment.  Next is up to you, cold crash.  Your call.  I usually do it for 24 hours just to let some hops fall out of solution, so I don’t get clogged dip tubes in my kegs.  But this is not a mandatory step.&lt;/p&gt;
+
+&lt;h2 id=&quot;drink-up&quot;&gt;Drink Up&lt;/h2&gt;
+&lt;p&gt;Last thing is to package and serve, do what you do here, nothing special.  I close transfer and try to carbonate and serve as soon as possible.  Fresher is better!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/2019-08-14-nobody-got-time-for-that/beer.jpg&quot; alt=&quot;Beer&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Thats it, cheers!&lt;/p&gt;</content><author><name></name></author><category term="homebrewing" /><category term="homebrewing" /><summary type="html">I have been tinkering with NEIPAs for a while now, in theory, they shouldn’t be too hard to make, and to get an OK one, they really aren’t. But I wanted something better then just OK. After about 10 attempts and lots of trial and error and even more picking the brains of the Homebrewing Slack team, I think I have finally done it, I mean just absolutely nailed it! I personally think it all really came down to the water, but also, the now more readily available Kveik yeasts out there helped me as well. Especially Omega Voss, allowing to ferment at 90F+ you can turn beers around in 5-7 days. And they are some of the best NEIPAs I’ve ever had, second to maybe Arvon Brewing. Anyway, I wanted to share my findings and what seems to really be working for me. The best part is that the grain and water pretty much always stay the same, and you can just tinker with hops.</summary></entry><entry><title type="html">Replace Failed Storage Pool HDD</title><link href="http://0.0.0.0:4000/replacing-failed-storage-pool-hdd/" rel="alternate" type="text/html" title="Replace Failed Storage Pool HDD" /><published>2019-08-05T00:00:00+00:00</published><updated>2019-08-05T00:00:00+00:00</updated><id>http://0.0.0.0:4000/replacing-failed-storage-pool-hdd</id><content type="html" xml:base="http://0.0.0.0:4000/replacing-failed-storage-pool-hdd/">&lt;p&gt;In my day to day jobby, I manage multiple Hyper-V clusters, and these clusters use shared storage.  Most of the storage is a JBOD shelf with dual SAS connections to the hypervisor nodes.  Because the shelf is JBOD, Windows is the &lt;em&gt;brains&lt;/em&gt; for the storage.  Enter &lt;a href=&quot;https://docs.microsoft.com/en-us/windows-server/storage/storage-spaces/overview&quot;&gt;Windows Storage Spaces&lt;/a&gt;.  This is basically a Software RAID that you configure a &lt;em&gt;pool&lt;/em&gt; of disks, and then you layer a VHD over that pool.  After a volume is created on the VHD, it can be used by the hosts.  These volumes can be added to &lt;a href=&quot;https://docs.microsoft.com/en-us/windows-server/failover-clustering/failover-cluster-csvs&quot;&gt;Cluster Shared Volumes&lt;/a&gt; which allows the volume to move between host nodes, creating redundancy.  All the VMs hosted in the cluster, live on the CSV, making them Highly Available.&lt;/p&gt;
 
 &lt;p&gt;As hardware always does, physical disks in the pool fail.  Most of the Microsoft docs on fixing this issue are quite cumbersome to follow, and even more so, they tend to deal with &lt;a href=&quot;https://docs.microsoft.com/en-us/windows-server/storage/storage-spaces/storage-spaces-direct-overview&quot;&gt;Storage Spaces Direct&lt;/a&gt;, which is not the same technology.  So I thought I would make up a quick little walk through on replacing a failed HDD in a storage pool.  I have to do this about once a month, so this is just as much for me, as it is for you.&lt;/p&gt;
 
@@ -56,7 +127,7 @@
 &lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;Remove-PhysicalDisk&lt;/span&gt; -StoragePoolFriendlyName MyStoragePool -PhysicalDisks &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Get-PhysicalDisk&lt;/span&gt; -Usage Retired &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;And thats it, good to go!  Cheers.&lt;/p&gt;</content><author><name></name></author><category term="powershell" /><category term="powershell" /><category term="windows" /><category term="server" /><summary type="html">In my day to day jobby, I manage multiple Hyper-V clusters, and these clusters use shared storage. Most of the storage is a JBOD shelf with dual SAS connections to the hypervisor nodes. Because the shelf is JBOD, Windows is the brains for the storage. Enter Windows Storage Spaces. This basically a Software RAID that you configure a pool of disks, and then you layer a VHD over that pool. After a volume is created on the VHD, it can be used by the hosts. These volumes can be added to Cluster Shared Volumes which allows the volume to move between host nodes, creating redundancy. All the VMs hosted in the cluster, live on the CSV, making them Highly Available.</summary></entry><entry><title type="html">Installing PKI SSL Certificate on HPE iLO</title><link href="http://0.0.0.0:4000/installing-pki-ssl-certificate-on-hpe-ilo/" rel="alternate" type="text/html" title="Installing PKI SSL Certificate on HPE iLO" /><published>2019-07-25T00:00:00+00:00</published><updated>2019-07-25T00:00:00+00:00</updated><id>http://0.0.0.0:4000/installing-pki-ssl-certificate-on-hpe-ilo</id><content type="html" xml:base="http://0.0.0.0:4000/installing-pki-ssl-certificate-on-hpe-ilo/">&lt;p&gt;I work with HPE Systems almost exclusively, and as of late I have been getting very irritated with the browser warning about the self signed SSL cert that is installed on the HPE iLO by default.&lt;/p&gt;
+&lt;p&gt;And thats it, good to go!  Cheers.&lt;/p&gt;</content><author><name></name></author><category term="powershell" /><category term="powershell" /><category term="windows" /><category term="server" /><summary type="html">In my day to day jobby, I manage multiple Hyper-V clusters, and these clusters use shared storage. Most of the storage is a JBOD shelf with dual SAS connections to the hypervisor nodes. Because the shelf is JBOD, Windows is the brains for the storage. Enter Windows Storage Spaces. This is basically a Software RAID that you configure a pool of disks, and then you layer a VHD over that pool. After a volume is created on the VHD, it can be used by the hosts. These volumes can be added to Cluster Shared Volumes which allows the volume to move between host nodes, creating redundancy. All the VMs hosted in the cluster, live on the CSV, making them Highly Available.</summary></entry><entry><title type="html">Installing PKI SSL Certificate on HPE iLO</title><link href="http://0.0.0.0:4000/installing-pki-ssl-certificate-on-hpe-ilo/" rel="alternate" type="text/html" title="Installing PKI SSL Certificate on HPE iLO" /><published>2019-07-25T00:00:00+00:00</published><updated>2019-07-25T00:00:00+00:00</updated><id>http://0.0.0.0:4000/installing-pki-ssl-certificate-on-hpe-ilo</id><content type="html" xml:base="http://0.0.0.0:4000/installing-pki-ssl-certificate-on-hpe-ilo/">&lt;p&gt;I work with HPE Systems almost exclusively, and as of late I have been getting very irritated with the browser warning about the self signed SSL cert that is installed on the HPE iLO by default.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/images/2019-07-25-installing-pki-ssl-certificate-on-hpe-ilo/security-error.png&quot; alt=&quot;Security Error&quot; /&gt;&lt;/p&gt;
 

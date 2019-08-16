@@ -62,10 +62,23 @@
   
     <article class="post">
 
+      <h1><a href="/nobody-got-time-for-that/">Nobody Got Time For That</a></h1>
+
+      <div class="entry">
+        <p>I have been tinkering with NEIPAs for a while now, in theory, they shouldn’t be <em>too</em> hard to make, and to get an OK one, they really aren’t.  But I wanted something better then just OK.  After about 10 attempts and lots of trial and error and even more picking the brains of the Homebrewing Slack team, I think I have finally done it, I mean just absolutely nailed it!  I personally think it all really came down to the water, but also, the now more readily available Kveik yeasts out there helped me as well.  Especially <a href="https://omegayeast.com/yeast/norwegian-ales/voss-kveik">Omega Voss</a>, allowing to ferment at 90F+ you can turn beers around in 5-7 days.  And they are some of the best NEIPAs I’ve ever had, second to maybe <a href="https://www.arvonbrewingco.com">Arvon Brewing</a>.  Anyway, I wanted to share my findings and what seems to really be working for me.  The best part is that the grain and water pretty much always stay the same, and you can just tinker with hops.</p>
+
+
+      </div>
+
+      <a href="/nobody-got-time-for-that/" class="read-more">Read More</a>
+    </article>
+  
+    <article class="post">
+
       <h1><a href="/replacing-failed-storage-pool-hdd/">Replace Failed Storage Pool HDD</a></h1>
 
       <div class="entry">
-        <p>In my day to day jobby, I manage multiple Hyper-V clusters, and these clusters use shared storage.  Most of the storage is a JBOD shelf with dual SAS connections to the hypervisor nodes.  Because the shelf is JBOD, Windows is the <em>brains</em> for the storage.  Enter <a href="https://docs.microsoft.com/en-us/windows-server/storage/storage-spaces/overview">Windows Storage Spaces</a>.  This basically a Software RAID that you configure a <em>pool</em> of disks, and then you layer a VHD over that pool.  After a volume is created on the VHD, it can be used by the hosts.  These volumes can be added to <a href="https://docs.microsoft.com/en-us/windows-server/failover-clustering/failover-cluster-csvs">Cluster Shared Volumes</a> which allows the volume to move between host nodes, creating redundancy.  All the VMs hosted in the cluster, live on the CSV, making them Highly Available.</p>
+        <p>In my day to day jobby, I manage multiple Hyper-V clusters, and these clusters use shared storage.  Most of the storage is a JBOD shelf with dual SAS connections to the hypervisor nodes.  Because the shelf is JBOD, Windows is the <em>brains</em> for the storage.  Enter <a href="https://docs.microsoft.com/en-us/windows-server/storage/storage-spaces/overview">Windows Storage Spaces</a>.  This is basically a Software RAID that you configure a <em>pool</em> of disks, and then you layer a VHD over that pool.  After a volume is created on the VHD, it can be used by the hosts.  These volumes can be added to <a href="https://docs.microsoft.com/en-us/windows-server/failover-clustering/failover-cluster-csvs">Cluster Shared Volumes</a> which allows the volume to move between host nodes, creating redundancy.  All the VMs hosted in the cluster, live on the CSV, making them Highly Available.</p>
 
 
       </div>
@@ -84,19 +97,6 @@
       </div>
 
       <a href="/installing-pki-ssl-certificate-on-hpe-ilo/" class="read-more">Read More</a>
-    </article>
-  
-    <article class="post">
-
-      <h1><a href="/using-bltouch-with-klipper-and-the-ender3/">Using BLTouch with Klipper and the Ender3</a></h1>
-
-      <div class="entry">
-        <p>I have been 3D printing for about a year now, its had its ups and downs, good times and bad.  Some times its the greatest thing, and sometimes I’m glad I don’t keep a baseball bat near my 3D Printer, because I may not still be the owner of one if I did.  I know all printers are different and everyone has their reasons for why or what they do and use for the build surface.  I have the <a href="https://www.amazon.com/Comgrow-Creality-Ender-Aluminum-220x220x250mm/dp/B07BR3F9N6/ref=sr_1_1_sspa?keywords=ender+3&amp;qid=1559158769&amp;s=gateway&amp;sr=8-1-spons&amp;psc=1">Ender3</a>, its a great entry level printer for the price and I have spit out some amazing prints.  But one the most notorious issues with the Ender3 is the warped bed.  It seems like everyone has reported this issue.  And I think one thing all 3D Printer Hobbyist could agree on, is the first layer is one of the most important parts of the print.  And when you printing around .2mm layer hight, if the build surface isn’t perfect you’re going to have problems, especially with larger prints.</p>
-
-
-      </div>
-
-      <a href="/using-bltouch-with-klipper-and-the-ender3/" class="read-more">Read More</a>
     </article>
   
 
