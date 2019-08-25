@@ -25,4 +25,4 @@ Thats pretty much it, I have this mounted up in my brew table, as you can see in
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/iY3-GoD2tAE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-thats it!  Pour one for me, cheers!
+Thats it!  Pour one for me, cheers!
