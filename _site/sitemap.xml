@@ -8,8 +8,40 @@
 	
 		
 		<item>
+			<title>Motorizing Your Grain Mill</title>
+			<description>&lt;p&gt;If you are like me, and most others I know who crush their own grain, you set up is pretty simple, a mill, and either you are hand cranking it, which sounds terrible, or you hooking your drill to it, and powering it that way.  I personally am the latter, I hook my battery powered DeWalt drill to the mill and try to hold the speed slow and steady.  This is a PITA for two reasons.  First, I can never hold the speed the same for the entire crush, especially if its a rather large grain bill, and, this may not be true, but I feel like it cannot be great for my drill to run it with the trigger barely pressed for 15 minutes.  And second, I cannot multitask when im grinding.  I have to just sit there and hold the drill with one hand and add additional grains to the hopper with the other.  I feel like its just a huge waste of time.  I have seen setups where people mount a drill and set the speed buy using a zip tie to get the trigger just right.  This wasn’t going to work for me because I don’t have a spare drill laying around I can donate to something like this, as it would have no other use.  And if I’m going to buy a drill for this purpose, then I might as well just buy a motor to power this thing.  And thats what I did.&lt;/p&gt;
+
+&lt;h2 id=&quot;parts-list&quot;&gt;Parts list&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.com/FERRODAY-Crusher-Stainless-Homebrew-Adjustable/dp/B07CMKN4B2/ref=sr_1_3?keywords=grain+mill&amp;amp;qid=1566772604&amp;amp;s=gateway&amp;amp;sr=8-3&quot;&gt;Grain Mill&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.aliexpress.com/item/468388028.html?spm=a2g0s.9042311.0.0.49844c4dQxdnus&quot;&gt;Motor&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.aliexpress.com/item/32366750867.html?spm=a2g0s.9042311.0.0.49844c4dQxdnus&quot;&gt;Coupler&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.com/gp/product/B07GFLFTV2/ref=ppx_yo_dt_b_asin_title_o02_s00?ie=UTF8&amp;amp;psc=1&quot;&gt;Power Supply&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;During my &lt;em&gt;experimentation&lt;/em&gt; of this project I went through 3 different power supply units before settling on this one. I mean it needed to be 12v DC so that part was obvious, but I started with a 7A, the motor wouldn’t even turn on, then went to a 10A.  This one worked, however, if it got even slightly jambed up, it would stop, and I would have to clear out the entire hopper to get it going again.  It was terrible, especially as I wanted to do this build so I could fill the hopper and let it grind and go do other things, not babysit the grinder.  After upgrading to the 20A its a beast and it has not jambed up on me not once.&lt;/p&gt;
+
+&lt;h2 id=&quot;wire-it-up&quot;&gt;Wire it up&lt;/h2&gt;
+&lt;p&gt;This build is extremely easy, you run in the AC wire to the +/- and ground.  Then the motor has red and black wires, its DC, so red goes to V+ and black goes goes to V-.  Now, if you read any of my other blergs, I had an extra AC Rocker switch laying around from my &lt;a href=&quot;https://tomohulk.github.io/piless-brewpi/&quot;&gt;BrewPiLess build&lt;/a&gt;, so I added that to my build to make it easy to turn the grinder on and off (you can find a wiring diagram on that post, just put it on the AC input in front of the PSU).&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Thats pretty much it, I have this mounted up in my brew table, as you can see in the video, I secured it down with a U-bolt.  Let me know if you have any questions, but this is a pretty straight forward build out, and saves me a lot of time, and I didn’t have to sacrifice a drill.&lt;/p&gt;
+
+&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/iY3-GoD2tAE&quot; frameborder=&quot;0&quot; allow=&quot;accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;thats it!  Pour one for me, cheers!&lt;/p&gt;
+</description>
+			<pubDate>Wed, 21 Aug 2019 00:00:00 +0000</pubDate>
+			<link>http://0.0.0.0:4000/motorizing-your-grain-mill/</link>
+			<guid isPermaLink="true">http://0.0.0.0:4000/motorizing-your-grain-mill/</guid>
+		</item>
+		
+	
+		
+		<item>
 			<title>Nobody Got Time For That</title>
-			<description>&lt;p&gt;I have been tinkering with NEIPAs for a while now, in theory, they shouldn’t be &lt;em&gt;too&lt;/em&gt; hard to make, and to get an OK one, they really aren’t.  But I wanted something better then just OK.  After about 10 attempts and lots of trial and error and even more picking the brains of the Homebrewing Slack team, I think I have finally done it, I mean just absolutely nailed it!  I personally think it all really came down to the water, but also, the now more readily available Kveik yeasts out there helped me as well.  Especially &lt;a href=&quot;https://omegayeast.com/yeast/norwegian-ales/voss-kveik&quot;&gt;Omega Voss&lt;/a&gt;, allowing to ferment at 90F+ you can turn beers around in 5-7 days.  And they are some of the best NEIPAs I’ve ever had, second to maybe &lt;a href=&quot;https://www.arvonbrewingco.com&quot;&gt;Arvon Brewing&lt;/a&gt;.  Anyway, I wanted to share my findings and what seems to really be working for me.  The best part is that the grain and water pretty much always stay the same, and you can just tinker with hops.&lt;/p&gt;
+			<description>&lt;p&gt;I have been tinkering with NEIPAs for a while now, in theory, they shouldn’t be &lt;em&gt;too&lt;/em&gt; hard to make, and to get an OK one, they really aren’t.  But I wanted something better then just OK.  After about 10 attempts and lots of trial and error and even more picking the brains of the Homebrewing Slack team (Bender, if you’re reading this, this is your shout out), I think I have finally done it, I mean just absolutely nailed it!  I personally think it all really came down to the water, but also, the now more readily available Kveik yeasts out there helped me as well.  Especially &lt;a href=&quot;https://omegayeast.com/yeast/norwegian-ales/voss-kveik&quot;&gt;Omega Voss&lt;/a&gt;, allowing to ferment at 90F+ you can turn beers around in 5-7 days.  And they are some of the best NEIPAs I’ve ever had, second to maybe &lt;a href=&quot;https://www.arvonbrewingco.com&quot;&gt;Arvon Brewing&lt;/a&gt;.  Anyway, I wanted to share my findings and what seems to really be working for me.  The best part is that the grain and water pretty much always stay the same, and you can just tinker with hops.&lt;/p&gt;
 
 &lt;h2 id=&quot;water&quot;&gt;Water&lt;/h2&gt;
 &lt;p&gt;OK, so first and foremost, the water.  In all my experimentation with these HaziBois, I have found that water seems to play the most important roll in what makes the hops &lt;em&gt;POP&lt;/em&gt;.  Here is my water chemistry (the report is about a year old, I am due to have it updated again):&lt;/p&gt;
@@ -915,10 +947,23 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
   
     &lt;article class=&quot;post&quot;&gt;
 
+      &lt;h1&gt;&lt;a href=&quot;/motorizing-your-grain-mill/&quot;&gt;Motorizing Your Grain Mill&lt;/a&gt;&lt;/h1&gt;
+
+      &lt;div class=&quot;entry&quot;&gt;
+        &lt;p&gt;If you are like me, and most others I know who crush their own grain, you set up is pretty simple, a mill, and either you are hand cranking it, which sounds terrible, or you hooking your drill to it, and powering it that way.  I personally am the latter, I hook my battery powered DeWalt drill to the mill and try to hold the speed slow and steady.  This is a PITA for two reasons.  First, I can never hold the speed the same for the entire crush, especially if its a rather large grain bill, and, this may not be true, but I feel like it cannot be great for my drill to run it with the trigger barely pressed for 15 minutes.  And second, I cannot multitask when im grinding.  I have to just sit there and hold the drill with one hand and add additional grains to the hopper with the other.  I feel like its just a huge waste of time.  I have seen setups where people mount a drill and set the speed buy using a zip tie to get the trigger just right.  This wasn’t going to work for me because I don’t have a spare drill laying around I can donate to something like this, as it would have no other use.  And if I’m going to buy a drill for this purpose, then I might as well just buy a motor to power this thing.  And thats what I did.&lt;/p&gt;
+
+
+      &lt;/div&gt;
+
+      &lt;a href=&quot;/motorizing-your-grain-mill/&quot; class=&quot;read-more&quot;&gt;Read More&lt;/a&gt;
+    &lt;/article&gt;
+  
+    &lt;article class=&quot;post&quot;&gt;
+
       &lt;h1&gt;&lt;a href=&quot;/nobody-got-time-for-that/&quot;&gt;Nobody Got Time For That&lt;/a&gt;&lt;/h1&gt;
 
       &lt;div class=&quot;entry&quot;&gt;
-        &lt;p&gt;I have been tinkering with NEIPAs for a while now, in theory, they shouldn’t be &lt;em&gt;too&lt;/em&gt; hard to make, and to get an OK one, they really aren’t.  But I wanted something better then just OK.  After about 10 attempts and lots of trial and error and even more picking the brains of the Homebrewing Slack team, I think I have finally done it, I mean just absolutely nailed it!  I personally think it all really came down to the water, but also, the now more readily available Kveik yeasts out there helped me as well.  Especially &lt;a href=&quot;https://omegayeast.com/yeast/norwegian-ales/voss-kveik&quot;&gt;Omega Voss&lt;/a&gt;, allowing to ferment at 90F+ you can turn beers around in 5-7 days.  And they are some of the best NEIPAs I’ve ever had, second to maybe &lt;a href=&quot;https://www.arvonbrewingco.com&quot;&gt;Arvon Brewing&lt;/a&gt;.  Anyway, I wanted to share my findings and what seems to really be working for me.  The best part is that the grain and water pretty much always stay the same, and you can just tinker with hops.&lt;/p&gt;
+        &lt;p&gt;I have been tinkering with NEIPAs for a while now, in theory, they shouldn’t be &lt;em&gt;too&lt;/em&gt; hard to make, and to get an OK one, they really aren’t.  But I wanted something better then just OK.  After about 10 attempts and lots of trial and error and even more picking the brains of the Homebrewing Slack team (Bender, if you’re reading this, this is your shout out), I think I have finally done it, I mean just absolutely nailed it!  I personally think it all really came down to the water, but also, the now more readily available Kveik yeasts out there helped me as well.  Especially &lt;a href=&quot;https://omegayeast.com/yeast/norwegian-ales/voss-kveik&quot;&gt;Omega Voss&lt;/a&gt;, allowing to ferment at 90F+ you can turn beers around in 5-7 days.  And they are some of the best NEIPAs I’ve ever had, second to maybe &lt;a href=&quot;https://www.arvonbrewingco.com&quot;&gt;Arvon Brewing&lt;/a&gt;.  Anyway, I wanted to share my findings and what seems to really be working for me.  The best part is that the grain and water pretty much always stay the same, and you can just tinker with hops.&lt;/p&gt;
 
 
       &lt;/div&gt;
@@ -937,19 +982,6 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &lt;/div&gt;
 
       &lt;a href=&quot;/replacing-failed-storage-pool-hdd/&quot; class=&quot;read-more&quot;&gt;Read More&lt;/a&gt;
-    &lt;/article&gt;
-  
-    &lt;article class=&quot;post&quot;&gt;
-
-      &lt;h1&gt;&lt;a href=&quot;/installing-pki-ssl-certificate-on-hpe-ilo/&quot;&gt;Installing PKI SSL Certificate on HPE iLO&lt;/a&gt;&lt;/h1&gt;
-
-      &lt;div class=&quot;entry&quot;&gt;
-        &lt;p&gt;I work with HPE Systems almost exclusively, and as of late I have been getting very irritated with the browser warning about the self signed SSL cert that is installed on the HPE iLO by default.&lt;/p&gt;
-
-
-      &lt;/div&gt;
-
-      &lt;a href=&quot;/installing-pki-ssl-certificate-on-hpe-ilo/&quot; class=&quot;read-more&quot;&gt;Read More&lt;/a&gt;
     &lt;/article&gt;
   
 
@@ -1028,6 +1060,17 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
 			<item>
 				<title></title>
 				<description>[
+  
+    {
+    
+      &quot;title&quot;    : &quot;Motorizing Your Grain Mill&quot;,
+      &quot;url&quot;      : &quot;/motorizing-your-grain-mill/&quot;,
+      &quot;category&quot; : &quot;homebrewing&quot;,
+      &quot;tags&quot;     : &quot;homebrewing&quot;,
+      &quot;date&quot;     : &quot;2019-08-21 00:00:00 +0000&quot;,
+      &quot;description&quot; : &quot;How to turn your hand powered grain mill into a motorized one.&quot;
+      
+    } ,
   
     {
     
@@ -1633,6 +1676,47 @@ footer {
 				<pubDate></pubDate>
 				<link>http://0.0.0.0:4000/page3/</link>
 				<guid isPermaLink="true">http://0.0.0.0:4000/page3/</guid>
+			</item>
+			
+		
+	
+		
+			
+			<item>
+				<title></title>
+				<description>&lt;div class=&quot;posts&quot;&gt;
+  {% for post in paginator.posts %}
+    &lt;article class=&quot;post&quot;&gt;
+
+      &lt;h1&gt;&lt;a href=&quot;{{ post.url | prepend: site.baseurl }}&quot;&gt;{{ post.title }}&lt;/a&gt;&lt;/h1&gt;
+
+      &lt;div class=&quot;entry&quot;&gt;
+        {{ post.excerpt }}
+      &lt;/div&gt;
+
+      &lt;a href=&quot;{{ site.baseurl }}{{ post.url }}&quot; class=&quot;read-more&quot;&gt;Read More&lt;/a&gt;
+    &lt;/article&gt;
+  {% endfor %}
+
+  &lt;!-- Pager --&gt;
+  &lt;div class=&quot;pager&quot;&gt;
+  {% if paginator.total_pages &gt; 1 %}
+    {% if paginator.previous_page %}
+        &lt;a href=&quot;{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}&quot;&gt;Newer Posts&lt;/a&gt;
+        {% if paginator.next_page %}
+          | 
+        {% endif %}
+    {% endif %}
+    {% if paginator.next_page %}
+        &lt;a href=&quot;{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}&quot;&gt;Older Posts&lt;/a&gt;
+    {% endif %}
+  {% endif %}
+  &lt;/div&gt;
+&lt;/div&gt;
+</description>
+				<pubDate></pubDate>
+				<link>http://0.0.0.0:4000/page4/</link>
+				<guid isPermaLink="true">http://0.0.0.0:4000/page4/</guid>
 			</item>
 			
 		
