@@ -3,7 +3,7 @@ layout: post
 title: Motorizing Your Grain Mill
 category: homebrewing
 description: How to turn your hand powered grain mill into a motorized one.
-tags: homebrewing
+tags: homebrewing diy
 ---
 
 If you are like me, and most others I know who crush their own grain, you set up is pretty simple, a mill, and either you are hand cranking it, which sounds terrible, or you hooking your drill to it, and powering it that way.  I personally am the latter, I hook my battery powered DeWalt drill to the mill and try to hold the speed slow and steady.  This is a PITA for two reasons.  First, I can never hold the speed the same for the entire crush, especially if its a rather large grain bill, and, this may not be true, but I feel like it cannot be great for my drill to run it with the trigger barely pressed for 15 minutes.  And second, I cannot multitask when im grinding.  I have to just sit there and hold the drill with one hand and add additional grains to the hopper with the other.  I feel like its just a huge waste of time.  I have seen setups where people mount a drill and set the speed buy using a zip tie to get the trigger just right.  This wasn't going to work for me because I don't have a spare drill laying around I can donate to something like this, as it would have no other use.  And if I'm going to buy a drill for this purpose, then I might as well just buy a motor to power this thing.  And thats what I did.

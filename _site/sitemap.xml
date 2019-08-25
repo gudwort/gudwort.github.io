@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
 	<title></title>
-	<description>Homebrewer, Father, Husband, Tinker</description>
+	<description>Homebrewer, Father, Husband, Nerd</description>
 	<link>http://0.0.0.0:4000</link>
 	<atom:link href="http://0.0.0.0:4000/search.xml" rel="self" type="application/rss+xml" />
 	
@@ -30,7 +30,7 @@
 
 &lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/iY3-GoD2tAE&quot; frameborder=&quot;0&quot; allow=&quot;accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
 
-&lt;p&gt;thats it!  Pour one for me, cheers!&lt;/p&gt;
+&lt;p&gt;Thats it!  Pour one for me, cheers!&lt;/p&gt;
 </description>
 			<pubDate>Wed, 21 Aug 2019 00:00:00 +0000</pubDate>
 			<link>http://0.0.0.0:4000/motorizing-your-grain-mill/</link>
@@ -950,9 +950,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &lt;h1&gt;&lt;a href=&quot;/motorizing-your-grain-mill/&quot;&gt;Motorizing Your Grain Mill&lt;/a&gt;&lt;/h1&gt;
 
       &lt;div class=&quot;entry&quot;&gt;
-        &lt;p&gt;If you are like me, and most others I know who crush their own grain, you set up is pretty simple, a mill, and either you are hand cranking it, which sounds terrible, or you hooking your drill to it, and powering it that way.  I personally am the latter, I hook my battery powered DeWalt drill to the mill and try to hold the speed slow and steady.  This is a PITA for two reasons.  First, I can never hold the speed the same for the entire crush, especially if its a rather large grain bill, and, this may not be true, but I feel like it cannot be great for my drill to run it with the trigger barely pressed for 15 minutes.  And second, I cannot multitask when im grinding.  I have to just sit there and hold the drill with one hand and add additional grains to the hopper with the other.  I feel like its just a huge waste of time.  I have seen setups where people mount a drill and set the speed buy using a zip tie to get the trigger just right.  This wasn’t going to work for me because I don’t have a spare drill laying around I can donate to something like this, as it would have no other use.  And if I’m going to buy a drill for this purpose, then I might as well just buy a motor to power this thing.  And thats what I did.&lt;/p&gt;
-
-
+        How to turn your hand powered grain mill into a motorized one.
       &lt;/div&gt;
 
       &lt;a href=&quot;/motorizing-your-grain-mill/&quot; class=&quot;read-more&quot;&gt;Read More&lt;/a&gt;
@@ -963,9 +961,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &lt;h1&gt;&lt;a href=&quot;/nobody-got-time-for-that/&quot;&gt;Nobody Got Time For That&lt;/a&gt;&lt;/h1&gt;
 
       &lt;div class=&quot;entry&quot;&gt;
-        &lt;p&gt;I have been tinkering with NEIPAs for a while now, in theory, they shouldn’t be &lt;em&gt;too&lt;/em&gt; hard to make, and to get an OK one, they really aren’t.  But I wanted something better then just OK.  After about 10 attempts and lots of trial and error and even more picking the brains of the Homebrewing Slack team (Bender, if you’re reading this, this is your shout out), I think I have finally done it, I mean just absolutely nailed it!  I personally think it all really came down to the water, but also, the now more readily available Kveik yeasts out there helped me as well.  Especially &lt;a href=&quot;https://omegayeast.com/yeast/norwegian-ales/voss-kveik&quot;&gt;Omega Voss&lt;/a&gt;, allowing to ferment at 90F+ you can turn beers around in 5-7 days.  And they are some of the best NEIPAs I’ve ever had, second to maybe &lt;a href=&quot;https://www.arvonbrewingco.com&quot;&gt;Arvon Brewing&lt;/a&gt;.  Anyway, I wanted to share my findings and what seems to really be working for me.  The best part is that the grain and water pretty much always stay the same, and you can just tinker with hops.&lt;/p&gt;
-
-
+        45 minute mash, no boil, Kveik HaziBoi, grain to glass in 5 days.
       &lt;/div&gt;
 
       &lt;a href=&quot;/nobody-got-time-for-that/&quot; class=&quot;read-more&quot;&gt;Read More&lt;/a&gt;
@@ -976,9 +972,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &lt;h1&gt;&lt;a href=&quot;/replacing-failed-storage-pool-hdd/&quot;&gt;Replace Failed Storage Pool HDD&lt;/a&gt;&lt;/h1&gt;
 
       &lt;div class=&quot;entry&quot;&gt;
-        &lt;p&gt;In my day to day jobby, I manage multiple Hyper-V clusters, and these clusters use shared storage.  Most of the storage is a JBOD shelf with dual SAS connections to the hypervisor nodes.  Because the shelf is JBOD, Windows is the &lt;em&gt;brains&lt;/em&gt; for the storage.  Enter &lt;a href=&quot;https://docs.microsoft.com/en-us/windows-server/storage/storage-spaces/overview&quot;&gt;Windows Storage Spaces&lt;/a&gt;.  This is basically a Software RAID that you configure a &lt;em&gt;pool&lt;/em&gt; of disks, and then you layer a VHD over that pool.  After a volume is created on the VHD, it can be used by the hosts.  These volumes can be added to &lt;a href=&quot;https://docs.microsoft.com/en-us/windows-server/failover-clustering/failover-cluster-csvs&quot;&gt;Cluster Shared Volumes&lt;/a&gt; which allows the volume to move between host nodes, creating redundancy.  All the VMs hosted in the cluster, live on the CSV, making them Highly Available.&lt;/p&gt;
-
-
+        Replacing a failed hard disk drive in Windows Server Storage Spaces Storage Pool.
       &lt;/div&gt;
 
       &lt;a href=&quot;/replacing-failed-storage-pool-hdd/&quot; class=&quot;read-more&quot;&gt;Read More&lt;/a&gt;
@@ -1066,7 +1060,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &quot;title&quot;    : &quot;Motorizing Your Grain Mill&quot;,
       &quot;url&quot;      : &quot;/motorizing-your-grain-mill/&quot;,
       &quot;category&quot; : &quot;homebrewing&quot;,
-      &quot;tags&quot;     : &quot;homebrewing&quot;,
+      &quot;tags&quot;     : &quot;homebrewing, diy&quot;,
       &quot;date&quot;     : &quot;2019-08-21 00:00:00 +0000&quot;,
       &quot;description&quot; : &quot;How to turn your hand powered grain mill into a motorized one.&quot;
       
@@ -1210,13 +1204,13 @@ SimpleJekyllSearch({
 
 &lt;p&gt;&lt;a href=&quot;/tag/keezer&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;keezer&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
 
+&lt;p&gt;&lt;a href=&quot;/tag/diy&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;diy&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
+
 &lt;p&gt;&lt;a href=&quot;/tag/3dprinting&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;3dprinting&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;/tag/raspberrypi&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;raspberrypi&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;/tag/powershell&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;powershell&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/tag/diy&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;diy&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;/tag/windows&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;windows&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
 
@@ -1609,7 +1603,7 @@ footer {
       &lt;h1&gt;&lt;a href=&quot;{{ post.url | prepend: site.baseurl }}&quot;&gt;{{ post.title }}&lt;/a&gt;&lt;/h1&gt;
 
       &lt;div class=&quot;entry&quot;&gt;
-        {{ post.excerpt }}
+        {{ post.description }}
       &lt;/div&gt;
 
       &lt;a href=&quot;{{ site.baseurl }}{{ post.url }}&quot; class=&quot;read-more&quot;&gt;Read More&lt;/a&gt;
@@ -1650,7 +1644,7 @@ footer {
       &lt;h1&gt;&lt;a href=&quot;{{ post.url | prepend: site.baseurl }}&quot;&gt;{{ post.title }}&lt;/a&gt;&lt;/h1&gt;
 
       &lt;div class=&quot;entry&quot;&gt;
-        {{ post.excerpt }}
+        {{ post.description }}
       &lt;/div&gt;
 
       &lt;a href=&quot;{{ site.baseurl }}{{ post.url }}&quot; class=&quot;read-more&quot;&gt;Read More&lt;/a&gt;
@@ -1691,7 +1685,7 @@ footer {
       &lt;h1&gt;&lt;a href=&quot;{{ post.url | prepend: site.baseurl }}&quot;&gt;{{ post.title }}&lt;/a&gt;&lt;/h1&gt;
 
       &lt;div class=&quot;entry&quot;&gt;
-        {{ post.excerpt }}
+        {{ post.description }}
       &lt;/div&gt;
 
       &lt;a href=&quot;{{ site.baseurl }}{{ post.url }}&quot; class=&quot;read-more&quot;&gt;Read More&lt;/a&gt;
