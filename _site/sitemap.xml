@@ -14,7 +14,7 @@
 &lt;h2 id=&quot;parts-list&quot;&gt;Parts list&lt;/h2&gt;
 &lt;ol&gt;
   &lt;li&gt;&lt;a href=&quot;https://www.amazon.com/FERRODAY-Crusher-Stainless-Homebrew-Adjustable/dp/B07CMKN4B2/ref=sr_1_3?keywords=grain+mill&amp;amp;qid=1566772604&amp;amp;s=gateway&amp;amp;sr=8-3&quot;&gt;Grain Mill&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.aliexpress.com/item/468388028.html?spm=a2g0s.9042311.0.0.49844c4dQxdnus&quot;&gt;Motor&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.aliexpress.com/item/4000060286950.html&quot;&gt;Motor (12V, 160RPM)&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://www.aliexpress.com/item/32366750867.html?spm=a2g0s.9042311.0.0.49844c4dQxdnus&quot;&gt;Coupler&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://www.amazon.com/gp/product/B07GFLFTV2/ref=ppx_yo_dt_b_asin_title_o02_s00?ie=UTF8&amp;amp;psc=1&quot;&gt;Power Supply&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
@@ -97,7 +97,7 @@
 &lt;h2 id=&quot;whirlpool&quot;&gt;Whirlpool&lt;/h2&gt;
 &lt;p&gt;So after killing the flame, I turn on my chiller for about 1-2 minutes, this will bring the wort to 190ish.  Even after killing the flame, the temperature still seems to drop pretty quick to about 182ish.  Time to hop the piss out this thing.  I have been doing a half pound whirlpool only hop.  I use 4oz Citra, 2oz Mosiac, and 2oz tuttie fruity hop of your choice, I have done Amarillo, and El Dorado, and at the time of this writing, a batch with Azzaca is in the fermenter.  The El Dorado was amazing, one of the best NEIPAs I have ever had.&lt;/p&gt;
 
-&lt;p&gt;Now, I feel like my brew house is a bit prone to clogs during a heavy whirlpool, so I generally do it slowly.  I add the Citra over about a minute, then Mosaic, then whatever I’m, using for the last happy hop.  After this the temp is usually about 179.  I start my timer for a 20 minute whirlpool and turn on a very low flame, with my banjo burner I can hold a temp to a degree or two, so I do my best to hold at 180F.  usually by the time the 20 minutes has passed, its at 181-182.&lt;/p&gt;
+&lt;p&gt;Now, I feel like my brew house is a bit prone to clogs during a heavy whirlpool, so I generally do it slowly.  I add the Citra over about a minute, then Mosaic, then whatever I’m, using for the last happy hop.  After this the temp is usually about 179.  I start my timer for a 20 minute whirlpool and turn on a very low flame, with my banjo burner I can hold a temp to a degree or two, so I do my best to hold at 180F.  Usually by the time the 20 minutes has passed, its at 181-182.&lt;/p&gt;
 
 &lt;p&gt;After the whirlpool, chill to 100F, rack to fermenter.&lt;/p&gt;
 
@@ -105,7 +105,7 @@
 &lt;p&gt;Heres the good stuff, &lt;em&gt;Voss is Boss&lt;/em&gt; set your temperature controller 90, And let it roll, you could probably go hotter if you wanted, I’ve heard of people pushing Voss over the 100F mark.  I also DO NOT make a starter for a 5 gallon batch with this yeast, trying to stress it a bit for some esters.&lt;/p&gt;
 
 &lt;h2 id=&quot;dry-hop&quot;&gt;Dry Hop&lt;/h2&gt;
-&lt;p&gt;I do everything in 24 hour increments.  24 hours after pitch, I do a dry hop, 2oz Citra, 1oz, Mosaic, 1oz same hop I used to finish the whirlpool.  48 hours post pitch, hit with that hop dosage again, totalling one pound of hops.  By 48 hours, the primary ferment will have already completed (again &lt;em&gt;Voss is Boss&lt;/em&gt;).  Let it sit for atleast another 24 hours for hop utilization, but ideally I target 48 hours.  So a four day total ferment.  Next is up to you, cold crash.  Your call.  I usually do it for 24 hours just to let some hops fall out of solution, so I don’t get clogged dip tubes in my kegs.  But this is not a mandatory step.&lt;/p&gt;
+&lt;p&gt;I do everything in 24 hour increments.  24 hours after pitch, I do a dry hop, 2oz Citra, 1oz, Mosaic, 1oz same hop I used to finish the whirlpool.  48 hours post pitch, hit with that hop dosage again, totalling one pound of hops.  By 48 hours, the primary ferment will have already completed (again &lt;em&gt;Voss is Boss&lt;/em&gt;).  Let it sit for at least another 24 hours for hop utilization, but ideally I target 48 hours.  So a four day total ferment.  Next is up to you, cold crash.  Your call.  I usually do it for 24 hours just to let some hops fall out of solution, so I don’t get clogged dip tubes in my kegs.  But this is not a mandatory step.&lt;/p&gt;
 
 &lt;h2 id=&quot;drink-up&quot;&gt;Drink Up&lt;/h2&gt;
 &lt;p&gt;Last thing is to package and serve, do what you do here, nothing special.  I close transfer and try to carbonate and serve as soon as possible.  Fresher is better!&lt;/p&gt;
@@ -950,7 +950,10 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &lt;h1&gt;&lt;a href=&quot;/motorizing-your-grain-mill/&quot;&gt;Motorizing Your Grain Mill&lt;/a&gt;&lt;/h1&gt;
 
       &lt;div class=&quot;entry&quot;&gt;
-        How to turn your hand powered grain mill into a motorized one.
+        &lt;i&gt;How to turn your hand powered grain mill into a motorized one.&lt;/i&gt;
+        &lt;p&gt;If you are like me, and most others I know who crush their own grain, you set up is pretty simple, a mill, and either you are hand cranking it, which sounds terrible, or you hooking your drill to it, and powering it that way.  I personally am the latter, I hook my battery powered DeWalt drill to the mill and try to hold the speed slow and steady.  This is a PITA for two reasons.  First, I can never hold the speed the same for the entire crush, especially if its a rather large grain bill, and, this may not be true, but I feel like it cannot be great for my drill to run it with the trigger barely pressed for 15 minutes.  And second, I cannot multitask when im grinding.  I have to just sit there and hold the drill with one hand and add additional grains to the hopper with the other.  I feel like its just a huge waste of time.  I have seen setups where people mount a drill and set the speed buy using a zip tie to get the trigger just right.  This wasn’t going to work for me because I don’t have a spare drill laying around I can donate to something like this, as it would have no other use.  And if I’m going to buy a drill for this purpose, then I might as well just buy a motor to power this thing.  And thats what I did.&lt;/p&gt;
+
+
       &lt;/div&gt;
 
       &lt;a href=&quot;/motorizing-your-grain-mill/&quot; class=&quot;read-more&quot;&gt;Read More&lt;/a&gt;
@@ -961,7 +964,10 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &lt;h1&gt;&lt;a href=&quot;/nobody-got-time-for-that/&quot;&gt;Nobody Got Time For That&lt;/a&gt;&lt;/h1&gt;
 
       &lt;div class=&quot;entry&quot;&gt;
-        45 minute mash, no boil, Kveik HaziBoi, grain to glass in 5 days.
+        &lt;i&gt;45 minute mash, no boil, Kveik HaziBoi, grain to glass in 5 days.&lt;/i&gt;
+        &lt;p&gt;I have been tinkering with NEIPAs for a while now, in theory, they shouldn’t be &lt;em&gt;too&lt;/em&gt; hard to make, and to get an OK one, they really aren’t.  But I wanted something better then just OK.  After about 10 attempts and lots of trial and error and even more picking the brains of the Homebrewing Slack team (Bender, if you’re reading this, this is your shout out), I think I have finally done it, I mean just absolutely nailed it!  I personally think it all really came down to the water, but also, the now more readily available Kveik yeasts out there helped me as well.  Especially &lt;a href=&quot;https://omegayeast.com/yeast/norwegian-ales/voss-kveik&quot;&gt;Omega Voss&lt;/a&gt;, allowing to ferment at 90F+ you can turn beers around in 5-7 days.  And they are some of the best NEIPAs I’ve ever had, second to maybe &lt;a href=&quot;https://www.arvonbrewingco.com&quot;&gt;Arvon Brewing&lt;/a&gt;.  Anyway, I wanted to share my findings and what seems to really be working for me.  The best part is that the grain and water pretty much always stay the same, and you can just tinker with hops.&lt;/p&gt;
+
+
       &lt;/div&gt;
 
       &lt;a href=&quot;/nobody-got-time-for-that/&quot; class=&quot;read-more&quot;&gt;Read More&lt;/a&gt;
@@ -972,7 +978,10 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &lt;h1&gt;&lt;a href=&quot;/replacing-failed-storage-pool-hdd/&quot;&gt;Replace Failed Storage Pool HDD&lt;/a&gt;&lt;/h1&gt;
 
       &lt;div class=&quot;entry&quot;&gt;
-        Replacing a failed hard disk drive in Windows Server Storage Spaces Storage Pool.
+        &lt;i&gt;Replacing a failed hard disk drive in Windows Server Storage Spaces Storage Pool.&lt;/i&gt;
+        &lt;p&gt;In my day to day jobby, I manage multiple Hyper-V clusters, and these clusters use shared storage.  Most of the storage is a JBOD shelf with dual SAS connections to the hypervisor nodes.  Because the shelf is JBOD, Windows is the &lt;em&gt;brains&lt;/em&gt; for the storage.  Enter &lt;a href=&quot;https://docs.microsoft.com/en-us/windows-server/storage/storage-spaces/overview&quot;&gt;Windows Storage Spaces&lt;/a&gt;.  This is basically a Software RAID that you configure a &lt;em&gt;pool&lt;/em&gt; of disks, and then you layer a VHD over that pool.  After a volume is created on the VHD, it can be used by the hosts.  These volumes can be added to &lt;a href=&quot;https://docs.microsoft.com/en-us/windows-server/failover-clustering/failover-cluster-csvs&quot;&gt;Cluster Shared Volumes&lt;/a&gt; which allows the volume to move between host nodes, creating redundancy.  All the VMs hosted in the cluster, live on the CSV, making them Highly Available.&lt;/p&gt;
+
+
       &lt;/div&gt;
 
       &lt;a href=&quot;/replacing-failed-storage-pool-hdd/&quot; class=&quot;read-more&quot;&gt;Read More&lt;/a&gt;
@@ -1603,7 +1612,8 @@ footer {
       &lt;h1&gt;&lt;a href=&quot;{{ post.url | prepend: site.baseurl }}&quot;&gt;{{ post.title }}&lt;/a&gt;&lt;/h1&gt;
 
       &lt;div class=&quot;entry&quot;&gt;
-        {{ post.description }}
+        &lt;i&gt;{{ post.description }}&lt;/i&gt;
+        {{ post.excerpt }}
       &lt;/div&gt;
 
       &lt;a href=&quot;{{ site.baseurl }}{{ post.url }}&quot; class=&quot;read-more&quot;&gt;Read More&lt;/a&gt;
@@ -1644,7 +1654,8 @@ footer {
       &lt;h1&gt;&lt;a href=&quot;{{ post.url | prepend: site.baseurl }}&quot;&gt;{{ post.title }}&lt;/a&gt;&lt;/h1&gt;
 
       &lt;div class=&quot;entry&quot;&gt;
-        {{ post.description }}
+        &lt;i&gt;{{ post.description }}&lt;/i&gt;
+        {{ post.excerpt }}
       &lt;/div&gt;
 
       &lt;a href=&quot;{{ site.baseurl }}{{ post.url }}&quot; class=&quot;read-more&quot;&gt;Read More&lt;/a&gt;
@@ -1685,7 +1696,8 @@ footer {
       &lt;h1&gt;&lt;a href=&quot;{{ post.url | prepend: site.baseurl }}&quot;&gt;{{ post.title }}&lt;/a&gt;&lt;/h1&gt;
 
       &lt;div class=&quot;entry&quot;&gt;
-        {{ post.description }}
+        &lt;i&gt;{{ post.description }}&lt;/i&gt;
+        {{ post.excerpt }}
       &lt;/div&gt;
 
       &lt;a href=&quot;{{ site.baseurl }}{{ post.url }}&quot; class=&quot;read-more&quot;&gt;Read More&lt;/a&gt;

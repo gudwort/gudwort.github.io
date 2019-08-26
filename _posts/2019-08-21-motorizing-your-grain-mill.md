@@ -10,7 +10,7 @@ If you are like me, and most others I know who crush their own grain, you set up
 
 ## Parts list
 1. [Grain Mill](https://www.amazon.com/FERRODAY-Crusher-Stainless-Homebrew-Adjustable/dp/B07CMKN4B2/ref=sr_1_3?keywords=grain+mill&qid=1566772604&s=gateway&sr=8-3)
-2. [Motor](https://www.aliexpress.com/item/468388028.html?spm=a2g0s.9042311.0.0.49844c4dQxdnus)
+2. [Motor (12V, 160RPM)](https://www.aliexpress.com/item/4000060286950.html)
 3. [Coupler](https://www.aliexpress.com/item/32366750867.html?spm=a2g0s.9042311.0.0.49844c4dQxdnus)
 4. [Power Supply](https://www.amazon.com/gp/product/B07GFLFTV2/ref=ppx_yo_dt_b_asin_title_o02_s00?ie=UTF8&psc=1)
 

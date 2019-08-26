@@ -71,7 +71,7 @@ sass:
   style: :expanded # You might prefer to minify using :compressed
 
 # default pagination
-paginate: 5
+paginate: 3
 
 # Use the following plug-ins
 plugins:
