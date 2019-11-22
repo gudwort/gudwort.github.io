@@ -69,7 +69,7 @@ So, for me this was the hardest part, I had the probe working, and at least stop
 3. Next tell the printer to go into `Relative Position` mode: `G91`
 4. Now move the hotend over the spot the BLTouch probed to home the bed: `G1 X-47`
 5. Get a piece of paper and get ready to bed level like you always do, lower the Z axis by -.05 until the nozzle scrapes the paper.  You can do this with the display control, or I use [OctoPod](https://itunes.apple.com/us/app/octopod-for-octoprint/id1412557625?mt=8) on my iOS device.
-6. Once the Z axis is where it needs to be, you can run `GET_POSISTION` in the terminal and then just do the math:
+6. Once the Z axis is where it needs to be, you can run `GET_POSITION` in the terminal and then just do the math:
     * `[printer.cfg [bltouch] z_offset] - [z value from GET_POSITION] = z_offset`
     * IE: 10 - 8.5 = 1.5
 7. Replace your the `z_offset` value in the `[bltouch]` section with your new calculated value.
