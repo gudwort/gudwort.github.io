@@ -66,10 +66,10 @@
 
   <div id="main" role="main" class="container">
     <article class="post">
-  <h1>Using BLTouch with Klipper and the Ender3</h1><i>How to make your BLTouch Sensor work with the Klipper firmware and the Crealty Ender3.</i>
-  <hr/>
+  <h1>Using BLTouch with Klipper and the Ender3</h1>
 
   <div class="entry">
+    <i>How to make your BLTouch Sensor work with the Klipper firmware and the Crealty Ender3.</i>
     <p>I have been 3D printing for about a year now, its had its ups and downs, good times and bad.  Some times its the greatest thing, and sometimes I’m glad I don’t keep a baseball bat near my 3D Printer, because I may not still be the owner of one if I did.  I know all printers are different and everyone has their reasons for why or what they do and use for the build surface.  I have the <a href="https://www.amazon.com/Comgrow-Creality-Ender-Aluminum-220x220x250mm/dp/B07BR3F9N6/ref=sr_1_1_sspa?keywords=ender+3&amp;qid=1559158769&amp;s=gateway&amp;sr=8-1-spons&amp;psc=1">Ender3</a>, its a great entry level printer for the price and I have spit out some amazing prints.  But one the most notorious issues with the Ender3 is the warped bed.  It seems like everyone has reported this issue.  And I think one thing all 3D Printer Hobbyist could agree on, is the first layer is one of the most important parts of the print.  And when you printing around .2mm layer hight, if the build surface isn’t perfect you’re going to have problems, especially with larger prints.</p>
 
 <p>There are a few things you could do about this, such as, just deal with it, replace the bed with something higher grade, or add a new surface, such as a piece of glass.  I chose to use a sensor on the hot end.  I went with the <a href="https://www.amazon.com/BLTouch-Leveling-Printer-Official-Authorization/dp/B07GVCX74T/ref=sr_1_4?keywords=bltouch&amp;qid=1559158792&amp;s=gateway&amp;sr=8-4">BLTouch</a> sensor.  It’s pretty much just a probe, that will make a <em>mesh</em> of your build surface and allow for your Z axis to compensate for the imperfect surface with very small up and down Z axis movements.</p>
@@ -147,7 +147,7 @@ gcode:
   <li>Next tell the printer to go into <code class="highlighter-rouge">Relative Position</code> mode: <code class="highlighter-rouge">G91</code></li>
   <li>Now move the hotend over the spot the BLTouch probed to home the bed: <code class="highlighter-rouge">G1 X-47</code></li>
   <li>Get a piece of paper and get ready to bed level like you always do, lower the Z axis by -.05 until the nozzle scrapes the paper.  You can do this with the display control, or I use <a href="https://itunes.apple.com/us/app/octopod-for-octoprint/id1412557625?mt=8">OctoPod</a> on my iOS device.</li>
-  <li>Once the Z axis is where it needs to be, you can run <code class="highlighter-rouge">GET_POSISTION</code> in the terminal and then just do the math:
+  <li>Once the Z axis is where it needs to be, you can run <code class="highlighter-rouge">GET_POSITION</code> in the terminal and then just do the math:
     <ul>
       <li><code class="highlighter-rouge">[printer.cfg [bltouch] z_offset] - [z value from GET_POSITION] = z_offset</code></li>
       <li>IE: 10 - 8.5 = 1.5</li>
@@ -233,6 +233,8 @@ gcode:
 
 
 <!-- Add the LinkedIn icon to footer if _config.yml has the linkedin value specified. -->
+
+    <a href="https://www.linkedin.com/in/tomohulk" target="_blank"><i class="fab fa-linkedin-in fa-lg"></i></a>
 
 
 <!-- Add the Twitter icon to footer if _config.yml has the twitter value specified. -->

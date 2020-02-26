@@ -2,6 +2,17 @@
   
     {
     
+      "title"    : "Building Hyper-V Nodes with Dsc",
+      "url"      : "/building-hyper-v-nodes-with-dsc/",
+      "category" : "powershell",
+      "tags"     : "powershell, server, windows, dsc",
+      "date"     : "2020-02-04 00:00:00 +0000",
+      "description" : "Tales from my experiences using Dsc to build Hyper-V Failover Cluster Nodes."
+      
+    } ,
+  
+    {
+    
       "title"    : "Motorizing Your Grain Mill",
       "url"      : "/motorizing-your-grain-mill/",
       "category" : "homebrewing",

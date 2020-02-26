@@ -66,10 +66,10 @@
 
   <div id="main" role="main" class="container">
     <article class="post">
-  <h1>Replace Failed Storage Pool HDD</h1><i>Replacing a failed hard disk drive in Windows Server Storage Spaces Storage Pool.</i>
-  <hr/>
+  <h1>Replace Failed Storage Pool HDD</h1>
 
   <div class="entry">
+    <i>Replacing a failed hard disk drive in Windows Server Storage Spaces Storage Pool.</i>
     <p>In my day to day jobby, I manage multiple Hyper-V clusters, and these clusters use shared storage.  Most of the storage is a JBOD shelf with dual SAS connections to the hypervisor nodes.  Because the shelf is JBOD, Windows is the <em>brains</em> for the storage.  Enter <a href="https://docs.microsoft.com/en-us/windows-server/storage/storage-spaces/overview">Windows Storage Spaces</a>.  This is basically a Software RAID that you configure a <em>pool</em> of disks, and then you layer a VHD over that pool.  After a volume is created on the VHD, it can be used by the hosts.  These volumes can be added to <a href="https://docs.microsoft.com/en-us/windows-server/failover-clustering/failover-cluster-csvs">Cluster Shared Volumes</a> which allows the volume to move between host nodes, creating redundancy.  All the VMs hosted in the cluster, live on the CSV, making them Highly Available.</p>
 
 <p>As hardware always does, physical disks in the pool fail.  Most of the Microsoft docs on fixing this issue are quite cumbersome to follow, and even more so, they tend to deal with <a href="https://docs.microsoft.com/en-us/windows-server/storage/storage-spaces/storage-spaces-direct-overview">Storage Spaces Direct</a>, which is not the same technology.  So I thought I would make up a quick little walk through on replacing a failed HDD in a storage pool.  I have to do this about once a month, so this is just as much for me, as it is for you.</p>
@@ -193,6 +193,8 @@
 
 
 <!-- Add the LinkedIn icon to footer if _config.yml has the linkedin value specified. -->
+
+    <a href="https://www.linkedin.com/in/tomohulk" target="_blank"><i class="fab fa-linkedin-in fa-lg"></i></a>
 
 
 <!-- Add the Twitter icon to footer if _config.yml has the twitter value specified. -->

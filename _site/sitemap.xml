@@ -8,6 +8,19 @@
 	
 		
 		<item>
+			<title>Building Hyper-V Nodes with Dsc</title>
+			<description>&lt;p&gt;I have been managing Hyper-V clusters at my job for the better part of 3 years.  This was a new role for me.  I had done small amounts of Hyper-V here and there in the past, but never managing Failover Clusters or large numbers of production VMs.  Over the past few years, I have gone through a number of configurations, starting with one very large 20 node Hyper-V cluster, and a 4 node Scale Out File Server to host the storage for the VMs.  After having some bad luck with that setup, namely with the SOFS portion, I implemented smaller 4 node clusters with direct attached SAS disk.  This has been our standard “Hyper-V Failover Cluster Configuration” for the past year or so.&lt;/p&gt;
+
+&lt;p&gt;But, change is coming, as it always does, and upgrades will be bringing in new switching, with much less available ports then before, and a Fiber Attached Pure Array.  So, with another round of Hyper-V Failover Cluster Node rebuilds on the horizon, I wanted to automate some of this, and i thought it would be a good time to get involved with some Dsc to do so.&lt;/p&gt;
+</description>
+			<pubDate>Tue, 04 Feb 2020 00:00:00 +0000</pubDate>
+			<link>http://0.0.0.0:4000/building-hyper-v-nodes-with-dsc/</link>
+			<guid isPermaLink="true">http://0.0.0.0:4000/building-hyper-v-nodes-with-dsc/</guid>
+		</item>
+		
+	
+		
+		<item>
 			<title>Motorizing Your Grain Mill</title>
 			<description>&lt;p&gt;If you are like me, and most others I know who crush their own grain, you set up is pretty simple, a mill, and either you are hand cranking it, which sounds terrible, or you hooking your drill to it, and powering it that way.  I personally am the latter, I hook my battery powered DeWalt drill to the mill and try to hold the speed slow and steady.  This is a PITA for two reasons.  First, I can never hold the speed the same for the entire crush, especially if its a rather large grain bill, and, this may not be true, but I feel like it cannot be great for my drill to run it with the trigger barely pressed for 15 minutes.  And second, I cannot multitask when im grinding.  I have to just sit there and hold the drill with one hand and add additional grains to the hopper with the other.  I feel like its just a huge waste of time.  I have seen setups where people mount a drill and set the speed buy using a zip tie to get the trigger just right.  This wasn’t going to work for me because I don’t have a spare drill laying around I can donate to something like this, as it would have no other use.  And if I’m going to buy a drill for this purpose, then I might as well just buy a motor to power this thing.  And thats what I did.&lt;/p&gt;
 
@@ -373,7 +386,7 @@ gcode:
   &lt;li&gt;Next tell the printer to go into &lt;code class=&quot;highlighter-rouge&quot;&gt;Relative Position&lt;/code&gt; mode: &lt;code class=&quot;highlighter-rouge&quot;&gt;G91&lt;/code&gt;&lt;/li&gt;
   &lt;li&gt;Now move the hotend over the spot the BLTouch probed to home the bed: &lt;code class=&quot;highlighter-rouge&quot;&gt;G1 X-47&lt;/code&gt;&lt;/li&gt;
   &lt;li&gt;Get a piece of paper and get ready to bed level like you always do, lower the Z axis by -.05 until the nozzle scrapes the paper.  You can do this with the display control, or I use &lt;a href=&quot;https://itunes.apple.com/us/app/octopod-for-octoprint/id1412557625?mt=8&quot;&gt;OctoPod&lt;/a&gt; on my iOS device.&lt;/li&gt;
-  &lt;li&gt;Once the Z axis is where it needs to be, you can run &lt;code class=&quot;highlighter-rouge&quot;&gt;GET_POSISTION&lt;/code&gt; in the terminal and then just do the math:
+  &lt;li&gt;Once the Z axis is where it needs to be, you can run &lt;code class=&quot;highlighter-rouge&quot;&gt;GET_POSITION&lt;/code&gt; in the terminal and then just do the math:
     &lt;ul&gt;
       &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[printer.cfg [bltouch] z_offset] - [z value from GET_POSITION] = z_offset&lt;/code&gt;&lt;/li&gt;
       &lt;li&gt;IE: 10 - 8.5 = 1.5&lt;/li&gt;
@@ -929,6 +942,19 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
 		
 			
 			<item>
+				<title>Tag: dsc</title>
+				<description>
+</description>
+				<pubDate></pubDate>
+				<link>http://0.0.0.0:4000/tag/dsc/</link>
+				<guid isPermaLink="true">http://0.0.0.0:4000/tag/dsc/</guid>
+			</item>
+			
+		
+	
+		
+			
+			<item>
 				<title>Tag: homebrewing</title>
 				<description>
 </description>
@@ -944,6 +970,20 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
 			<item>
 				<title></title>
 				<description>&lt;div class=&quot;posts&quot;&gt;
+  
+    &lt;article class=&quot;post&quot;&gt;
+
+      &lt;h1&gt;&lt;a href=&quot;/building-hyper-v-nodes-with-dsc/&quot;&gt;Building Hyper-V Nodes with Dsc&lt;/a&gt;&lt;/h1&gt;
+
+      &lt;div class=&quot;entry&quot;&gt;
+        &lt;i&gt;Tales from my experiences using Dsc to build Hyper-V Failover Cluster Nodes.&lt;/i&gt;
+        &lt;p&gt;I have been managing Hyper-V clusters at my job for the better part of 3 years.  This was a new role for me.  I had done small amounts of Hyper-V here and there in the past, but never managing Failover Clusters or large numbers of production VMs.  Over the past few years, I have gone through a number of configurations, starting with one very large 20 node Hyper-V cluster, and a 4 node Scale Out File Server to host the storage for the VMs.  After having some bad luck with that setup, namely with the SOFS portion, I implemented smaller 4 node clusters with direct attached SAS disk.  This has been our standard “Hyper-V Failover Cluster Configuration” for the past year or so.&lt;/p&gt;
+
+
+      &lt;/div&gt;
+
+      &lt;a href=&quot;/building-hyper-v-nodes-with-dsc/&quot; class=&quot;read-more&quot;&gt;Read More&lt;/a&gt;
+    &lt;/article&gt;
   
     &lt;article class=&quot;post&quot;&gt;
 
@@ -971,20 +1011,6 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &lt;/div&gt;
 
       &lt;a href=&quot;/nobody-got-time-for-that/&quot; class=&quot;read-more&quot;&gt;Read More&lt;/a&gt;
-    &lt;/article&gt;
-  
-    &lt;article class=&quot;post&quot;&gt;
-
-      &lt;h1&gt;&lt;a href=&quot;/replacing-failed-storage-pool-hdd/&quot;&gt;Replace Failed Storage Pool HDD&lt;/a&gt;&lt;/h1&gt;
-
-      &lt;div class=&quot;entry&quot;&gt;
-        &lt;i&gt;Replacing a failed hard disk drive in Windows Server Storage Spaces Storage Pool.&lt;/i&gt;
-        &lt;p&gt;In my day to day jobby, I manage multiple Hyper-V clusters, and these clusters use shared storage.  Most of the storage is a JBOD shelf with dual SAS connections to the hypervisor nodes.  Because the shelf is JBOD, Windows is the &lt;em&gt;brains&lt;/em&gt; for the storage.  Enter &lt;a href=&quot;https://docs.microsoft.com/en-us/windows-server/storage/storage-spaces/overview&quot;&gt;Windows Storage Spaces&lt;/a&gt;.  This is basically a Software RAID that you configure a &lt;em&gt;pool&lt;/em&gt; of disks, and then you layer a VHD over that pool.  After a volume is created on the VHD, it can be used by the hosts.  These volumes can be added to &lt;a href=&quot;https://docs.microsoft.com/en-us/windows-server/failover-clustering/failover-cluster-csvs&quot;&gt;Cluster Shared Volumes&lt;/a&gt; which allows the volume to move between host nodes, creating redundancy.  All the VMs hosted in the cluster, live on the CSV, making them Highly Available.&lt;/p&gt;
-
-
-      &lt;/div&gt;
-
-      &lt;a href=&quot;/replacing-failed-storage-pool-hdd/&quot; class=&quot;read-more&quot;&gt;Read More&lt;/a&gt;
     &lt;/article&gt;
   
 
@@ -1063,6 +1089,17 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
 			<item>
 				<title></title>
 				<description>[
+  
+    {
+    
+      &quot;title&quot;    : &quot;Building Hyper-V Nodes with Dsc&quot;,
+      &quot;url&quot;      : &quot;/building-hyper-v-nodes-with-dsc/&quot;,
+      &quot;category&quot; : &quot;powershell&quot;,
+      &quot;tags&quot;     : &quot;powershell, server, windows, dsc&quot;,
+      &quot;date&quot;     : &quot;2020-02-04 00:00:00 +0000&quot;,
+      &quot;description&quot; : &quot;Tales from my experiences using Dsc to build Hyper-V Failover Cluster Nodes.&quot;
+      
+    } ,
   
     {
     
@@ -1211,21 +1248,23 @@ SimpleJekyllSearch({
 
 &lt;p&gt;&lt;a href=&quot;/tag/homebrewing&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;homebrewing&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
 
+&lt;p&gt;&lt;a href=&quot;/tag/powershell&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;powershell&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
+
 &lt;p&gt;&lt;a href=&quot;/tag/keezer&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;keezer&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;/tag/diy&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;diy&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;/tag/3dprinting&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;3dprinting&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;/tag/raspberrypi&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;raspberrypi&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/tag/powershell&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;powershell&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
-
 &lt;p&gt;&lt;a href=&quot;/tag/windows&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;windows&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;/tag/server&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;server&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
 
+&lt;p&gt;&lt;a href=&quot;/tag/raspberrypi&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;raspberrypi&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
+
 &lt;p&gt;&lt;a href=&quot;/tag/klipper&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;klipper&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/tag/dsc&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;dsc&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
 
 </description>
 				<pubDate></pubDate>

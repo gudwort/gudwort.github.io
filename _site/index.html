@@ -62,6 +62,20 @@
   
     <article class="post">
 
+      <h1><a href="/building-hyper-v-nodes-with-dsc/">Building Hyper-V Nodes with Dsc</a></h1>
+
+      <div class="entry">
+        <i>Tales from my experiences using Dsc to build Hyper-V Failover Cluster Nodes.</i>
+        <p>I have been managing Hyper-V clusters at my job for the better part of 3 years.  This was a new role for me.  I had done small amounts of Hyper-V here and there in the past, but never managing Failover Clusters or large numbers of production VMs.  Over the past few years, I have gone through a number of configurations, starting with one very large 20 node Hyper-V cluster, and a 4 node Scale Out File Server to host the storage for the VMs.  After having some bad luck with that setup, namely with the SOFS portion, I implemented smaller 4 node clusters with direct attached SAS disk.  This has been our standard “Hyper-V Failover Cluster Configuration” for the past year or so.</p>
+
+
+      </div>
+
+      <a href="/building-hyper-v-nodes-with-dsc/" class="read-more">Read More</a>
+    </article>
+  
+    <article class="post">
+
       <h1><a href="/motorizing-your-grain-mill/">Motorizing Your Grain Mill</a></h1>
 
       <div class="entry">
@@ -86,20 +100,6 @@
       </div>
 
       <a href="/nobody-got-time-for-that/" class="read-more">Read More</a>
-    </article>
-  
-    <article class="post">
-
-      <h1><a href="/replacing-failed-storage-pool-hdd/">Replace Failed Storage Pool HDD</a></h1>
-
-      <div class="entry">
-        <i>Replacing a failed hard disk drive in Windows Server Storage Spaces Storage Pool.</i>
-        <p>In my day to day jobby, I manage multiple Hyper-V clusters, and these clusters use shared storage.  Most of the storage is a JBOD shelf with dual SAS connections to the hypervisor nodes.  Because the shelf is JBOD, Windows is the <em>brains</em> for the storage.  Enter <a href="https://docs.microsoft.com/en-us/windows-server/storage/storage-spaces/overview">Windows Storage Spaces</a>.  This is basically a Software RAID that you configure a <em>pool</em> of disks, and then you layer a VHD over that pool.  After a volume is created on the VHD, it can be used by the hosts.  These volumes can be added to <a href="https://docs.microsoft.com/en-us/windows-server/failover-clustering/failover-cluster-csvs">Cluster Shared Volumes</a> which allows the volume to move between host nodes, creating redundancy.  All the VMs hosted in the cluster, live on the CSV, making them Highly Available.</p>
-
-
-      </div>
-
-      <a href="/replacing-failed-storage-pool-hdd/" class="read-more">Read More</a>
     </article>
   
 
@@ -139,6 +139,8 @@
 
 
 <!-- Add the LinkedIn icon to footer if _config.yml has the linkedin value specified. -->
+
+    <a href="https://www.linkedin.com/in/tomohulk" target="_blank"><i class="fab fa-linkedin-in fa-lg"></i></a>
 
 
 <!-- Add the Twitter icon to footer if _config.yml has the twitter value specified. -->
