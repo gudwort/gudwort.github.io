@@ -11,7 +11,7 @@
 			<title>Building Hyper-V Nodes with Dsc</title>
 			<description>&lt;p&gt;I have been managing Hyper-V clusters at my job for the better part of 3 years.  This was a new role for me.  I had done small amounts of Hyper-V here and there in the past, but never managing Failover Clusters or large numbers of production VMs.  Over the past few years, I have gone through a number of configurations, starting with one very large 20 node Hyper-V cluster, and a 4 node Scale Out File Server to host the storage for the VMs.  After having some bad luck with that setup, namely with the SOFS portion, I implemented smaller 4 node clusters with direct attached SAS disk.  This has been our standard “Hyper-V Failover Cluster Configuration” for the past year or so.&lt;/p&gt;
 
-&lt;p&gt;But, change is coming, as it always does, and upgrades will be bringing in new switching, with much less available ports then before, and a Fiber Attached Pure Array.  So, with another round of Hyper-V Failover Cluster Node rebuilds on the horizon, I wanted to automate some of this, and i thought it would be a good time to get involved with some Dsc to do so.&lt;/p&gt;
+&lt;p&gt;But, change is coming, as it always does, and upgrades will be bringing in new switching, with much less available ports then before, and a Fiber Attached Pure Array.  So, with another round of Hyper-V Failover Cluster Node rebuilds on the horizon, I wanted to automate some of this, and I thought it would be a good time to get involved with some Dsc to do so.&lt;/p&gt;
 </description>
 			<pubDate>Tue, 04 Feb 2020 00:00:00 +0000</pubDate>
 			<link>http://0.0.0.0:4000/building-hyper-v-nodes-with-dsc/</link>
@@ -145,54 +145,54 @@
 &lt;h2 id=&quot;identifying-a-failed-hdd&quot;&gt;Identifying a failed HDD&lt;/h2&gt;
 &lt;p&gt;Identifying a failed HDD is pretty simple, it can be done with a simple PowerShell command:&lt;/p&gt;
 
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;Get-PhysicalDisk&lt;/span&gt; | ? HealthStatus -ne &lt;span class=&quot;s2&quot;&gt;&quot;Healthy&quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nf&quot;&gt;Get-PhysicalDisk&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;HealthStatus&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-ne&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Healthy&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;This will show you any disks that have failed, I typically use a 3-way mirror on my Storage Pools, so if that number is greater then 2, then well, might as well just start over.  Anyway, if the &lt;code class=&quot;highlighter-rouge&quot;&gt;Usage&lt;/code&gt; property of the failed disk is not marked as &lt;em&gt;Retired&lt;/em&gt;, you will need to mark it as such:&lt;/p&gt;
+&lt;p&gt;This will show you any disks that have failed, I typically use a 3-way mirror on my Storage Pools, so if that number is greater then 2, then well, might as well just start over.  Anyway, if the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Usage&lt;/code&gt; property of the failed disk is not marked as &lt;em&gt;Retired&lt;/em&gt;, you will need to mark it as such:&lt;/p&gt;
 
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;Get-PhysicalDisk&lt;/span&gt; | ? HealthStatus -ne &lt;span class=&quot;s2&quot;&gt;&quot;Healthy&quot;&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;Set-PhysicalDisk&lt;/span&gt; -Usage Retired
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nf&quot;&gt;Get-PhysicalDisk&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;HealthStatus&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-ne&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Healthy&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Set-PhysicalDisk&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Usage&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Retired&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;So, this next part tends to vary between JBOD models, but to actually &lt;em&gt;identify&lt;/em&gt; the failed HDD for physical replacement, there are a few things you can do, first off, you can actually trigger the slots LED to indicate the failed drive:&lt;/p&gt;
 
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# This command assumes you already completed the previous command and 'Retired' the failed disks.&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;Get-PhysicalDisk&lt;/span&gt; -Usage Retired | &lt;span class=&quot;nb&quot;&gt;Enable-PhysicalDiskIdentification&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# This command assumes you already completed the previous command and 'Retired' the failed disks.&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Get-PhysicalDisk&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Usage&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Retired&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Enable-PhysicalDiskIdentification&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;You can also get the physical &lt;code class=&quot;highlighter-rouge&quot;&gt;SlotNumber&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;You can also get the physical &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SlotNumber&lt;/code&gt;:&lt;/p&gt;
 
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;Get-PhysicalDisk&lt;/span&gt; -Usage Retired | &lt;span class=&quot;nb&quot;&gt;select &lt;/span&gt;SlotNumber
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nf&quot;&gt;Get-PhysicalDisk&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Usage&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Retired&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;SlotNumber&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;However, this number is 0 indexed so when looking at the JBOD shelf, be sure to start counting at 0.&lt;/p&gt;
 
 &lt;h2 id=&quot;replacing-the-hdd&quot;&gt;Replacing the HDD&lt;/h2&gt;
-&lt;p&gt;After you have identified the failed HDD and marked it as retired, you can now physically replace the drive.  In my experience, after the new drive is inserted and running &lt;code class=&quot;highlighter-rouge&quot;&gt;Get-PhysicalDisk&lt;/code&gt; the new drive always hangs in a &lt;code class=&quot;highlighter-rouge&quot;&gt;Starting&lt;/code&gt; Operational Status.  And because of this you cannot add it to the storage pool (notice the &lt;code class=&quot;highlighter-rouge&quot;&gt;CanPool&lt;/code&gt; Property will be &lt;code class=&quot;highlighter-rouge&quot;&gt;False&lt;/code&gt;).  This can be cleared up by Resetting the disk:&lt;/p&gt;
+&lt;p&gt;After you have identified the failed HDD and marked it as retired, you can now physically replace the drive.  In my experience, after the new drive is inserted and running &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Get-PhysicalDisk&lt;/code&gt; the new drive always hangs in a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Starting&lt;/code&gt; Operational Status.  And because of this you cannot add it to the storage pool (notice the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CanPool&lt;/code&gt; Property will be &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;False&lt;/code&gt;).  This can be cleared up by Resetting the disk:&lt;/p&gt;
 
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;Get-PhysicalDisk&lt;/span&gt; | ? OperationalStatus -eq &lt;span class=&quot;s2&quot;&gt;&quot;Starting&quot;&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;Reset-PhysicalDisk&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nf&quot;&gt;Get-PhysicalDisk&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;OperationalStatus&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-eq&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Starting&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Reset-PhysicalDisk&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;After this is complete, running the &lt;code class=&quot;highlighter-rouge&quot;&gt;Get-PhysicalDisk&lt;/code&gt; will show the disk is &lt;code class=&quot;highlighter-rouge&quot;&gt;Healthy&lt;/code&gt; and the &lt;code class=&quot;highlighter-rouge&quot;&gt;CanPool&lt;/code&gt; property will be &lt;code class=&quot;highlighter-rouge&quot;&gt;True&lt;/code&gt;.  Now, you need to identify the Storage Pool’s Friendly Name, this can be found by running the &lt;code class=&quot;highlighter-rouge&quot;&gt;Get-StoragePool&lt;/code&gt; command.  Once you have the Friendly Name, you can add the new disk to the pool:&lt;/p&gt;
+&lt;p&gt;After this is complete, running the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Get-PhysicalDisk&lt;/code&gt; will show the disk is &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Healthy&lt;/code&gt; and the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CanPool&lt;/code&gt; property will be &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;True&lt;/code&gt;.  Now, you need to identify the Storage Pool’s Friendly Name, this can be found by running the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Get-StoragePool&lt;/code&gt; command.  Once you have the Friendly Name, you can add the new disk to the pool:&lt;/p&gt;
 
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;Add-PhysicalDisk&lt;/span&gt; -StoragePoolFriendlyName MyStoragePool -PhysicalDisks &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Get-PhysicalDisk&lt;/span&gt; -CanPool:&lt;span class=&quot;nv&quot;&gt;$true&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nf&quot;&gt;Add-PhysicalDisk&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-StoragePoolFriendlyName&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;MyStoragePool&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-PhysicalDisks&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Get-PhysicalDisk&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-CanPool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;$true&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Now that the drive is replaced, go ahead and repair the virtual disk:&lt;/p&gt;
 
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;Get-VirtualDisk&lt;/span&gt; | ? HealthStatus -ne &lt;span class=&quot;s2&quot;&gt;&quot;Healthy&quot;&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;Repair-VirtualDisk&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;This will take some time depending on how large the virtual disk is, resiliency settings, and hardware, but there will be a progress bar.  Or you can add the &lt;code class=&quot;highlighter-rouge&quot;&gt;-AsJob&lt;/code&gt; switch to the &lt;code class=&quot;highlighter-rouge&quot;&gt;Repair-VirtualDisk&lt;/code&gt; command and let it run in the background.  You can fetch the status with &lt;code class=&quot;highlighter-rouge&quot;&gt;Get-StorageJob&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nf&quot;&gt;Get-VirtualDisk&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;HealthStatus&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-ne&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Healthy&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Repair-VirtualDisk&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;This will take some time depending on how large the virtual disk is, resiliency settings, and hardware, but there will be a progress bar.  Or you can add the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-AsJob&lt;/code&gt; switch to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Repair-VirtualDisk&lt;/code&gt; command and let it run in the background.  You can fetch the status with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Get-StorageJob&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;Be sure to disable the LED identification:&lt;/p&gt;
 
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# I always just run this on against all the disks, it won't hurt anything for the ones where its not enabled.&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;Get-PhysicalDisk&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;Disable-PhysicalDiskIdentification&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# I always just run this on against all the disks, it won't hurt anything for the ones where its not enabled.&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Get-PhysicalDisk&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Disable-PhysicalDiskIdentification&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;After the repair is complete, the last step is to remove the failed drive from the pool.  Remember, the repair has to fully complete before removing the failed drive from the pool, else data loss will occur.&lt;/p&gt;
 
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;Remove-PhysicalDisk&lt;/span&gt; -StoragePoolFriendlyName MyStoragePool -PhysicalDisks &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Get-PhysicalDisk&lt;/span&gt; -Usage Retired &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nf&quot;&gt;Remove-PhysicalDisk&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-StoragePoolFriendlyName&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;MyStoragePool&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-PhysicalDisks&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Get-PhysicalDisk&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Usage&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Retired&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;And thats it, good to go!  Cheers.&lt;/p&gt;
 </description>
@@ -214,7 +214,7 @@
 &lt;h2 id=&quot;manual-steps&quot;&gt;Manual steps&lt;/h2&gt;
 &lt;p&gt;I suppose before we jump into the automation portion, as with anything that is being automated, its best we cover the manual steps for reaching our goal so we fully understand what needs to be done, and what information is needed to get it done.&lt;/p&gt;
 
-&lt;p&gt;After signing into the iLO, in the &lt;code class=&quot;highlighter-rouge&quot;&gt;Administration&lt;/code&gt; section in the &lt;code class=&quot;highlighter-rouge&quot;&gt;Security&lt;/code&gt; workspace, there is an &lt;code class=&quot;highlighter-rouge&quot;&gt;SSL Certificate&lt;/code&gt; tab.  On that tab you select the &lt;code class=&quot;highlighter-rouge&quot;&gt;Customize Certificate&lt;/code&gt; button, and from there you will get a dialog, asking for the basic information to build the &lt;em&gt;Certificate Signing Request&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;After signing into the iLO, in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Administration&lt;/code&gt; section in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Security&lt;/code&gt; workspace, there is an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SSL Certificate&lt;/code&gt; tab.  On that tab you select the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Customize Certificate&lt;/code&gt; button, and from there you will get a dialog, asking for the basic information to build the &lt;em&gt;Certificate Signing Request&lt;/em&gt;.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/images/2019-07-25-installing-pki-ssl-certificate-on-hpe-ilo/default-certificate.png&quot; alt=&quot;Default Certificate&quot; /&gt;&lt;/p&gt;
 
@@ -233,63 +233,63 @@
   &lt;li&gt;Include the iLO IP Address in the CSR&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;After filling these in, hit the &lt;code class=&quot;highlighter-rouge&quot;&gt;Generate Request&lt;/code&gt; button.  Now this part is really dumb, the CSR is generating, but it takes a random amount of time (0-10 minutes), with no progress control.  You just keep hitting the &lt;code class=&quot;highlighter-rouge&quot;&gt;Generate Request&lt;/code&gt; again and again until the dialog pops up&lt;/p&gt;
+&lt;p&gt;After filling these in, hit the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Generate Request&lt;/code&gt; button.  Now this part is really dumb, the CSR is generating, but it takes a random amount of time (0-10 minutes), with no progress control.  You just keep hitting the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Generate Request&lt;/code&gt; again and again until the dialog pops up&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;The iLO subsystem is currently generating a Certificate Signing Request (CSR). This may take 10 minutes or more. In order to view the CSR, wait 10 minutes or more, and then click the “Generate CSR” button again.&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;Once the dialog opens, you will need to copy the entire CSR output, including the &lt;code class=&quot;highlighter-rouge&quot;&gt;-----Begin/End Certificate Request-----&lt;/code&gt; portions.&lt;/p&gt;
+&lt;p&gt;Once the dialog opens, you will need to copy the entire CSR output, including the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-----Begin/End Certificate Request-----&lt;/code&gt; portions.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/images/2019-07-25-installing-pki-ssl-certificate-on-hpe-ilo/csr-generation.png&quot; alt=&quot;CSR-Generation&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;After you have the &lt;code class=&quot;highlighter-rouge&quot;&gt;CSR&lt;/code&gt;, browse out to your CA and generate an &lt;code class=&quot;highlighter-rouge&quot;&gt;Advanced Certificate Request&lt;/code&gt;, paste in the &lt;code class=&quot;highlighter-rouge&quot;&gt;CSR&lt;/code&gt;, select your desired template, and submit the request.  (I’m not going into info on CAs and templates in this walk through, I’m sure either you know how to do this, else ask your PKI admin).  On the certificate download page, select the &lt;code class=&quot;highlighter-rouge&quot;&gt;BASE64&lt;/code&gt; encoding, and download the certificate, you do not the entire chain.  Lastly, on the same screen in the iLO, you select the &lt;code class=&quot;highlighter-rouge&quot;&gt;Import Certificate&lt;/code&gt; button, and in the dialog, you will paste your cert data.  You get this by right clicking the certificate file you generated and downloaded, and select &lt;code class=&quot;highlighter-rouge&quot;&gt;Open With -&amp;gt; Notepad&lt;/code&gt; and there you will get a similar result as the &lt;code class=&quot;highlighter-rouge&quot;&gt;CSR&lt;/code&gt;, but a longer string of random characters, that is what you paste in the iLO dialog.  If this was all done correctly the iLO will reset, and you will have a custom certificate installed.  And no more security warning if you browse to it by the name you entered into the &lt;code class=&quot;highlighter-rouge&quot;&gt;Common Name&lt;/code&gt; property.&lt;/p&gt;
+&lt;p&gt;After you have the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CSR&lt;/code&gt;, browse out to your CA and generate an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Advanced Certificate Request&lt;/code&gt;, paste in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CSR&lt;/code&gt;, select your desired template, and submit the request.  (I’m not going into info on CAs and templates in this walk through, I’m sure either you know how to do this, else ask your PKI admin).  On the certificate download page, select the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;BASE64&lt;/code&gt; encoding, and download the certificate, you do not the entire chain.  Lastly, on the same screen in the iLO, you select the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Import Certificate&lt;/code&gt; button, and in the dialog, you will paste your cert data.  You get this by right clicking the certificate file you generated and downloaded, and select &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Open With -&amp;gt; Notepad&lt;/code&gt; and there you will get a similar result as the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CSR&lt;/code&gt;, but a longer string of random characters, that is what you paste in the iLO dialog.  If this was all done correctly the iLO will reset, and you will have a custom certificate installed.  And no more security warning if you browse to it by the name you entered into the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Common Name&lt;/code&gt; property.&lt;/p&gt;
 
 &lt;p&gt;Whew!  Lets automate this.&lt;/p&gt;
 
-&lt;p&gt;As you can see, there really isn’t that many steps, but I have hundreds of HPE servers, and there is no way in Hell I am going to sign into each one, generate a CSR, wait, wait, wait, then go to my CA, submit the request, save it, open it, and paste it in the web page hundreds of times.  So I started messing with the &lt;a href=&quot;https://www.powershellgallery.com/packages/HPEiLOCmdlets/2.2.0.0&quot;&gt;HPEiLOCmdlets&lt;/a&gt; PowerShell Module, and using those its pretty easy to start the CSR generation, and once its created, use &lt;a href=&quot;https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/certreq_1&quot;&gt;certreq.exe&lt;/a&gt; to submit the request, and the &lt;code class=&quot;highlighter-rouge&quot;&gt;HPEiLOCmdlets&lt;/code&gt; can be used to install the certificate as well.&lt;/p&gt;
+&lt;p&gt;As you can see, there really isn’t that many steps, but I have hundreds of HPE servers, and there is no way in Hell I am going to sign into each one, generate a CSR, wait, wait, wait, then go to my CA, submit the request, save it, open it, and paste it in the web page hundreds of times.  So I started messing with the &lt;a href=&quot;https://www.powershellgallery.com/packages/HPEiLOCmdlets/2.2.0.0&quot;&gt;HPEiLOCmdlets&lt;/a&gt; PowerShell Module, and using those its pretty easy to start the CSR generation, and once its created, use &lt;a href=&quot;https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/certreq_1&quot;&gt;certreq.exe&lt;/a&gt; to submit the request, and the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;HPEiLOCmdlets&lt;/code&gt; can be used to install the certificate as well.&lt;/p&gt;
 
 &lt;h2 id=&quot;breaking-down-the-code&quot;&gt;Breaking Down The Code&lt;/h2&gt;
 
-&lt;p&gt;The cmdlet I created is called &lt;code class=&quot;highlighter-rouge&quot;&gt;New-HPEiLOPKICertificate&lt;/code&gt;  Here is the usage:&lt;/p&gt;
+&lt;p&gt;The cmdlet I created is called &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;New-HPEiLOPKICertificate&lt;/code&gt;  Here is the usage:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;New-HPEiLOPKICertificate.ps1 [-Credential] &amp;lt;pscredential&amp;gt; [-iLOName] &amp;lt;string[]&amp;gt; [[-Country] &amp;lt;string&amp;gt;] [[-State] &amp;lt;string&amp;gt;] [[-Locality] &amp;lt;string&amp;gt;] [[-Organization] &amp;lt;string&amp;gt;] [[-OrganizationalUnit] &amp;lt;string&amp;gt;] [[-CertificateAuthorityName] &amp;lt;string&amp;gt;] [[-CertificateTemplateName] &amp;lt;string&amp;gt;] [[-FirmwareMinimumVersion] &amp;lt;version&amp;gt;] [-IncludeiLOIP] [&amp;lt;CommonParameters&amp;gt;]
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;New-HPEiLOPKICertificate.ps1 [-Credential] &amp;lt;pscredential&amp;gt; [-iLOName] &amp;lt;string[]&amp;gt; [[-Country] &amp;lt;string&amp;gt;] [[-State] &amp;lt;string&amp;gt;] [[-Locality] &amp;lt;string&amp;gt;] [[-Organization] &amp;lt;string&amp;gt;] [[-OrganizationalUnit] &amp;lt;string&amp;gt;] [[-CertificateAuthorityName] &amp;lt;string&amp;gt;] [[-CertificateTemplateName] &amp;lt;string&amp;gt;] [[-FirmwareMinimumVersion] &amp;lt;version&amp;gt;] [-IncludeiLOIP] [&amp;lt;CommonParameters&amp;gt;]
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;The parameters pretty much all line up with the values discribed above, with the exception of a few:&lt;/p&gt;
 &lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Credential&lt;/code&gt; - This is a &lt;code class=&quot;highlighter-rouge&quot;&gt;PSCredential&lt;/code&gt; object for the iLO login credentials, use &lt;code class=&quot;highlighter-rouge&quot;&gt;Get-Credential&lt;/code&gt; to populate this value.&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;iLOName&lt;/code&gt; - This is the &lt;code class=&quot;highlighter-rouge&quot;&gt;CommonName&lt;/code&gt; can be the FQDN or the shortname.&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;CertificateAuthorityName&lt;/code&gt; - This is your &lt;code class=&quot;highlighter-rouge&quot;&gt;CA&lt;/code&gt; instance, you can find this by just typing &lt;code class=&quot;highlighter-rouge&quot;&gt;certreq&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;CMD&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;CertificateTemplateName&lt;/code&gt; - The template to submit your &lt;code class=&quot;highlighter-rouge&quot;&gt;CSR&lt;/code&gt; against.&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;FirmwareMinimumVersion&lt;/code&gt; - The &lt;code class=&quot;highlighter-rouge&quot;&gt;HPEiLOCmdlets&lt;/code&gt; seem to only like newer iLO versions, I can tell you 2.55 does not work, but 2.70 does.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Credential&lt;/code&gt; - This is a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;PSCredential&lt;/code&gt; object for the iLO login credentials, use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Get-Credential&lt;/code&gt; to populate this value.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;iLOName&lt;/code&gt; - This is the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CommonName&lt;/code&gt; can be the FQDN or the shortname.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CertificateAuthorityName&lt;/code&gt; - This is your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CA&lt;/code&gt; instance, you can find this by just typing &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;certreq&lt;/code&gt; in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CMD&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CertificateTemplateName&lt;/code&gt; - The template to submit your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CSR&lt;/code&gt; against.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;FirmwareMinimumVersion&lt;/code&gt; - The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;HPEiLOCmdlets&lt;/code&gt; seem to only like newer iLO versions, I can tell you 2.55 does not work, but 2.70 does.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;If you want you can set default parameter values in the script, so your really only have to change the &lt;code class=&quot;highlighter-rouge&quot;&gt;iLOName&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;If you want you can set default parameter values in the script, so your really only have to change the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;iLOName&lt;/code&gt;.&lt;/p&gt;
 
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;New-HPEiLOPKICertifacte.ps1 -iLOName myHPEiLO.tomohulk.io -Credential &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Get-Credential&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nf&quot;&gt;New-HPEiLOPKICertifacte.ps1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-iLOName&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;myHPEiLO.tomohulk.io&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Credential&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Get-Credential&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;The workflow of the cmdlet is pretty straight forward:&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;Connect to the iLO.&lt;/li&gt;
   &lt;li&gt;Verify the firmware version is a minimum version.&lt;/li&gt;
   &lt;li&gt;Begin the CSR generation with the supplied values.&lt;/li&gt;
-  &lt;li&gt;Looping every 5 seconds, query the iLO to see if the &lt;code class=&quot;highlighter-rouge&quot;&gt;CSR&lt;/code&gt; has been generated.&lt;/li&gt;
-  &lt;li&gt;Export the &lt;code class=&quot;highlighter-rouge&quot;&gt;CSR&lt;/code&gt; to a temp file.&lt;/li&gt;
-  &lt;li&gt;Submit the request to the the &lt;code class=&quot;highlighter-rouge&quot;&gt;CA&lt;/code&gt; using &lt;code class=&quot;highlighter-rouge&quot;&gt;certreq.exe&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Use resulting &lt;code class=&quot;highlighter-rouge&quot;&gt;.pem&lt;/code&gt; file to upload the new certificate to the iLO.&lt;/li&gt;
-  &lt;li&gt;Delete the temporary &lt;code class=&quot;highlighter-rouge&quot;&gt;.csr&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;.pem&lt;/code&gt; files.&lt;/li&gt;
+  &lt;li&gt;Looping every 5 seconds, query the iLO to see if the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CSR&lt;/code&gt; has been generated.&lt;/li&gt;
+  &lt;li&gt;Export the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CSR&lt;/code&gt; to a temp file.&lt;/li&gt;
+  &lt;li&gt;Submit the request to the the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CA&lt;/code&gt; using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;certreq.exe&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;Use resulting &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.pem&lt;/code&gt; file to upload the new certificate to the iLO.&lt;/li&gt;
+  &lt;li&gt;Delete the temporary &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.csr&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.pem&lt;/code&gt; files.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;This cmdlet accepts pipeline input for the &lt;code class=&quot;highlighter-rouge&quot;&gt;iLOName&lt;/code&gt; as well as a &lt;code class=&quot;highlighter-rouge&quot;&gt;StringArray&lt;/code&gt;, so as long as they have the same credentials, you can complete this on multiple systems at once:&lt;/p&gt;
+&lt;p&gt;This cmdlet accepts pipeline input for the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;iLOName&lt;/code&gt; as well as a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;StringArray&lt;/code&gt;, so as long as they have the same credentials, you can complete this on multiple systems at once:&lt;/p&gt;
 
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ilo1&quot;&lt;/span&gt;, &lt;span class=&quot;s2&quot;&gt;&quot;ilo2&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; | New-HPEiLOPKICertificate -Credential &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Get-Credential&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;@(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ilo1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ilo2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;New-HPEiLOPKICertificate&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Credential&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Get-Credential&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
 
-&lt;span class=&quot;c1&quot;&gt;# or&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;# or&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
 
-New-HPEiLOCertificate -iLOName &lt;span class=&quot;s2&quot;&gt;&quot;ilo1&quot;&lt;/span&gt;, &lt;span class=&quot;s2&quot;&gt;&quot;ilo2&quot;&lt;/span&gt; -Credential &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Get-Credential&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;New-HPEiLOCertificate&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-iLOName&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ilo1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ilo2&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Credential&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Get-Credential&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Thats pretty much it, after the iLO resets and you refresh the page, you will see your connection is now &lt;em&gt;secure&lt;/em&gt;.&lt;/p&gt;
 
@@ -316,25 +316,25 @@ New-HPEiLOCertificate -iLOName &lt;span class=&quot;s2&quot;&gt;&quot;ilo1&quot;
 &lt;p&gt;Now, I know there is a lot of YouTube videos out there on how to setup and use a BLTouch sensor, but, everything I found when I was setting mine up, was with using the Marlin firmware. Either Vanilla Marlin or the TH3D flavor.  Well, to complicate things even more, I am using &lt;a href=&quot;https://github.com/KevinOConnor/klipper&quot;&gt;Klipper&lt;/a&gt;.  I’m not going to dive into much about Klipper in this blog post, as its not really the focus.  Either you are already using Klipper and you know what it is, so keep reading, or go research Klipper and see if its for you.  Because these settings will &lt;strong&gt;NOT&lt;/strong&gt; work with any flavor of the Marlin firmware.&lt;/p&gt;
 
 &lt;h2 id=&quot;values-youll-need&quot;&gt;Values You’ll Need&lt;/h2&gt;
-&lt;p&gt;There are values you need when setting up your BLTouch, namely the X and Y offsets from the nozzle to the BLTouch, you can either measure these or, if you are using third party mods on your hot end, a lot of the designers will specify these values.  I am using the &lt;a href=&quot;https://www.thingiverse.com/thing:2759439&quot;&gt;Bullseye Cooling Fan Duct&lt;/a&gt; and the designer has provided the offset values on the Thingiverse page.  Using the Bullseye Fan Duct and the provided mount, the offsets are &lt;code class=&quot;highlighter-rouge&quot;&gt;X -42, Y -5&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;There are values you need when setting up your BLTouch, namely the X and Y offsets from the nozzle to the BLTouch, you can either measure these or, if you are using third party mods on your hot end, a lot of the designers will specify these values.  I am using the &lt;a href=&quot;https://www.thingiverse.com/thing:2759439&quot;&gt;Bullseye Cooling Fan Duct&lt;/a&gt; and the designer has provided the offset values on the Thingiverse page.  Using the Bullseye Fan Duct and the provided mount, the offsets are &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;X -42, Y -5&lt;/code&gt;.&lt;/p&gt;
 
-&lt;p&gt;Next, you will need to know your bed size, the bed that ships with the Ender3 is &lt;code class=&quot;highlighter-rouge&quot;&gt;220x220mm&lt;/code&gt;.  You need to know this for creating a bed mesh, which is what the BLTouch will build when probing.&lt;/p&gt;
+&lt;p&gt;Next, you will need to know your bed size, the bed that ships with the Ender3 is &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;220x220mm&lt;/code&gt;.  You need to know this for creating a bed mesh, which is what the BLTouch will build when probing.&lt;/p&gt;
 
 &lt;h2 id=&quot;get-configuring&quot;&gt;Get Configuring&lt;/h2&gt;
-&lt;p&gt;Here are the settings you need to add or update on in your Klipper &lt;code class=&quot;highlighter-rouge&quot;&gt;printer.cfg&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;Here are the settings you need to add or update on in your Klipper &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;printer.cfg&lt;/code&gt;:&lt;/p&gt;
 &lt;ol&gt;
-  &lt;li&gt;You need to change the &lt;code class=&quot;highlighter-rouge&quot;&gt;endstop_pin&lt;/code&gt; value to use a virtual endstop, this is in the &lt;code class=&quot;highlighter-rouge&quot;&gt;z_stepper&lt;/code&gt; section.
+  &lt;li&gt;You need to change the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;endstop_pin&lt;/code&gt; value to use a virtual endstop, this is in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;z_stepper&lt;/code&gt; section.
     &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;endstop_pin: probe:z_virtual_endstop&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;endstop_pin: probe:z_virtual_endstop&lt;/code&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;You need to allow the Z Axis to go below the ‘0’ mark for negative warp, this can be done by editing the &lt;code class=&quot;highlighter-rouge&quot;&gt;position_min&lt;/code&gt; value, also in the &lt;code class=&quot;highlighter-rouge&quot;&gt;z_stepper&lt;/code&gt; section.
+  &lt;li&gt;You need to allow the Z Axis to go below the ‘0’ mark for negative warp, this can be done by editing the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;position_min&lt;/code&gt; value, also in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;z_stepper&lt;/code&gt; section.
     &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;position_min: -3&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;position_min: -3&lt;/code&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;You need to define the &lt;code class=&quot;highlighter-rouge&quot;&gt;[bltouch]&lt;/code&gt; section and values in the configuration file (a section is defined with square brackets, this section does not exist in the Ender3 printer.cfg by default, so you will need manually create it).  You can see that the X and Y offsets are the values I got from the Thingiverse page.
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[bltouch]
+  &lt;li&gt;You need to define the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[bltouch]&lt;/code&gt; section and values in the configuration file (a section is defined with square brackets, this section does not exist in the Ender3 printer.cfg by default, so you will need manually create it).  You can see that the X and Y offsets are the values I got from the Thingiverse page.
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[bltouch]
 sensor_pin: ^PC4
 control_pin: PA4
 x_offset: -47.0
@@ -345,11 +345,11 @@ samples: 2
 sample_retract_dist: 8.0
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
     &lt;ul&gt;
-      &lt;li&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;samples&lt;/code&gt; value is how many times it checks each location in the bed mesh, more samples will take longer.&lt;/li&gt;
+      &lt;li&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;samples&lt;/code&gt; value is how many times it checks each location in the bed mesh, more samples will take longer.&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;Next, the &lt;code class=&quot;highlighter-rouge&quot;&gt;[bed_mesh]&lt;/code&gt; section needs to be manually defined.
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[bed_mesh]
+  &lt;li&gt;Next, the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[bed_mesh]&lt;/code&gt; section needs to be manually defined.
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[bed_mesh]
 speed: 80
 horizontal_move_z: 5
 min_point: 50,30
@@ -357,12 +357,12 @@ max_point: 230,230
 probe_count: 5,5
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
     &lt;ul&gt;
-      &lt;li&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;probe_count&lt;/code&gt; is how many samples its going to take, &lt;code class=&quot;highlighter-rouge&quot;&gt;5,5&lt;/code&gt; is a &lt;code class=&quot;highlighter-rouge&quot;&gt;5x5&lt;/code&gt; grid, a bigger grid will take longer, but may be more accurate.&lt;/li&gt;
-      &lt;li&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;min_point&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;max_point&lt;/code&gt; is how big your bed is, with the &lt;code class=&quot;highlighter-rouge&quot;&gt;220x220mm&lt;/code&gt; build plate, &lt;code class=&quot;highlighter-rouge&quot;&gt;230x230mm&lt;/code&gt; is about as large as you can go.&lt;/li&gt;
+      &lt;li&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;probe_count&lt;/code&gt; is how many samples its going to take, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;5,5&lt;/code&gt; is a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;5x5&lt;/code&gt; grid, a bigger grid will take longer, but may be more accurate.&lt;/li&gt;
+      &lt;li&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;min_point&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;max_point&lt;/code&gt; is how big your bed is, with the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;220x220mm&lt;/code&gt; build plate, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;230x230mm&lt;/code&gt; is about as large as you can go.&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;Now, add the &lt;code class=&quot;highlighter-rouge&quot;&gt;[homing_override]&lt;/code&gt; section.  You can do what ever you want here, I am just setting the Z axis to home in the middle of the bed.
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[homing_override]
+  &lt;li&gt;Now, add the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[homing_override]&lt;/code&gt; section.  You can do what ever you want here, I am just setting the Z axis to home in the middle of the bed.
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[homing_override]
 set_position_z:0
 gcode:
  G1 Z10 F600
@@ -374,25 +374,25 @@ gcode:
       &lt;li&gt;PRO TIP: gcode sections in the printer.cfg need to be 4 spaced or you will get errors.&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;There is one last thing to do, and that is configure your start and end gcode sequences to tell klipper to generate the bed mesh and use it.  This command is &lt;code class=&quot;highlighter-rouge&quot;&gt;BED_MESH_CALIBRATE&lt;/code&gt; called after &lt;code class=&quot;highlighter-rouge&quot;&gt;G28&lt;/code&gt; (the homing override).  Now, here is what I do, I keep my start and end gcode sequences in the Klipper printer.cfg as &lt;code class=&quot;highlighter-rouge&quot;&gt;gcode_macro&lt;/code&gt;s.  This allows me to use multiple slicers and keep my start and end gcode the same.  I have them mapped to &lt;code class=&quot;highlighter-rouge&quot;&gt;START_PRINT&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;END_PRINT&lt;/code&gt;, then in any slicer i am using, I can just put those in and let Klipper handle the sequences.  I have included my printer.cfg at the bottom of this page so you take a look at my start up and end print gcode.&lt;/li&gt;
+  &lt;li&gt;There is one last thing to do, and that is configure your start and end gcode sequences to tell klipper to generate the bed mesh and use it.  This command is &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;BED_MESH_CALIBRATE&lt;/code&gt; called after &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;G28&lt;/code&gt; (the homing override).  Now, here is what I do, I keep my start and end gcode sequences in the Klipper printer.cfg as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gcode_macro&lt;/code&gt;s.  This allows me to use multiple slicers and keep my start and end gcode the same.  I have them mapped to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;START_PRINT&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;END_PRINT&lt;/code&gt;, then in any slicer i am using, I can just put those in and let Klipper handle the sequences.  I have included my printer.cfg at the bottom of this page so you take a look at my start up and end print gcode.&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;h2 id=&quot;configure-the-z-offset&quot;&gt;Configure The Z Offset&lt;/h2&gt;
 &lt;p&gt;So, for me this was the hardest part, I had the probe working, and at least stopping from crashing into the bed, but, I couldn’t figure out how to actually make the printer know the space from the probe being triggered, to the bottom of the nozzle.  Which is obviously crucial for the hotend to know how much lower to go past the point where the BLTouch is triggered and be the perfect height above the bed to start printing.  Well, its actually really simple.  At least thats how I feel about it now that I know how to do it.  And after figuring it out, the only time I have had to re-calibrate my Z offset is when I replace the nozzle.&lt;/p&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;Go into your printer.cfg and change the &lt;code class=&quot;highlighter-rouge&quot;&gt;z_offset&lt;/code&gt; to 10 in the &lt;code class=&quot;highlighter-rouge&quot;&gt;[bltouch]&lt;/code&gt; section.  This number is completely arbitrary.  Just need a value there, and one that will be easy to do math with later.&lt;/li&gt;
-  &lt;li&gt;Home the printer, &lt;code class=&quot;highlighter-rouge&quot;&gt;G28&lt;/code&gt;.  as long as your &lt;code class=&quot;highlighter-rouge&quot;&gt;[bltouch]&lt;/code&gt; settings are correct, the BLTouch pin should engage, and the Z axis should lower and stop, once its triggered.  I kept my finger on the power button at this point to stop the hotend from crashing into the bed if need be.&lt;/li&gt;
-  &lt;li&gt;Next tell the printer to go into &lt;code class=&quot;highlighter-rouge&quot;&gt;Relative Position&lt;/code&gt; mode: &lt;code class=&quot;highlighter-rouge&quot;&gt;G91&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;Now move the hotend over the spot the BLTouch probed to home the bed: &lt;code class=&quot;highlighter-rouge&quot;&gt;G1 X-47&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Go into your printer.cfg and change the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;z_offset&lt;/code&gt; to 10 in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[bltouch]&lt;/code&gt; section.  This number is completely arbitrary.  Just need a value there, and one that will be easy to do math with later.&lt;/li&gt;
+  &lt;li&gt;Home the printer, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;G28&lt;/code&gt;.  as long as your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[bltouch]&lt;/code&gt; settings are correct, the BLTouch pin should engage, and the Z axis should lower and stop, once its triggered.  I kept my finger on the power button at this point to stop the hotend from crashing into the bed if need be.&lt;/li&gt;
+  &lt;li&gt;Next tell the printer to go into &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Relative Position&lt;/code&gt; mode: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;G91&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Now move the hotend over the spot the BLTouch probed to home the bed: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;G1 X-47&lt;/code&gt;&lt;/li&gt;
   &lt;li&gt;Get a piece of paper and get ready to bed level like you always do, lower the Z axis by -.05 until the nozzle scrapes the paper.  You can do this with the display control, or I use &lt;a href=&quot;https://itunes.apple.com/us/app/octopod-for-octoprint/id1412557625?mt=8&quot;&gt;OctoPod&lt;/a&gt; on my iOS device.&lt;/li&gt;
-  &lt;li&gt;Once the Z axis is where it needs to be, you can run &lt;code class=&quot;highlighter-rouge&quot;&gt;GET_POSITION&lt;/code&gt; in the terminal and then just do the math:
+  &lt;li&gt;Once the Z axis is where it needs to be, you can run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;GET_POSITION&lt;/code&gt; in the terminal and then just do the math:
     &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[printer.cfg [bltouch] z_offset] - [z value from GET_POSITION] = z_offset&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[printer.cfg [bltouch] z_offset] - [z value from GET_POSITION] = z_offset&lt;/code&gt;&lt;/li&gt;
       &lt;li&gt;IE: 10 - 8.5 = 1.5&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;Replace your the &lt;code class=&quot;highlighter-rouge&quot;&gt;z_offset&lt;/code&gt; value in the &lt;code class=&quot;highlighter-rouge&quot;&gt;[bltouch]&lt;/code&gt; section with your new calculated value.&lt;/li&gt;
+  &lt;li&gt;Replace your the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;z_offset&lt;/code&gt; value in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[bltouch]&lt;/code&gt; section with your new calculated value.&lt;/li&gt;
   &lt;li&gt;Print and be happy as your first layer runs perfect!&lt;/li&gt;
 &lt;/ol&gt;
 
@@ -402,7 +402,7 @@ gcode:
 
 &lt;h3 id=&quot;update&quot;&gt;Update&lt;/h3&gt;
 &lt;ul&gt;
-  &lt;li&gt;20190609 - A recent Klipper update moved the &lt;code class=&quot;highlighter-rouge&quot;&gt;samples: 2&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;sample_retract_distance: 8.0&lt;/code&gt; from the &lt;code class=&quot;highlighter-rouge&quot;&gt;[bed_mesh]&lt;/code&gt; section to the &lt;code class=&quot;highlighter-rouge&quot;&gt;[bltouch]&lt;/code&gt; section.  I have updated this article to reflect those changes.&lt;/li&gt;
+  &lt;li&gt;20190609 - A recent Klipper update moved the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;samples: 2&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sample_retract_distance: 8.0&lt;/code&gt; from the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[bed_mesh]&lt;/code&gt; section to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[bltouch]&lt;/code&gt; section.  I have updated this article to reflect those changes.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -534,30 +534,30 @@ gcode:
 &lt;ol&gt;
   &lt;li&gt;Download the BrewPiLess Repository:
     &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;git clone https://github.com/vitotai/BrewPiLess.git&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;git clone https://github.com/vitotai/BrewPiLess.git&lt;/code&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;If you don’t have it installed, you will need to download and install &lt;a href=&quot;https://code.visualstudio.com&quot;&gt;VSCode&lt;/a&gt;.&lt;/li&gt;
   &lt;li&gt;Open the repository in VSCode.  If you don’t have &lt;a href=&quot;https://platformio.org/install/ide?install=vscode&quot;&gt;Platform.io&lt;/a&gt; installed, go to the extensions workspace and install it.
     &lt;ul&gt;
-      &lt;li&gt;On my mac, it failed to install the first, and it was because &lt;code class=&quot;highlighter-rouge&quot;&gt;virtualenv&lt;/code&gt; needed to be installed.  Completing the three steps listed in the &lt;em&gt;Perquisites&lt;/em&gt; section &lt;a href=&quot;http://docs.platformio.org/en/latest/installation.html#virtual-environment&quot;&gt;here&lt;/a&gt;, and then uninstall/reinstall the extension fixed the issue.&lt;/li&gt;
+      &lt;li&gt;On my mac, it failed to install the first, and it was because &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;virtualenv&lt;/code&gt; needed to be installed.  Completing the three steps listed in the &lt;em&gt;Perquisites&lt;/em&gt; section &lt;a href=&quot;http://docs.platformio.org/en/latest/installation.html#virtual-environment&quot;&gt;here&lt;/a&gt;, and then uninstall/reinstall the extension fixed the issue.&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;Connect the NodeMCU to your computer via USB, and flash the bin to the board (make sure you are in the working directory of the repo):
     &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;command+shit+p&lt;/code&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;command+shit+p&lt;/code&gt;
         &lt;ul&gt;
-          &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;PlatformIO: Build&lt;/code&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;PlatformIO: Upload&lt;/code&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;PlatformIO: Clean&lt;/code&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;gt;PlatformIO: Build&lt;/code&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;gt;PlatformIO: Upload&lt;/code&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;gt;PlatformIO: Clean&lt;/code&gt;&lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;After the flash is complete, the NodeMCU will begin broadcasting its own SSID, you need to connect to to this WiFi network to configure it to connect to your home WiFi.
     &lt;ul&gt;
-      &lt;li&gt;Username: &lt;code class=&quot;highlighter-rouge&quot;&gt;brewpiless&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;Password: &lt;code class=&quot;highlighter-rouge&quot;&gt;brewpiless&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;Username: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;brewpiless&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;Password: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;brewpiless&lt;/code&gt;&lt;/li&gt;
       &lt;li&gt;Open a browser it should auto connect to a config page, where you can change the username, password, and the title.&lt;/li&gt;
       &lt;li&gt;Save the changes and on the next page enter you home wireless info.&lt;/li&gt;
       &lt;li&gt;After this is complete you can connect back to your home wifi.&lt;/li&gt;
@@ -629,12 +629,12 @@ Layout diagram (I wasn’t able to find a 3D model of the AC-DC 5V PSU, that goe
 &lt;p&gt;Once everything is up an running, there isn’t much left to do.  Just need to set which plug is the hot and cold, and which probes are the chamber, and the beer.&lt;/p&gt;
 &lt;ol&gt;
   &lt;li&gt;Connect to your BrewPiLess via a web browser at http://brewpiless.local (or whatever you named it in the setup screen.)&lt;/li&gt;
-  &lt;li&gt;Go to the &lt;code class=&quot;highlighter-rouge&quot;&gt;Device Setup&lt;/code&gt; screen on the top right corner.
+  &lt;li&gt;Go to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Device Setup&lt;/code&gt; screen on the top right corner.
     &lt;ul&gt;
-      &lt;li&gt;Be sure to click the &lt;code class=&quot;highlighter-rouge&quot;&gt;Erase EEPROM&lt;/code&gt; button at the top to be sure everything is reset.&lt;/li&gt;
-      &lt;li&gt;Click &lt;code class=&quot;highlighter-rouge&quot;&gt;Refresh Device List&lt;/code&gt; on the top load all your devices.&lt;/li&gt;
-      &lt;li&gt;You have to manually select a &lt;code class=&quot;highlighter-rouge&quot;&gt;Device&lt;/code&gt; slot for each probe and plug, but these are arbitrary, they just have to be unique.&lt;/li&gt;
-      &lt;li&gt;The temperature probes will have an &lt;code class=&quot;highlighter-rouge&quot;&gt;Address&lt;/code&gt; value.&lt;/li&gt;
+      &lt;li&gt;Be sure to click the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Erase EEPROM&lt;/code&gt; button at the top to be sure everything is reset.&lt;/li&gt;
+      &lt;li&gt;Click &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Refresh Device List&lt;/code&gt; on the top load all your devices.&lt;/li&gt;
+      &lt;li&gt;You have to manually select a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Device&lt;/code&gt; slot for each probe and plug, but these are arbitrary, they just have to be unique.&lt;/li&gt;
+      &lt;li&gt;The temperature probes will have an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Address&lt;/code&gt; value.&lt;/li&gt;
       &lt;li&gt;Setup 4 devices:
         &lt;ul&gt;
           &lt;li&gt;Chamber Temp&lt;/li&gt;
@@ -643,10 +643,10 @@ Layout diagram (I wasn’t able to find a 3D model of the AC-DC 5V PSU, that goe
           &lt;li&gt;Chamber Cooler&lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
-      &lt;li&gt;I am not sure if there is a better way to then trial and error to identify which is which, for the probes you can just hold in your hand and the value will change on the display.  For the plugs you will need to actually set a &lt;code class=&quot;highlighter-rouge&quot;&gt;Beer&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;Fridge&lt;/code&gt; temperature value and then one or the other will turn on.&lt;/li&gt;
+      &lt;li&gt;I am not sure if there is a better way to then trial and error to identify which is which, for the probes you can just hold in your hand and the value will change on the display.  For the plugs you will need to actually set a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Beer&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Fridge&lt;/code&gt; temperature value and then one or the other will turn on.&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;Once your get everything setup, I would recommend backing up the configuration from the &lt;code class=&quot;highlighter-rouge&quot;&gt;Device Setup&lt;/code&gt; screen incase you ever need to reload or rebuild, then you won’t have to play the guessing game on which device is which.&lt;/li&gt;
+  &lt;li&gt;Once your get everything setup, I would recommend backing up the configuration from the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Device Setup&lt;/code&gt; screen incase you ever need to reload or rebuild, then you won’t have to play the guessing game on which device is which.&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;h2 id=&quot;extra-credit&quot;&gt;Extra Credit&lt;/h2&gt;
@@ -655,12 +655,12 @@ Layout diagram (I wasn’t able to find a 3D model of the AC-DC 5V PSU, that goe
   &lt;li&gt;Navigate to http://brewpiless.local/testcmd.htm&lt;/li&gt;
   &lt;li&gt;Issue this command:
     &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;j{&quot;tempFormat&quot;:&quot;F&quot;}&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;j{&quot;tempFormat&quot;:&quot;F&quot;}&lt;/code&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;If your getting in the Kveik craze, and want to ferment hot AF, the you need to increase the &lt;code class=&quot;highlighter-rouge&quot;&gt;tempSetMax&lt;/code&gt; value:
+  &lt;li&gt;If your getting in the Kveik craze, and want to ferment hot AF, the you need to increase the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tempSetMax&lt;/code&gt; value:
     &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;j{&quot;tempSetMax&quot;:&quot;90.0&quot;}&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;j{&quot;tempSetMax&quot;:&quot;90.0&quot;}&lt;/code&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
 &lt;/ol&gt;
@@ -700,30 +700,30 @@ Layout diagram (I wasn’t able to find a 3D model of the AC-DC 5V PSU, that goe
 &lt;p&gt;For the first part of this build, we need to install and configure the Raspberry Pi Zero, we will be installing the latest version of &lt;a href=&quot;https://www.raspbian.org&quot;&gt;Raspbian Stretch Lite&lt;/a&gt;.&lt;/p&gt;
 &lt;ol&gt;
   &lt;li&gt;Download the latest img for &lt;strong&gt;Raspbian Stretch Lite&lt;/strong&gt; &lt;a href=&quot;https://www.raspberrypi.org/downloads/raspbian/&quot;&gt;here&lt;/a&gt;.&lt;/li&gt;
-  &lt;li&gt;Open the &lt;code class=&quot;highlighter-rouge&quot;&gt;Disk Utility&lt;/code&gt; app:
+  &lt;li&gt;Open the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Disk Utility&lt;/code&gt; app:
     &lt;ul&gt;
-      &lt;li&gt;Press &lt;code class=&quot;highlighter-rouge&quot;&gt;CMD+SPACE&lt;/code&gt; to open the &lt;code class=&quot;highlighter-rouge&quot;&gt;Spotlight&lt;/code&gt; application.&lt;/li&gt;
-      &lt;li&gt;In the search bar type &lt;code class=&quot;highlighter-rouge&quot;&gt;Disk Utility&lt;/code&gt;.&lt;/li&gt;
+      &lt;li&gt;Press &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CMD+SPACE&lt;/code&gt; to open the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Spotlight&lt;/code&gt; application.&lt;/li&gt;
+      &lt;li&gt;In the search bar type &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Disk Utility&lt;/code&gt;.&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;In the top left had corner, select &lt;code class=&quot;highlighter-rouge&quot;&gt;View&lt;/code&gt;, and be sure &lt;code class=&quot;highlighter-rouge&quot;&gt;Show All Devices&lt;/code&gt; is selected.&lt;/li&gt;
+  &lt;li&gt;In the top left had corner, select &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;View&lt;/code&gt;, and be sure &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Show All Devices&lt;/code&gt; is selected.&lt;/li&gt;
   &lt;li&gt;Next, you will need to be sure the SD card is formated with the &lt;a href=&quot;https://en.wikipedia.org/wiki/Design_of_the_FAT_file_system&quot;&gt;FAT&lt;/a&gt; file system.
     &lt;ul&gt;
       &lt;li&gt;Select the SD drive in the left pane.&lt;/li&gt;
-      &lt;li&gt;Select &lt;code class=&quot;highlighter-rouge&quot;&gt;Erase&lt;/code&gt; from the top.&lt;/li&gt;
-      &lt;li&gt;Make sure you pick &lt;code class=&quot;highlighter-rouge&quot;&gt;FAT (MS-DOS)&lt;/code&gt; for the file system, and &lt;code class=&quot;highlighter-rouge&quot;&gt;MBR (Master Boot Record)&lt;/code&gt; for the partition.&lt;/li&gt;
+      &lt;li&gt;Select &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Erase&lt;/code&gt; from the top.&lt;/li&gt;
+      &lt;li&gt;Make sure you pick &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;FAT (MS-DOS)&lt;/code&gt; for the file system, and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MBR (Master Boot Record)&lt;/code&gt; for the partition.&lt;/li&gt;
       &lt;li&gt;&lt;strong&gt;THIS WILL ERASE THE ENTIRE SD CARD, SO BE SURE YOU HAVE SAVED ANYTHING YOU WANT TO EVER SEE AGAIN!&lt;/strong&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;Open a &lt;code class=&quot;highlighter-rouge&quot;&gt;terminal&lt;/code&gt; using the &lt;code class=&quot;highlighter-rouge&quot;&gt;Spotlight&lt;/code&gt; tool (see step 2) and type &lt;code class=&quot;highlighter-rouge&quot;&gt;Terminal&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;In the &lt;code class=&quot;highlighter-rouge&quot;&gt;terminal&lt;/code&gt; application, find your disk number by running &lt;code class=&quot;highlighter-rouge&quot;&gt;diskutil list&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;Note your disk number, it will be in the format of &lt;code class=&quot;highlighter-rouge&quot;&gt;/dev/disk2&lt;/code&gt;, it may not actually be the number &lt;code class=&quot;highlighter-rouge&quot;&gt;2&lt;/code&gt;, just look at the size of the disk and make sure its the correct one.&lt;/li&gt;
-  &lt;li&gt;Unmount the disk with &lt;code class=&quot;highlighter-rouge&quot;&gt;diskutil unmountDisk /dev/disk2&lt;/code&gt;, again, replace &lt;code class=&quot;highlighter-rouge&quot;&gt;2&lt;/code&gt; with number of your SD card.&lt;/li&gt;
-  &lt;li&gt;write the image to the SD Card with &lt;code class=&quot;highlighter-rouge&quot;&gt;dd&lt;/code&gt;:
+  &lt;li&gt;Open a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;terminal&lt;/code&gt; using the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Spotlight&lt;/code&gt; tool (see step 2) and type &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Terminal&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;In the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;terminal&lt;/code&gt; application, find your disk number by running &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;diskutil list&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Note your disk number, it will be in the format of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/dev/disk2&lt;/code&gt;, it may not actually be the number &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;2&lt;/code&gt;, just look at the size of the disk and make sure its the correct one.&lt;/li&gt;
+  &lt;li&gt;Unmount the disk with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;diskutil unmountDisk /dev/disk2&lt;/code&gt;, again, replace &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;2&lt;/code&gt; with number of your SD card.&lt;/li&gt;
+  &lt;li&gt;write the image to the SD Card with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dd&lt;/code&gt;:
     &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sudo dd bs=1m if=Downloads/raspbian-stretch-lite.img of=/dev/rdisk4 conv=sync&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;Replace &lt;code class=&quot;highlighter-rouge&quot;&gt;Downloads/raspbian-stretch-lite.img&lt;/code&gt; with the path to the &lt;code class=&quot;highlighter-rouge&quot;&gt;.img&lt;/code&gt; file you downloaded in step 1.&lt;/li&gt;
-      &lt;li&gt;Again, replace &lt;code class=&quot;highlighter-rouge&quot;&gt;rdisk4&lt;/code&gt; with the disk number you found in step 7.&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo dd bs=1m if=Downloads/raspbian-stretch-lite.img of=/dev/rdisk4 conv=sync&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;Replace &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Downloads/raspbian-stretch-lite.img&lt;/code&gt; with the path to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.img&lt;/code&gt; file you downloaded in step 1.&lt;/li&gt;
+      &lt;li&gt;Again, replace &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rdisk4&lt;/code&gt; with the disk number you found in step 7.&lt;/li&gt;
       &lt;li&gt;This may take some time, took my system about 10 minutes on an 8GB SD Card with a Thunderbolt SD Card Reader.&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
@@ -732,56 +732,56 @@ Layout diagram (I wasn’t able to find a 3D model of the AC-DC 5V PSU, that goe
 &lt;h2 id=&quot;configuring-raspbian-lite-stretch&quot;&gt;Configuring Raspbian Lite Stretch&lt;/h2&gt;
 &lt;p&gt;After the img is done writing to the SD card, its time to being configuring Raspbian.  Because the Raspberry Pi Zero has such little hardware, we are going to try to keep this as minimal as possible.&lt;/p&gt;
 &lt;ol&gt;
-  &lt;li&gt;SSH is disabled by default, so to enable it, you need to create an empty file called &lt;code class=&quot;highlighter-rouge&quot;&gt;ssh&lt;/code&gt;:
+  &lt;li&gt;SSH is disabled by default, so to enable it, you need to create an empty file called &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh&lt;/code&gt;:
     &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;touch /Volumes/boot/ssh&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;touch /Volumes/boot/ssh&lt;/code&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;Next, you need to append &lt;code class=&quot;highlighter-rouge&quot;&gt;dtoverlay=dwc2&lt;/code&gt; to the end of &lt;code class=&quot;highlighter-rouge&quot;&gt;/Volumes/boot/config.txt&lt;/code&gt;.  You can do this either with &lt;code class=&quot;highlighter-rouge&quot;&gt;textEdit&lt;/code&gt; or with a terminal editor.&lt;/li&gt;
-  &lt;li&gt;This next step is a little tricky, first open &lt;code class=&quot;highlighter-rouge&quot;&gt;/Volumes/boot/cmdline.txt&lt;/code&gt;, and located the text &lt;code class=&quot;highlighter-rouge&quot;&gt;rootwait&lt;/code&gt;, immediately after that, add a space, and then this text: &lt;code class=&quot;highlighter-rouge&quot;&gt;modules-load=dwc2,g_ether&lt;/code&gt;.  So it should look like this:
+  &lt;li&gt;Next, you need to append &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dtoverlay=dwc2&lt;/code&gt; to the end of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/Volumes/boot/config.txt&lt;/code&gt;.  You can do this either with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;textEdit&lt;/code&gt; or with a terminal editor.&lt;/li&gt;
+  &lt;li&gt;This next step is a little tricky, first open &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/Volumes/boot/cmdline.txt&lt;/code&gt;, and located the text &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rootwait&lt;/code&gt;, immediately after that, add a space, and then this text: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;modules-load=dwc2,g_ether&lt;/code&gt;.  So it should look like this:
     &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;rootwait modules-load=dwc2,g_ether&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rootwait modules-load=dwc2,g_ether&lt;/code&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;Now go ahead and eject the SD card and then load it into the Raspberry Pi Zero and plug in the power.  It will take about 60 seconds to boot up, then connect it to your computer.&lt;/li&gt;
-  &lt;li&gt;Next, go to &lt;code class=&quot;highlighter-rouge&quot;&gt;System Preferences &amp;gt; Network&lt;/code&gt; and you will see a new device called &lt;code class=&quot;highlighter-rouge&quot;&gt;RNDIS/Ethernet Gadget&lt;/code&gt;.  &lt;img src=&quot;/images/2019-04-26-taplist-pi-zero/network.png&quot; alt=&quot;Network&quot; /&gt;  This is the Raspberry Pi Zero, you can share your internet connection to it, which will then all you to SSH to the device.&lt;/li&gt;
-  &lt;li&gt;Go to &lt;code class=&quot;highlighter-rouge&quot;&gt;System Preferences &amp;gt; Sharing&lt;/code&gt; and enable internet sharing for the &lt;code class=&quot;highlighter-rouge&quot;&gt;RNDIS/Ethernet Gadget&lt;/code&gt;. &lt;img src=&quot;/images/2019-04-26-taplist-pi-zero/sharing.png&quot; alt=&quot;Sharing&quot; /&gt;&lt;/li&gt;
-  &lt;li&gt;You should now beable to &lt;code class=&quot;highlighter-rouge&quot;&gt;ssh&lt;/code&gt; to the Raspberry Pi Zero:
+  &lt;li&gt;Next, go to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;System Preferences &amp;gt; Network&lt;/code&gt; and you will see a new device called &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;RNDIS/Ethernet Gadget&lt;/code&gt;.  &lt;img src=&quot;/images/2019-04-26-taplist-pi-zero/network.png&quot; alt=&quot;Network&quot; /&gt;  This is the Raspberry Pi Zero, you can share your internet connection to it, which will then all you to SSH to the device.&lt;/li&gt;
+  &lt;li&gt;Go to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;System Preferences &amp;gt; Sharing&lt;/code&gt; and enable internet sharing for the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;RNDIS/Ethernet Gadget&lt;/code&gt;. &lt;img src=&quot;/images/2019-04-26-taplist-pi-zero/sharing.png&quot; alt=&quot;Sharing&quot; /&gt;&lt;/li&gt;
+  &lt;li&gt;You should now beable to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh&lt;/code&gt; to the Raspberry Pi Zero:
     &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ssh pi@raspberrypi.local&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;Default password is &lt;code class=&quot;highlighter-rouge&quot;&gt;raspberry&lt;/code&gt;.&lt;/li&gt;
-      &lt;li&gt;Type &lt;code class=&quot;highlighter-rouge&quot;&gt;yes&lt;/code&gt; to accept the certificate thumbprint.&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh pi@raspberrypi.local&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;Default password is &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;raspberry&lt;/code&gt;.&lt;/li&gt;
+      &lt;li&gt;Type &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;yes&lt;/code&gt; to accept the certificate thumbprint.&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;After you are connected, there are a few things that need to be set, run &lt;code class=&quot;highlighter-rouge&quot;&gt;raspi-config&lt;/code&gt; and update the following:
+  &lt;li&gt;After you are connected, there are a few things that need to be set, run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;raspi-config&lt;/code&gt; and update the following:
     &lt;ul&gt;
-      &lt;li&gt;&lt;strong&gt;CHANGE THE DEFAULT PASSWORD&lt;/strong&gt; else anyone can now &lt;code class=&quot;highlighter-rouge&quot;&gt;ssh&lt;/code&gt; to your taplist board with the default credentials!&lt;/li&gt;
-      &lt;li&gt;Under &lt;code class=&quot;highlighter-rouge&quot;&gt;Boot Options&lt;/code&gt; select &lt;code class=&quot;highlighter-rouge&quot;&gt;Desktop/CLI&lt;/code&gt; and then select &lt;code class=&quot;highlighter-rouge&quot;&gt;Console Autologin&lt;/code&gt;.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;CHANGE THE DEFAULT PASSWORD&lt;/strong&gt; else anyone can now &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh&lt;/code&gt; to your taplist board with the default credentials!&lt;/li&gt;
+      &lt;li&gt;Under &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Boot Options&lt;/code&gt; select &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Desktop/CLI&lt;/code&gt; and then select &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Console Autologin&lt;/code&gt;.&lt;/li&gt;
       &lt;li&gt;Lastly configure the wifi.&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;You are now connected to your wifi, and can update the system:
     &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sudo apt-get update -y&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sudo apt-get upgrade -y&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sudo apt-get dist-upgrade -y&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo apt-get update -y&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo apt-get upgrade -y&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo apt-get dist-upgrade -y&lt;/code&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;Now, install the minimum X Server Environment for Chromium:
     &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sudo apt-get install --no-install-recommends xserver-xorg x11-xserver-utils xinit openbox&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sudo apt-get install --no-install-recommends chromium-browser&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo apt-get install --no-install-recommends xserver-xorg x11-xserver-utils xinit openbox&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo apt-get install --no-install-recommends chromium-browser&lt;/code&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;You need to configure the auto start commands, and to do this, you will have to use a terminal based editor, like &lt;code class=&quot;highlighter-rouge&quot;&gt;nano&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;vi&lt;/code&gt;.  I prefer &lt;code class=&quot;highlighter-rouge&quot;&gt;nano&lt;/code&gt;:
+  &lt;li&gt;You need to configure the auto start commands, and to do this, you will have to use a terminal based editor, like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nano&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;vi&lt;/code&gt;.  I prefer &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nano&lt;/code&gt;:
     &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sudo nano /etc/xdg/openbox/autostart&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo nano /etc/xdg/openbox/autostart&lt;/code&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;
     &lt;p&gt;Replace the entire contents of the file with this:&lt;/p&gt;
 
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# Disable any form of screen saver / screen blanking / power management
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# Disable any form of screen saver / screen blanking / power management
 xset s off
 xset s noblank
 xset -dpms
@@ -797,12 +797,12 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
   &lt;/li&gt;
   &lt;li&gt;You need to configure X Server to autostart and boot and load the display web page.
     &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;nano ~/.bash_profile&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;Add this to the file: &lt;code class=&quot;highlighter-rouge&quot;&gt;[[ -z $DISPLAY &amp;amp;&amp;amp; $XDG_VTNR -eq 1 ]] &amp;amp;&amp;amp; startx -- -nocursor&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nano ~/.bash_profile&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;Add this to the file: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[[ -z $DISPLAY &amp;amp;&amp;amp; $XDG_VTNR -eq 1 ]] &amp;amp;&amp;amp; startx -- -nocursor&lt;/code&gt;&lt;/li&gt;
       &lt;li&gt;Save and close the file.&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;Lastly shut you Raspberry Pi Zero down &lt;code class=&quot;highlighter-rouge&quot;&gt;sudo shutdown now&lt;/code&gt; and go attach it to your monitor.  You do not need to attach any peripherals, on its next boot, it will autologin as the &lt;code class=&quot;highlighter-rouge&quot;&gt;Pi&lt;/code&gt; user, and start up &lt;code class=&quot;highlighter-rouge&quot;&gt;Chromium&lt;/code&gt; and navigate to https://www.taplist.io/display.  The very first time this boots, there will be a code on the screen that you need to go to https://taplist.io/activate and enter in.&lt;/li&gt;
+  &lt;li&gt;Lastly shut you Raspberry Pi Zero down &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo shutdown now&lt;/code&gt; and go attach it to your monitor.  You do not need to attach any peripherals, on its next boot, it will autologin as the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Pi&lt;/code&gt; user, and start up &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Chromium&lt;/code&gt; and navigate to https://www.taplist.io/display.  The very first time this boots, there will be a code on the screen that you need to go to https://taplist.io/activate and enter in.&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;p&gt;WHEW!  Thats it, hopefully you made it this far, and ended up with something like this &lt;img src=&quot;/images/2019-04-26-taplist-pi-zero/taplist.jpg&quot; alt=&quot;Taplist&quot; /&gt;&lt;/p&gt;

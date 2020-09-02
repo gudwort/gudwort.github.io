@@ -79,54 +79,54 @@
 <h2 id="identifying-a-failed-hdd">Identifying a failed HDD</h2>
 <p>Identifying a failed HDD is pretty simple, it can be done with a simple PowerShell command:</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Get-PhysicalDisk</span> | ? HealthStatus -ne <span class="s2">"Healthy"</span>
-</code></pre></div></div>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-PhysicalDisk</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="err">?</span><span class="w"> </span><span class="nf">HealthStatus</span><span class="w"> </span><span class="o">-ne</span><span class="w"> </span><span class="s2">"Healthy"</span><span class="w">
+</span></code></pre></div></div>
 
-<p>This will show you any disks that have failed, I typically use a 3-way mirror on my Storage Pools, so if that number is greater then 2, then well, might as well just start over.  Anyway, if the <code class="highlighter-rouge">Usage</code> property of the failed disk is not marked as <em>Retired</em>, you will need to mark it as such:</p>
+<p>This will show you any disks that have failed, I typically use a 3-way mirror on my Storage Pools, so if that number is greater then 2, then well, might as well just start over.  Anyway, if the <code class="language-plaintext highlighter-rouge">Usage</code> property of the failed disk is not marked as <em>Retired</em>, you will need to mark it as such:</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Get-PhysicalDisk</span> | ? HealthStatus -ne <span class="s2">"Healthy"</span> | <span class="nb">Set-PhysicalDisk</span> -Usage Retired
-</code></pre></div></div>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-PhysicalDisk</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="err">?</span><span class="w"> </span><span class="nf">HealthStatus</span><span class="w"> </span><span class="o">-ne</span><span class="w"> </span><span class="s2">"Healthy"</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">Set-PhysicalDisk</span><span class="w"> </span><span class="nt">-Usage</span><span class="w"> </span><span class="nx">Retired</span><span class="w">
+</span></code></pre></div></div>
 
 <p>So, this next part tends to vary between JBOD models, but to actually <em>identify</em> the failed HDD for physical replacement, there are a few things you can do, first off, you can actually trigger the slots LED to indicate the failed drive:</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># This command assumes you already completed the previous command and 'Retired' the failed disks.</span>
-<span class="nb">Get-PhysicalDisk</span> -Usage Retired | <span class="nb">Enable-PhysicalDiskIdentification</span>
-</code></pre></div></div>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># This command assumes you already completed the previous command and 'Retired' the failed disks.</span><span class="w">
+</span><span class="nf">Get-PhysicalDisk</span><span class="w"> </span><span class="nt">-Usage</span><span class="w"> </span><span class="nx">Retired</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">Enable-PhysicalDiskIdentification</span><span class="w">
+</span></code></pre></div></div>
 
-<p>You can also get the physical <code class="highlighter-rouge">SlotNumber</code>:</p>
+<p>You can also get the physical <code class="language-plaintext highlighter-rouge">SlotNumber</code>:</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Get-PhysicalDisk</span> -Usage Retired | <span class="nb">select </span>SlotNumber
-</code></pre></div></div>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-PhysicalDisk</span><span class="w"> </span><span class="nt">-Usage</span><span class="w"> </span><span class="nx">Retired</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">select</span><span class="w"> </span><span class="nx">SlotNumber</span><span class="w">
+</span></code></pre></div></div>
 
 <p>However, this number is 0 indexed so when looking at the JBOD shelf, be sure to start counting at 0.</p>
 
 <h2 id="replacing-the-hdd">Replacing the HDD</h2>
-<p>After you have identified the failed HDD and marked it as retired, you can now physically replace the drive.  In my experience, after the new drive is inserted and running <code class="highlighter-rouge">Get-PhysicalDisk</code> the new drive always hangs in a <code class="highlighter-rouge">Starting</code> Operational Status.  And because of this you cannot add it to the storage pool (notice the <code class="highlighter-rouge">CanPool</code> Property will be <code class="highlighter-rouge">False</code>).  This can be cleared up by Resetting the disk:</p>
+<p>After you have identified the failed HDD and marked it as retired, you can now physically replace the drive.  In my experience, after the new drive is inserted and running <code class="language-plaintext highlighter-rouge">Get-PhysicalDisk</code> the new drive always hangs in a <code class="language-plaintext highlighter-rouge">Starting</code> Operational Status.  And because of this you cannot add it to the storage pool (notice the <code class="language-plaintext highlighter-rouge">CanPool</code> Property will be <code class="language-plaintext highlighter-rouge">False</code>).  This can be cleared up by Resetting the disk:</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Get-PhysicalDisk</span> | ? OperationalStatus -eq <span class="s2">"Starting"</span> | <span class="nb">Reset-PhysicalDisk</span>
-</code></pre></div></div>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-PhysicalDisk</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="err">?</span><span class="w"> </span><span class="nf">OperationalStatus</span><span class="w"> </span><span class="o">-eq</span><span class="w"> </span><span class="s2">"Starting"</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">Reset-PhysicalDisk</span><span class="w">
+</span></code></pre></div></div>
 
-<p>After this is complete, running the <code class="highlighter-rouge">Get-PhysicalDisk</code> will show the disk is <code class="highlighter-rouge">Healthy</code> and the <code class="highlighter-rouge">CanPool</code> property will be <code class="highlighter-rouge">True</code>.  Now, you need to identify the Storage Pool’s Friendly Name, this can be found by running the <code class="highlighter-rouge">Get-StoragePool</code> command.  Once you have the Friendly Name, you can add the new disk to the pool:</p>
+<p>After this is complete, running the <code class="language-plaintext highlighter-rouge">Get-PhysicalDisk</code> will show the disk is <code class="language-plaintext highlighter-rouge">Healthy</code> and the <code class="language-plaintext highlighter-rouge">CanPool</code> property will be <code class="language-plaintext highlighter-rouge">True</code>.  Now, you need to identify the Storage Pool’s Friendly Name, this can be found by running the <code class="language-plaintext highlighter-rouge">Get-StoragePool</code> command.  Once you have the Friendly Name, you can add the new disk to the pool:</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Add-PhysicalDisk</span> -StoragePoolFriendlyName MyStoragePool -PhysicalDisks <span class="o">(</span> <span class="nb">Get-PhysicalDisk</span> -CanPool:<span class="nv">$true</span> <span class="o">)</span>
-</code></pre></div></div>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Add-PhysicalDisk</span><span class="w"> </span><span class="nt">-StoragePoolFriendlyName</span><span class="w"> </span><span class="nx">MyStoragePool</span><span class="w"> </span><span class="nt">-PhysicalDisks</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="nf">Get-PhysicalDisk</span><span class="w"> </span><span class="nt">-CanPool</span><span class="p">:</span><span class="bp">$true</span><span class="w"> </span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
 
 <p>Now that the drive is replaced, go ahead and repair the virtual disk:</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Get-VirtualDisk</span> | ? HealthStatus -ne <span class="s2">"Healthy"</span> | <span class="nb">Repair-VirtualDisk</span>
-</code></pre></div></div>
-<p>This will take some time depending on how large the virtual disk is, resiliency settings, and hardware, but there will be a progress bar.  Or you can add the <code class="highlighter-rouge">-AsJob</code> switch to the <code class="highlighter-rouge">Repair-VirtualDisk</code> command and let it run in the background.  You can fetch the status with <code class="highlighter-rouge">Get-StorageJob</code>.</p>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-VirtualDisk</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="err">?</span><span class="w"> </span><span class="nf">HealthStatus</span><span class="w"> </span><span class="o">-ne</span><span class="w"> </span><span class="s2">"Healthy"</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">Repair-VirtualDisk</span><span class="w">
+</span></code></pre></div></div>
+<p>This will take some time depending on how large the virtual disk is, resiliency settings, and hardware, but there will be a progress bar.  Or you can add the <code class="language-plaintext highlighter-rouge">-AsJob</code> switch to the <code class="language-plaintext highlighter-rouge">Repair-VirtualDisk</code> command and let it run in the background.  You can fetch the status with <code class="language-plaintext highlighter-rouge">Get-StorageJob</code>.</p>
 
 <p>Be sure to disable the LED identification:</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># I always just run this on against all the disks, it won't hurt anything for the ones where its not enabled.</span>
-<span class="nb">Get-PhysicalDisk</span> | <span class="nb">Disable-PhysicalDiskIdentification</span>
-</code></pre></div></div>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># I always just run this on against all the disks, it won't hurt anything for the ones where its not enabled.</span><span class="w">
+</span><span class="nf">Get-PhysicalDisk</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">Disable-PhysicalDiskIdentification</span><span class="w">
+</span></code></pre></div></div>
 
 <p>After the repair is complete, the last step is to remove the failed drive from the pool.  Remember, the repair has to fully complete before removing the failed drive from the pool, else data loss will occur.</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Remove-PhysicalDisk</span> -StoragePoolFriendlyName MyStoragePool -PhysicalDisks <span class="o">(</span> <span class="nb">Get-PhysicalDisk</span> -Usage Retired <span class="o">)</span>
-</code></pre></div></div>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Remove-PhysicalDisk</span><span class="w"> </span><span class="nt">-StoragePoolFriendlyName</span><span class="w"> </span><span class="nx">MyStoragePool</span><span class="w"> </span><span class="nt">-PhysicalDisks</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="nf">Get-PhysicalDisk</span><span class="w"> </span><span class="nt">-Usage</span><span class="w"> </span><span class="nx">Retired</span><span class="w"> </span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
 
 <p>And thats it, good to go!  Cheers.</p>
 

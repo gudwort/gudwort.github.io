@@ -108,30 +108,30 @@
 <ol>
   <li>Download the BrewPiLess Repository:
     <ul>
-      <li><code class="highlighter-rouge">git clone https://github.com/vitotai/BrewPiLess.git</code></li>
+      <li><code class="language-plaintext highlighter-rouge">git clone https://github.com/vitotai/BrewPiLess.git</code></li>
     </ul>
   </li>
   <li>If you don’t have it installed, you will need to download and install <a href="https://code.visualstudio.com">VSCode</a>.</li>
   <li>Open the repository in VSCode.  If you don’t have <a href="https://platformio.org/install/ide?install=vscode">Platform.io</a> installed, go to the extensions workspace and install it.
     <ul>
-      <li>On my mac, it failed to install the first, and it was because <code class="highlighter-rouge">virtualenv</code> needed to be installed.  Completing the three steps listed in the <em>Perquisites</em> section <a href="http://docs.platformio.org/en/latest/installation.html#virtual-environment">here</a>, and then uninstall/reinstall the extension fixed the issue.</li>
+      <li>On my mac, it failed to install the first, and it was because <code class="language-plaintext highlighter-rouge">virtualenv</code> needed to be installed.  Completing the three steps listed in the <em>Perquisites</em> section <a href="http://docs.platformio.org/en/latest/installation.html#virtual-environment">here</a>, and then uninstall/reinstall the extension fixed the issue.</li>
     </ul>
   </li>
   <li>Connect the NodeMCU to your computer via USB, and flash the bin to the board (make sure you are in the working directory of the repo):
     <ul>
-      <li><code class="highlighter-rouge">command+shit+p</code>
+      <li><code class="language-plaintext highlighter-rouge">command+shit+p</code>
         <ul>
-          <li><code class="highlighter-rouge">&gt;PlatformIO: Build</code></li>
-          <li><code class="highlighter-rouge">&gt;PlatformIO: Upload</code></li>
-          <li><code class="highlighter-rouge">&gt;PlatformIO: Clean</code></li>
+          <li><code class="language-plaintext highlighter-rouge">&gt;PlatformIO: Build</code></li>
+          <li><code class="language-plaintext highlighter-rouge">&gt;PlatformIO: Upload</code></li>
+          <li><code class="language-plaintext highlighter-rouge">&gt;PlatformIO: Clean</code></li>
         </ul>
       </li>
     </ul>
   </li>
   <li>After the flash is complete, the NodeMCU will begin broadcasting its own SSID, you need to connect to to this WiFi network to configure it to connect to your home WiFi.
     <ul>
-      <li>Username: <code class="highlighter-rouge">brewpiless</code></li>
-      <li>Password: <code class="highlighter-rouge">brewpiless</code></li>
+      <li>Username: <code class="language-plaintext highlighter-rouge">brewpiless</code></li>
+      <li>Password: <code class="language-plaintext highlighter-rouge">brewpiless</code></li>
       <li>Open a browser it should auto connect to a config page, where you can change the username, password, and the title.</li>
       <li>Save the changes and on the next page enter you home wireless info.</li>
       <li>After this is complete you can connect back to your home wifi.</li>
@@ -203,12 +203,12 @@ Layout diagram (I wasn’t able to find a 3D model of the AC-DC 5V PSU, that goe
 <p>Once everything is up an running, there isn’t much left to do.  Just need to set which plug is the hot and cold, and which probes are the chamber, and the beer.</p>
 <ol>
   <li>Connect to your BrewPiLess via a web browser at http://brewpiless.local (or whatever you named it in the setup screen.)</li>
-  <li>Go to the <code class="highlighter-rouge">Device Setup</code> screen on the top right corner.
+  <li>Go to the <code class="language-plaintext highlighter-rouge">Device Setup</code> screen on the top right corner.
     <ul>
-      <li>Be sure to click the <code class="highlighter-rouge">Erase EEPROM</code> button at the top to be sure everything is reset.</li>
-      <li>Click <code class="highlighter-rouge">Refresh Device List</code> on the top load all your devices.</li>
-      <li>You have to manually select a <code class="highlighter-rouge">Device</code> slot for each probe and plug, but these are arbitrary, they just have to be unique.</li>
-      <li>The temperature probes will have an <code class="highlighter-rouge">Address</code> value.</li>
+      <li>Be sure to click the <code class="language-plaintext highlighter-rouge">Erase EEPROM</code> button at the top to be sure everything is reset.</li>
+      <li>Click <code class="language-plaintext highlighter-rouge">Refresh Device List</code> on the top load all your devices.</li>
+      <li>You have to manually select a <code class="language-plaintext highlighter-rouge">Device</code> slot for each probe and plug, but these are arbitrary, they just have to be unique.</li>
+      <li>The temperature probes will have an <code class="language-plaintext highlighter-rouge">Address</code> value.</li>
       <li>Setup 4 devices:
         <ul>
           <li>Chamber Temp</li>
@@ -217,10 +217,10 @@ Layout diagram (I wasn’t able to find a 3D model of the AC-DC 5V PSU, that goe
           <li>Chamber Cooler</li>
         </ul>
       </li>
-      <li>I am not sure if there is a better way to then trial and error to identify which is which, for the probes you can just hold in your hand and the value will change on the display.  For the plugs you will need to actually set a <code class="highlighter-rouge">Beer</code> or <code class="highlighter-rouge">Fridge</code> temperature value and then one or the other will turn on.</li>
+      <li>I am not sure if there is a better way to then trial and error to identify which is which, for the probes you can just hold in your hand and the value will change on the display.  For the plugs you will need to actually set a <code class="language-plaintext highlighter-rouge">Beer</code> or <code class="language-plaintext highlighter-rouge">Fridge</code> temperature value and then one or the other will turn on.</li>
     </ul>
   </li>
-  <li>Once your get everything setup, I would recommend backing up the configuration from the <code class="highlighter-rouge">Device Setup</code> screen incase you ever need to reload or rebuild, then you won’t have to play the guessing game on which device is which.</li>
+  <li>Once your get everything setup, I would recommend backing up the configuration from the <code class="language-plaintext highlighter-rouge">Device Setup</code> screen incase you ever need to reload or rebuild, then you won’t have to play the guessing game on which device is which.</li>
 </ol>
 
 <h2 id="extra-credit">Extra Credit</h2>
@@ -229,12 +229,12 @@ Layout diagram (I wasn’t able to find a 3D model of the AC-DC 5V PSU, that goe
   <li>Navigate to http://brewpiless.local/testcmd.htm</li>
   <li>Issue this command:
     <ul>
-      <li><code class="highlighter-rouge">j{"tempFormat":"F"}</code></li>
+      <li><code class="language-plaintext highlighter-rouge">j{"tempFormat":"F"}</code></li>
     </ul>
   </li>
-  <li>If your getting in the Kveik craze, and want to ferment hot AF, the you need to increase the <code class="highlighter-rouge">tempSetMax</code> value:
+  <li>If your getting in the Kveik craze, and want to ferment hot AF, the you need to increase the <code class="language-plaintext highlighter-rouge">tempSetMax</code> value:
     <ul>
-      <li><code class="highlighter-rouge">j{"tempSetMax":"90.0"}</code></li>
+      <li><code class="language-plaintext highlighter-rouge">j{"tempSetMax":"90.0"}</code></li>
     </ul>
   </li>
 </ol>

@@ -77,25 +77,25 @@
 <p>Now, I know there is a lot of YouTube videos out there on how to setup and use a BLTouch sensor, but, everything I found when I was setting mine up, was with using the Marlin firmware. Either Vanilla Marlin or the TH3D flavor.  Well, to complicate things even more, I am using <a href="https://github.com/KevinOConnor/klipper">Klipper</a>.  I’m not going to dive into much about Klipper in this blog post, as its not really the focus.  Either you are already using Klipper and you know what it is, so keep reading, or go research Klipper and see if its for you.  Because these settings will <strong>NOT</strong> work with any flavor of the Marlin firmware.</p>
 
 <h2 id="values-youll-need">Values You’ll Need</h2>
-<p>There are values you need when setting up your BLTouch, namely the X and Y offsets from the nozzle to the BLTouch, you can either measure these or, if you are using third party mods on your hot end, a lot of the designers will specify these values.  I am using the <a href="https://www.thingiverse.com/thing:2759439">Bullseye Cooling Fan Duct</a> and the designer has provided the offset values on the Thingiverse page.  Using the Bullseye Fan Duct and the provided mount, the offsets are <code class="highlighter-rouge">X -42, Y -5</code>.</p>
+<p>There are values you need when setting up your BLTouch, namely the X and Y offsets from the nozzle to the BLTouch, you can either measure these or, if you are using third party mods on your hot end, a lot of the designers will specify these values.  I am using the <a href="https://www.thingiverse.com/thing:2759439">Bullseye Cooling Fan Duct</a> and the designer has provided the offset values on the Thingiverse page.  Using the Bullseye Fan Duct and the provided mount, the offsets are <code class="language-plaintext highlighter-rouge">X -42, Y -5</code>.</p>
 
-<p>Next, you will need to know your bed size, the bed that ships with the Ender3 is <code class="highlighter-rouge">220x220mm</code>.  You need to know this for creating a bed mesh, which is what the BLTouch will build when probing.</p>
+<p>Next, you will need to know your bed size, the bed that ships with the Ender3 is <code class="language-plaintext highlighter-rouge">220x220mm</code>.  You need to know this for creating a bed mesh, which is what the BLTouch will build when probing.</p>
 
 <h2 id="get-configuring">Get Configuring</h2>
-<p>Here are the settings you need to add or update on in your Klipper <code class="highlighter-rouge">printer.cfg</code>:</p>
+<p>Here are the settings you need to add or update on in your Klipper <code class="language-plaintext highlighter-rouge">printer.cfg</code>:</p>
 <ol>
-  <li>You need to change the <code class="highlighter-rouge">endstop_pin</code> value to use a virtual endstop, this is in the <code class="highlighter-rouge">z_stepper</code> section.
+  <li>You need to change the <code class="language-plaintext highlighter-rouge">endstop_pin</code> value to use a virtual endstop, this is in the <code class="language-plaintext highlighter-rouge">z_stepper</code> section.
     <ul>
-      <li><code class="highlighter-rouge">endstop_pin: probe:z_virtual_endstop</code></li>
+      <li><code class="language-plaintext highlighter-rouge">endstop_pin: probe:z_virtual_endstop</code></li>
     </ul>
   </li>
-  <li>You need to allow the Z Axis to go below the ‘0’ mark for negative warp, this can be done by editing the <code class="highlighter-rouge">position_min</code> value, also in the <code class="highlighter-rouge">z_stepper</code> section.
+  <li>You need to allow the Z Axis to go below the ‘0’ mark for negative warp, this can be done by editing the <code class="language-plaintext highlighter-rouge">position_min</code> value, also in the <code class="language-plaintext highlighter-rouge">z_stepper</code> section.
     <ul>
-      <li><code class="highlighter-rouge">position_min: -3</code></li>
+      <li><code class="language-plaintext highlighter-rouge">position_min: -3</code></li>
     </ul>
   </li>
-  <li>You need to define the <code class="highlighter-rouge">[bltouch]</code> section and values in the configuration file (a section is defined with square brackets, this section does not exist in the Ender3 printer.cfg by default, so you will need manually create it).  You can see that the X and Y offsets are the values I got from the Thingiverse page.
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[bltouch]
+  <li>You need to define the <code class="language-plaintext highlighter-rouge">[bltouch]</code> section and values in the configuration file (a section is defined with square brackets, this section does not exist in the Ender3 printer.cfg by default, so you will need manually create it).  You can see that the X and Y offsets are the values I got from the Thingiverse page.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[bltouch]
 sensor_pin: ^PC4
 control_pin: PA4
 x_offset: -47.0
@@ -106,11 +106,11 @@ samples: 2
 sample_retract_dist: 8.0
 </code></pre></div>    </div>
     <ul>
-      <li>The <code class="highlighter-rouge">samples</code> value is how many times it checks each location in the bed mesh, more samples will take longer.</li>
+      <li>The <code class="language-plaintext highlighter-rouge">samples</code> value is how many times it checks each location in the bed mesh, more samples will take longer.</li>
     </ul>
   </li>
-  <li>Next, the <code class="highlighter-rouge">[bed_mesh]</code> section needs to be manually defined.
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[bed_mesh]
+  <li>Next, the <code class="language-plaintext highlighter-rouge">[bed_mesh]</code> section needs to be manually defined.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[bed_mesh]
 speed: 80
 horizontal_move_z: 5
 min_point: 50,30
@@ -118,12 +118,12 @@ max_point: 230,230
 probe_count: 5,5
 </code></pre></div>    </div>
     <ul>
-      <li>The <code class="highlighter-rouge">probe_count</code> is how many samples its going to take, <code class="highlighter-rouge">5,5</code> is a <code class="highlighter-rouge">5x5</code> grid, a bigger grid will take longer, but may be more accurate.</li>
-      <li>The <code class="highlighter-rouge">min_point</code> and <code class="highlighter-rouge">max_point</code> is how big your bed is, with the <code class="highlighter-rouge">220x220mm</code> build plate, <code class="highlighter-rouge">230x230mm</code> is about as large as you can go.</li>
+      <li>The <code class="language-plaintext highlighter-rouge">probe_count</code> is how many samples its going to take, <code class="language-plaintext highlighter-rouge">5,5</code> is a <code class="language-plaintext highlighter-rouge">5x5</code> grid, a bigger grid will take longer, but may be more accurate.</li>
+      <li>The <code class="language-plaintext highlighter-rouge">min_point</code> and <code class="language-plaintext highlighter-rouge">max_point</code> is how big your bed is, with the <code class="language-plaintext highlighter-rouge">220x220mm</code> build plate, <code class="language-plaintext highlighter-rouge">230x230mm</code> is about as large as you can go.</li>
     </ul>
   </li>
-  <li>Now, add the <code class="highlighter-rouge">[homing_override]</code> section.  You can do what ever you want here, I am just setting the Z axis to home in the middle of the bed.
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[homing_override]
+  <li>Now, add the <code class="language-plaintext highlighter-rouge">[homing_override]</code> section.  You can do what ever you want here, I am just setting the Z axis to home in the middle of the bed.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[homing_override]
 set_position_z:0
 gcode:
  G1 Z10 F600
@@ -135,25 +135,25 @@ gcode:
       <li>PRO TIP: gcode sections in the printer.cfg need to be 4 spaced or you will get errors.</li>
     </ul>
   </li>
-  <li>There is one last thing to do, and that is configure your start and end gcode sequences to tell klipper to generate the bed mesh and use it.  This command is <code class="highlighter-rouge">BED_MESH_CALIBRATE</code> called after <code class="highlighter-rouge">G28</code> (the homing override).  Now, here is what I do, I keep my start and end gcode sequences in the Klipper printer.cfg as <code class="highlighter-rouge">gcode_macro</code>s.  This allows me to use multiple slicers and keep my start and end gcode the same.  I have them mapped to <code class="highlighter-rouge">START_PRINT</code> and <code class="highlighter-rouge">END_PRINT</code>, then in any slicer i am using, I can just put those in and let Klipper handle the sequences.  I have included my printer.cfg at the bottom of this page so you take a look at my start up and end print gcode.</li>
+  <li>There is one last thing to do, and that is configure your start and end gcode sequences to tell klipper to generate the bed mesh and use it.  This command is <code class="language-plaintext highlighter-rouge">BED_MESH_CALIBRATE</code> called after <code class="language-plaintext highlighter-rouge">G28</code> (the homing override).  Now, here is what I do, I keep my start and end gcode sequences in the Klipper printer.cfg as <code class="language-plaintext highlighter-rouge">gcode_macro</code>s.  This allows me to use multiple slicers and keep my start and end gcode the same.  I have them mapped to <code class="language-plaintext highlighter-rouge">START_PRINT</code> and <code class="language-plaintext highlighter-rouge">END_PRINT</code>, then in any slicer i am using, I can just put those in and let Klipper handle the sequences.  I have included my printer.cfg at the bottom of this page so you take a look at my start up and end print gcode.</li>
 </ol>
 
 <h2 id="configure-the-z-offset">Configure The Z Offset</h2>
 <p>So, for me this was the hardest part, I had the probe working, and at least stopping from crashing into the bed, but, I couldn’t figure out how to actually make the printer know the space from the probe being triggered, to the bottom of the nozzle.  Which is obviously crucial for the hotend to know how much lower to go past the point where the BLTouch is triggered and be the perfect height above the bed to start printing.  Well, its actually really simple.  At least thats how I feel about it now that I know how to do it.  And after figuring it out, the only time I have had to re-calibrate my Z offset is when I replace the nozzle.</p>
 
 <ol>
-  <li>Go into your printer.cfg and change the <code class="highlighter-rouge">z_offset</code> to 10 in the <code class="highlighter-rouge">[bltouch]</code> section.  This number is completely arbitrary.  Just need a value there, and one that will be easy to do math with later.</li>
-  <li>Home the printer, <code class="highlighter-rouge">G28</code>.  as long as your <code class="highlighter-rouge">[bltouch]</code> settings are correct, the BLTouch pin should engage, and the Z axis should lower and stop, once its triggered.  I kept my finger on the power button at this point to stop the hotend from crashing into the bed if need be.</li>
-  <li>Next tell the printer to go into <code class="highlighter-rouge">Relative Position</code> mode: <code class="highlighter-rouge">G91</code></li>
-  <li>Now move the hotend over the spot the BLTouch probed to home the bed: <code class="highlighter-rouge">G1 X-47</code></li>
+  <li>Go into your printer.cfg and change the <code class="language-plaintext highlighter-rouge">z_offset</code> to 10 in the <code class="language-plaintext highlighter-rouge">[bltouch]</code> section.  This number is completely arbitrary.  Just need a value there, and one that will be easy to do math with later.</li>
+  <li>Home the printer, <code class="language-plaintext highlighter-rouge">G28</code>.  as long as your <code class="language-plaintext highlighter-rouge">[bltouch]</code> settings are correct, the BLTouch pin should engage, and the Z axis should lower and stop, once its triggered.  I kept my finger on the power button at this point to stop the hotend from crashing into the bed if need be.</li>
+  <li>Next tell the printer to go into <code class="language-plaintext highlighter-rouge">Relative Position</code> mode: <code class="language-plaintext highlighter-rouge">G91</code></li>
+  <li>Now move the hotend over the spot the BLTouch probed to home the bed: <code class="language-plaintext highlighter-rouge">G1 X-47</code></li>
   <li>Get a piece of paper and get ready to bed level like you always do, lower the Z axis by -.05 until the nozzle scrapes the paper.  You can do this with the display control, or I use <a href="https://itunes.apple.com/us/app/octopod-for-octoprint/id1412557625?mt=8">OctoPod</a> on my iOS device.</li>
-  <li>Once the Z axis is where it needs to be, you can run <code class="highlighter-rouge">GET_POSITION</code> in the terminal and then just do the math:
+  <li>Once the Z axis is where it needs to be, you can run <code class="language-plaintext highlighter-rouge">GET_POSITION</code> in the terminal and then just do the math:
     <ul>
-      <li><code class="highlighter-rouge">[printer.cfg [bltouch] z_offset] - [z value from GET_POSITION] = z_offset</code></li>
+      <li><code class="language-plaintext highlighter-rouge">[printer.cfg [bltouch] z_offset] - [z value from GET_POSITION] = z_offset</code></li>
       <li>IE: 10 - 8.5 = 1.5</li>
     </ul>
   </li>
-  <li>Replace your the <code class="highlighter-rouge">z_offset</code> value in the <code class="highlighter-rouge">[bltouch]</code> section with your new calculated value.</li>
+  <li>Replace your the <code class="language-plaintext highlighter-rouge">z_offset</code> value in the <code class="language-plaintext highlighter-rouge">[bltouch]</code> section with your new calculated value.</li>
   <li>Print and be happy as your first layer runs perfect!</li>
 </ol>
 
@@ -163,7 +163,7 @@ gcode:
 
 <h3 id="update">Update</h3>
 <ul>
-  <li>20190609 - A recent Klipper update moved the <code class="highlighter-rouge">samples: 2</code> and <code class="highlighter-rouge">sample_retract_distance: 8.0</code> from the <code class="highlighter-rouge">[bed_mesh]</code> section to the <code class="highlighter-rouge">[bltouch]</code> section.  I have updated this article to reflect those changes.</li>
+  <li>20190609 - A recent Klipper update moved the <code class="language-plaintext highlighter-rouge">samples: 2</code> and <code class="language-plaintext highlighter-rouge">sample_retract_distance: 8.0</code> from the <code class="language-plaintext highlighter-rouge">[bed_mesh]</code> section to the <code class="language-plaintext highlighter-rouge">[bltouch]</code> section.  I have updated this article to reflect those changes.</li>
 </ul>
 
 <hr />

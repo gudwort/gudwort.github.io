@@ -79,7 +79,7 @@
 <h2 id="manual-steps">Manual steps</h2>
 <p>I suppose before we jump into the automation portion, as with anything that is being automated, its best we cover the manual steps for reaching our goal so we fully understand what needs to be done, and what information is needed to get it done.</p>
 
-<p>After signing into the iLO, in the <code class="highlighter-rouge">Administration</code> section in the <code class="highlighter-rouge">Security</code> workspace, there is an <code class="highlighter-rouge">SSL Certificate</code> tab.  On that tab you select the <code class="highlighter-rouge">Customize Certificate</code> button, and from there you will get a dialog, asking for the basic information to build the <em>Certificate Signing Request</em>.</p>
+<p>After signing into the iLO, in the <code class="language-plaintext highlighter-rouge">Administration</code> section in the <code class="language-plaintext highlighter-rouge">Security</code> workspace, there is an <code class="language-plaintext highlighter-rouge">SSL Certificate</code> tab.  On that tab you select the <code class="language-plaintext highlighter-rouge">Customize Certificate</code> button, and from there you will get a dialog, asking for the basic information to build the <em>Certificate Signing Request</em>.</p>
 
 <p><img src="/images/2019-07-25-installing-pki-ssl-certificate-on-hpe-ilo/default-certificate.png" alt="Default Certificate" /></p>
 
@@ -98,63 +98,63 @@
   <li>Include the iLO IP Address in the CSR</li>
 </ul>
 
-<p>After filling these in, hit the <code class="highlighter-rouge">Generate Request</code> button.  Now this part is really dumb, the CSR is generating, but it takes a random amount of time (0-10 minutes), with no progress control.  You just keep hitting the <code class="highlighter-rouge">Generate Request</code> again and again until the dialog pops up</p>
+<p>After filling these in, hit the <code class="language-plaintext highlighter-rouge">Generate Request</code> button.  Now this part is really dumb, the CSR is generating, but it takes a random amount of time (0-10 minutes), with no progress control.  You just keep hitting the <code class="language-plaintext highlighter-rouge">Generate Request</code> again and again until the dialog pops up</p>
 
 <blockquote>
   <p>The iLO subsystem is currently generating a Certificate Signing Request (CSR). This may take 10 minutes or more. In order to view the CSR, wait 10 minutes or more, and then click the “Generate CSR” button again.</p>
 </blockquote>
 
-<p>Once the dialog opens, you will need to copy the entire CSR output, including the <code class="highlighter-rouge">-----Begin/End Certificate Request-----</code> portions.</p>
+<p>Once the dialog opens, you will need to copy the entire CSR output, including the <code class="language-plaintext highlighter-rouge">-----Begin/End Certificate Request-----</code> portions.</p>
 
 <p><img src="/images/2019-07-25-installing-pki-ssl-certificate-on-hpe-ilo/csr-generation.png" alt="CSR-Generation" /></p>
 
-<p>After you have the <code class="highlighter-rouge">CSR</code>, browse out to your CA and generate an <code class="highlighter-rouge">Advanced Certificate Request</code>, paste in the <code class="highlighter-rouge">CSR</code>, select your desired template, and submit the request.  (I’m not going into info on CAs and templates in this walk through, I’m sure either you know how to do this, else ask your PKI admin).  On the certificate download page, select the <code class="highlighter-rouge">BASE64</code> encoding, and download the certificate, you do not the entire chain.  Lastly, on the same screen in the iLO, you select the <code class="highlighter-rouge">Import Certificate</code> button, and in the dialog, you will paste your cert data.  You get this by right clicking the certificate file you generated and downloaded, and select <code class="highlighter-rouge">Open With -&gt; Notepad</code> and there you will get a similar result as the <code class="highlighter-rouge">CSR</code>, but a longer string of random characters, that is what you paste in the iLO dialog.  If this was all done correctly the iLO will reset, and you will have a custom certificate installed.  And no more security warning if you browse to it by the name you entered into the <code class="highlighter-rouge">Common Name</code> property.</p>
+<p>After you have the <code class="language-plaintext highlighter-rouge">CSR</code>, browse out to your CA and generate an <code class="language-plaintext highlighter-rouge">Advanced Certificate Request</code>, paste in the <code class="language-plaintext highlighter-rouge">CSR</code>, select your desired template, and submit the request.  (I’m not going into info on CAs and templates in this walk through, I’m sure either you know how to do this, else ask your PKI admin).  On the certificate download page, select the <code class="language-plaintext highlighter-rouge">BASE64</code> encoding, and download the certificate, you do not the entire chain.  Lastly, on the same screen in the iLO, you select the <code class="language-plaintext highlighter-rouge">Import Certificate</code> button, and in the dialog, you will paste your cert data.  You get this by right clicking the certificate file you generated and downloaded, and select <code class="language-plaintext highlighter-rouge">Open With -&gt; Notepad</code> and there you will get a similar result as the <code class="language-plaintext highlighter-rouge">CSR</code>, but a longer string of random characters, that is what you paste in the iLO dialog.  If this was all done correctly the iLO will reset, and you will have a custom certificate installed.  And no more security warning if you browse to it by the name you entered into the <code class="language-plaintext highlighter-rouge">Common Name</code> property.</p>
 
 <p>Whew!  Lets automate this.</p>
 
-<p>As you can see, there really isn’t that many steps, but I have hundreds of HPE servers, and there is no way in Hell I am going to sign into each one, generate a CSR, wait, wait, wait, then go to my CA, submit the request, save it, open it, and paste it in the web page hundreds of times.  So I started messing with the <a href="https://www.powershellgallery.com/packages/HPEiLOCmdlets/2.2.0.0">HPEiLOCmdlets</a> PowerShell Module, and using those its pretty easy to start the CSR generation, and once its created, use <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/certreq_1">certreq.exe</a> to submit the request, and the <code class="highlighter-rouge">HPEiLOCmdlets</code> can be used to install the certificate as well.</p>
+<p>As you can see, there really isn’t that many steps, but I have hundreds of HPE servers, and there is no way in Hell I am going to sign into each one, generate a CSR, wait, wait, wait, then go to my CA, submit the request, save it, open it, and paste it in the web page hundreds of times.  So I started messing with the <a href="https://www.powershellgallery.com/packages/HPEiLOCmdlets/2.2.0.0">HPEiLOCmdlets</a> PowerShell Module, and using those its pretty easy to start the CSR generation, and once its created, use <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/certreq_1">certreq.exe</a> to submit the request, and the <code class="language-plaintext highlighter-rouge">HPEiLOCmdlets</code> can be used to install the certificate as well.</p>
 
 <h2 id="breaking-down-the-code">Breaking Down The Code</h2>
 
-<p>The cmdlet I created is called <code class="highlighter-rouge">New-HPEiLOPKICertificate</code>  Here is the usage:</p>
+<p>The cmdlet I created is called <code class="language-plaintext highlighter-rouge">New-HPEiLOPKICertificate</code>  Here is the usage:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>New-HPEiLOPKICertificate.ps1 [-Credential] &lt;pscredential&gt; [-iLOName] &lt;string[]&gt; [[-Country] &lt;string&gt;] [[-State] &lt;string&gt;] [[-Locality] &lt;string&gt;] [[-Organization] &lt;string&gt;] [[-OrganizationalUnit] &lt;string&gt;] [[-CertificateAuthorityName] &lt;string&gt;] [[-CertificateTemplateName] &lt;string&gt;] [[-FirmwareMinimumVersion] &lt;version&gt;] [-IncludeiLOIP] [&lt;CommonParameters&gt;]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>New-HPEiLOPKICertificate.ps1 [-Credential] &lt;pscredential&gt; [-iLOName] &lt;string[]&gt; [[-Country] &lt;string&gt;] [[-State] &lt;string&gt;] [[-Locality] &lt;string&gt;] [[-Organization] &lt;string&gt;] [[-OrganizationalUnit] &lt;string&gt;] [[-CertificateAuthorityName] &lt;string&gt;] [[-CertificateTemplateName] &lt;string&gt;] [[-FirmwareMinimumVersion] &lt;version&gt;] [-IncludeiLOIP] [&lt;CommonParameters&gt;]
 </code></pre></div></div>
 
 <p>The parameters pretty much all line up with the values discribed above, with the exception of a few:</p>
 <ul>
-  <li><code class="highlighter-rouge">Credential</code> - This is a <code class="highlighter-rouge">PSCredential</code> object for the iLO login credentials, use <code class="highlighter-rouge">Get-Credential</code> to populate this value.</li>
-  <li><code class="highlighter-rouge">iLOName</code> - This is the <code class="highlighter-rouge">CommonName</code> can be the FQDN or the shortname.</li>
-  <li><code class="highlighter-rouge">CertificateAuthorityName</code> - This is your <code class="highlighter-rouge">CA</code> instance, you can find this by just typing <code class="highlighter-rouge">certreq</code> in <code class="highlighter-rouge">CMD</code>.</li>
-  <li><code class="highlighter-rouge">CertificateTemplateName</code> - The template to submit your <code class="highlighter-rouge">CSR</code> against.</li>
-  <li><code class="highlighter-rouge">FirmwareMinimumVersion</code> - The <code class="highlighter-rouge">HPEiLOCmdlets</code> seem to only like newer iLO versions, I can tell you 2.55 does not work, but 2.70 does.</li>
+  <li><code class="language-plaintext highlighter-rouge">Credential</code> - This is a <code class="language-plaintext highlighter-rouge">PSCredential</code> object for the iLO login credentials, use <code class="language-plaintext highlighter-rouge">Get-Credential</code> to populate this value.</li>
+  <li><code class="language-plaintext highlighter-rouge">iLOName</code> - This is the <code class="language-plaintext highlighter-rouge">CommonName</code> can be the FQDN or the shortname.</li>
+  <li><code class="language-plaintext highlighter-rouge">CertificateAuthorityName</code> - This is your <code class="language-plaintext highlighter-rouge">CA</code> instance, you can find this by just typing <code class="language-plaintext highlighter-rouge">certreq</code> in <code class="language-plaintext highlighter-rouge">CMD</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">CertificateTemplateName</code> - The template to submit your <code class="language-plaintext highlighter-rouge">CSR</code> against.</li>
+  <li><code class="language-plaintext highlighter-rouge">FirmwareMinimumVersion</code> - The <code class="language-plaintext highlighter-rouge">HPEiLOCmdlets</code> seem to only like newer iLO versions, I can tell you 2.55 does not work, but 2.70 does.</li>
 </ul>
 
-<p>If you want you can set default parameter values in the script, so your really only have to change the <code class="highlighter-rouge">iLOName</code>.</p>
+<p>If you want you can set default parameter values in the script, so your really only have to change the <code class="language-plaintext highlighter-rouge">iLOName</code>.</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>New-HPEiLOPKICertifacte.ps1 -iLOName myHPEiLO.tomohulk.io -Credential <span class="o">(</span> <span class="nb">Get-Credential</span> <span class="o">)</span>
-</code></pre></div></div>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">New-HPEiLOPKICertifacte.ps1</span><span class="w"> </span><span class="nt">-iLOName</span><span class="w"> </span><span class="nx">myHPEiLO.tomohulk.io</span><span class="w"> </span><span class="nt">-Credential</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="nf">Get-Credential</span><span class="w"> </span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
 
 <p>The workflow of the cmdlet is pretty straight forward:</p>
 <ul>
   <li>Connect to the iLO.</li>
   <li>Verify the firmware version is a minimum version.</li>
   <li>Begin the CSR generation with the supplied values.</li>
-  <li>Looping every 5 seconds, query the iLO to see if the <code class="highlighter-rouge">CSR</code> has been generated.</li>
-  <li>Export the <code class="highlighter-rouge">CSR</code> to a temp file.</li>
-  <li>Submit the request to the the <code class="highlighter-rouge">CA</code> using <code class="highlighter-rouge">certreq.exe</code>.</li>
-  <li>Use resulting <code class="highlighter-rouge">.pem</code> file to upload the new certificate to the iLO.</li>
-  <li>Delete the temporary <code class="highlighter-rouge">.csr</code> and <code class="highlighter-rouge">.pem</code> files.</li>
+  <li>Looping every 5 seconds, query the iLO to see if the <code class="language-plaintext highlighter-rouge">CSR</code> has been generated.</li>
+  <li>Export the <code class="language-plaintext highlighter-rouge">CSR</code> to a temp file.</li>
+  <li>Submit the request to the the <code class="language-plaintext highlighter-rouge">CA</code> using <code class="language-plaintext highlighter-rouge">certreq.exe</code>.</li>
+  <li>Use resulting <code class="language-plaintext highlighter-rouge">.pem</code> file to upload the new certificate to the iLO.</li>
+  <li>Delete the temporary <code class="language-plaintext highlighter-rouge">.csr</code> and <code class="language-plaintext highlighter-rouge">.pem</code> files.</li>
 </ul>
 
-<p>This cmdlet accepts pipeline input for the <code class="highlighter-rouge">iLOName</code> as well as a <code class="highlighter-rouge">StringArray</code>, so as long as they have the same credentials, you can complete this on multiple systems at once:</p>
+<p>This cmdlet accepts pipeline input for the <code class="language-plaintext highlighter-rouge">iLOName</code> as well as a <code class="language-plaintext highlighter-rouge">StringArray</code>, so as long as they have the same credentials, you can complete this on multiple systems at once:</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@<span class="o">(</span><span class="s2">"ilo1"</span>, <span class="s2">"ilo2"</span><span class="o">)</span> | New-HPEiLOPKICertificate -Credential <span class="o">(</span> <span class="nb">Get-Credential</span> <span class="o">)</span>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">@(</span><span class="s2">"ilo1"</span><span class="p">,</span><span class="w"> </span><span class="s2">"ilo2"</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">New-HPEiLOPKICertificate</span><span class="w"> </span><span class="nt">-Credential</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="nf">Get-Credential</span><span class="w"> </span><span class="p">)</span><span class="w">
 
-<span class="c1"># or</span>
+</span><span class="c"># or</span><span class="w">
 
-New-HPEiLOCertificate -iLOName <span class="s2">"ilo1"</span>, <span class="s2">"ilo2"</span> -Credential <span class="o">(</span> <span class="nb">Get-Credential</span> <span class="o">)</span>
-</code></pre></div></div>
+</span><span class="nf">New-HPEiLOCertificate</span><span class="w"> </span><span class="nt">-iLOName</span><span class="w"> </span><span class="s2">"ilo1"</span><span class="p">,</span><span class="w"> </span><span class="s2">"ilo2"</span><span class="w"> </span><span class="nt">-Credential</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="nf">Get-Credential</span><span class="w"> </span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
 
 <p>Thats pretty much it, after the iLO resets and you refresh the page, you will see your connection is now <em>secure</em>.</p>
 

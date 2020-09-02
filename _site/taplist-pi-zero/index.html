@@ -91,30 +91,30 @@
 <p>For the first part of this build, we need to install and configure the Raspberry Pi Zero, we will be installing the latest version of <a href="https://www.raspbian.org">Raspbian Stretch Lite</a>.</p>
 <ol>
   <li>Download the latest img for <strong>Raspbian Stretch Lite</strong> <a href="https://www.raspberrypi.org/downloads/raspbian/">here</a>.</li>
-  <li>Open the <code class="highlighter-rouge">Disk Utility</code> app:
+  <li>Open the <code class="language-plaintext highlighter-rouge">Disk Utility</code> app:
     <ul>
-      <li>Press <code class="highlighter-rouge">CMD+SPACE</code> to open the <code class="highlighter-rouge">Spotlight</code> application.</li>
-      <li>In the search bar type <code class="highlighter-rouge">Disk Utility</code>.</li>
+      <li>Press <code class="language-plaintext highlighter-rouge">CMD+SPACE</code> to open the <code class="language-plaintext highlighter-rouge">Spotlight</code> application.</li>
+      <li>In the search bar type <code class="language-plaintext highlighter-rouge">Disk Utility</code>.</li>
     </ul>
   </li>
-  <li>In the top left had corner, select <code class="highlighter-rouge">View</code>, and be sure <code class="highlighter-rouge">Show All Devices</code> is selected.</li>
+  <li>In the top left had corner, select <code class="language-plaintext highlighter-rouge">View</code>, and be sure <code class="language-plaintext highlighter-rouge">Show All Devices</code> is selected.</li>
   <li>Next, you will need to be sure the SD card is formated with the <a href="https://en.wikipedia.org/wiki/Design_of_the_FAT_file_system">FAT</a> file system.
     <ul>
       <li>Select the SD drive in the left pane.</li>
-      <li>Select <code class="highlighter-rouge">Erase</code> from the top.</li>
-      <li>Make sure you pick <code class="highlighter-rouge">FAT (MS-DOS)</code> for the file system, and <code class="highlighter-rouge">MBR (Master Boot Record)</code> for the partition.</li>
+      <li>Select <code class="language-plaintext highlighter-rouge">Erase</code> from the top.</li>
+      <li>Make sure you pick <code class="language-plaintext highlighter-rouge">FAT (MS-DOS)</code> for the file system, and <code class="language-plaintext highlighter-rouge">MBR (Master Boot Record)</code> for the partition.</li>
       <li><strong>THIS WILL ERASE THE ENTIRE SD CARD, SO BE SURE YOU HAVE SAVED ANYTHING YOU WANT TO EVER SEE AGAIN!</strong></li>
     </ul>
   </li>
-  <li>Open a <code class="highlighter-rouge">terminal</code> using the <code class="highlighter-rouge">Spotlight</code> tool (see step 2) and type <code class="highlighter-rouge">Terminal</code>.</li>
-  <li>In the <code class="highlighter-rouge">terminal</code> application, find your disk number by running <code class="highlighter-rouge">diskutil list</code></li>
-  <li>Note your disk number, it will be in the format of <code class="highlighter-rouge">/dev/disk2</code>, it may not actually be the number <code class="highlighter-rouge">2</code>, just look at the size of the disk and make sure its the correct one.</li>
-  <li>Unmount the disk with <code class="highlighter-rouge">diskutil unmountDisk /dev/disk2</code>, again, replace <code class="highlighter-rouge">2</code> with number of your SD card.</li>
-  <li>write the image to the SD Card with <code class="highlighter-rouge">dd</code>:
+  <li>Open a <code class="language-plaintext highlighter-rouge">terminal</code> using the <code class="language-plaintext highlighter-rouge">Spotlight</code> tool (see step 2) and type <code class="language-plaintext highlighter-rouge">Terminal</code>.</li>
+  <li>In the <code class="language-plaintext highlighter-rouge">terminal</code> application, find your disk number by running <code class="language-plaintext highlighter-rouge">diskutil list</code></li>
+  <li>Note your disk number, it will be in the format of <code class="language-plaintext highlighter-rouge">/dev/disk2</code>, it may not actually be the number <code class="language-plaintext highlighter-rouge">2</code>, just look at the size of the disk and make sure its the correct one.</li>
+  <li>Unmount the disk with <code class="language-plaintext highlighter-rouge">diskutil unmountDisk /dev/disk2</code>, again, replace <code class="language-plaintext highlighter-rouge">2</code> with number of your SD card.</li>
+  <li>write the image to the SD Card with <code class="language-plaintext highlighter-rouge">dd</code>:
     <ul>
-      <li><code class="highlighter-rouge">sudo dd bs=1m if=Downloads/raspbian-stretch-lite.img of=/dev/rdisk4 conv=sync</code></li>
-      <li>Replace <code class="highlighter-rouge">Downloads/raspbian-stretch-lite.img</code> with the path to the <code class="highlighter-rouge">.img</code> file you downloaded in step 1.</li>
-      <li>Again, replace <code class="highlighter-rouge">rdisk4</code> with the disk number you found in step 7.</li>
+      <li><code class="language-plaintext highlighter-rouge">sudo dd bs=1m if=Downloads/raspbian-stretch-lite.img of=/dev/rdisk4 conv=sync</code></li>
+      <li>Replace <code class="language-plaintext highlighter-rouge">Downloads/raspbian-stretch-lite.img</code> with the path to the <code class="language-plaintext highlighter-rouge">.img</code> file you downloaded in step 1.</li>
+      <li>Again, replace <code class="language-plaintext highlighter-rouge">rdisk4</code> with the disk number you found in step 7.</li>
       <li>This may take some time, took my system about 10 minutes on an 8GB SD Card with a Thunderbolt SD Card Reader.</li>
     </ul>
   </li>
@@ -123,56 +123,56 @@
 <h2 id="configuring-raspbian-lite-stretch">Configuring Raspbian Lite Stretch</h2>
 <p>After the img is done writing to the SD card, its time to being configuring Raspbian.  Because the Raspberry Pi Zero has such little hardware, we are going to try to keep this as minimal as possible.</p>
 <ol>
-  <li>SSH is disabled by default, so to enable it, you need to create an empty file called <code class="highlighter-rouge">ssh</code>:
+  <li>SSH is disabled by default, so to enable it, you need to create an empty file called <code class="language-plaintext highlighter-rouge">ssh</code>:
     <ul>
-      <li><code class="highlighter-rouge">touch /Volumes/boot/ssh</code></li>
+      <li><code class="language-plaintext highlighter-rouge">touch /Volumes/boot/ssh</code></li>
     </ul>
   </li>
-  <li>Next, you need to append <code class="highlighter-rouge">dtoverlay=dwc2</code> to the end of <code class="highlighter-rouge">/Volumes/boot/config.txt</code>.  You can do this either with <code class="highlighter-rouge">textEdit</code> or with a terminal editor.</li>
-  <li>This next step is a little tricky, first open <code class="highlighter-rouge">/Volumes/boot/cmdline.txt</code>, and located the text <code class="highlighter-rouge">rootwait</code>, immediately after that, add a space, and then this text: <code class="highlighter-rouge">modules-load=dwc2,g_ether</code>.  So it should look like this:
+  <li>Next, you need to append <code class="language-plaintext highlighter-rouge">dtoverlay=dwc2</code> to the end of <code class="language-plaintext highlighter-rouge">/Volumes/boot/config.txt</code>.  You can do this either with <code class="language-plaintext highlighter-rouge">textEdit</code> or with a terminal editor.</li>
+  <li>This next step is a little tricky, first open <code class="language-plaintext highlighter-rouge">/Volumes/boot/cmdline.txt</code>, and located the text <code class="language-plaintext highlighter-rouge">rootwait</code>, immediately after that, add a space, and then this text: <code class="language-plaintext highlighter-rouge">modules-load=dwc2,g_ether</code>.  So it should look like this:
     <ul>
-      <li><code class="highlighter-rouge">rootwait modules-load=dwc2,g_ether</code></li>
+      <li><code class="language-plaintext highlighter-rouge">rootwait modules-load=dwc2,g_ether</code></li>
     </ul>
   </li>
   <li>Now go ahead and eject the SD card and then load it into the Raspberry Pi Zero and plug in the power.  It will take about 60 seconds to boot up, then connect it to your computer.</li>
-  <li>Next, go to <code class="highlighter-rouge">System Preferences &gt; Network</code> and you will see a new device called <code class="highlighter-rouge">RNDIS/Ethernet Gadget</code>.  <img src="/images/2019-04-26-taplist-pi-zero/network.png" alt="Network" />  This is the Raspberry Pi Zero, you can share your internet connection to it, which will then all you to SSH to the device.</li>
-  <li>Go to <code class="highlighter-rouge">System Preferences &gt; Sharing</code> and enable internet sharing for the <code class="highlighter-rouge">RNDIS/Ethernet Gadget</code>. <img src="/images/2019-04-26-taplist-pi-zero/sharing.png" alt="Sharing" /></li>
-  <li>You should now beable to <code class="highlighter-rouge">ssh</code> to the Raspberry Pi Zero:
+  <li>Next, go to <code class="language-plaintext highlighter-rouge">System Preferences &gt; Network</code> and you will see a new device called <code class="language-plaintext highlighter-rouge">RNDIS/Ethernet Gadget</code>.  <img src="/images/2019-04-26-taplist-pi-zero/network.png" alt="Network" />  This is the Raspberry Pi Zero, you can share your internet connection to it, which will then all you to SSH to the device.</li>
+  <li>Go to <code class="language-plaintext highlighter-rouge">System Preferences &gt; Sharing</code> and enable internet sharing for the <code class="language-plaintext highlighter-rouge">RNDIS/Ethernet Gadget</code>. <img src="/images/2019-04-26-taplist-pi-zero/sharing.png" alt="Sharing" /></li>
+  <li>You should now beable to <code class="language-plaintext highlighter-rouge">ssh</code> to the Raspberry Pi Zero:
     <ul>
-      <li><code class="highlighter-rouge">ssh pi@raspberrypi.local</code></li>
-      <li>Default password is <code class="highlighter-rouge">raspberry</code>.</li>
-      <li>Type <code class="highlighter-rouge">yes</code> to accept the certificate thumbprint.</li>
+      <li><code class="language-plaintext highlighter-rouge">ssh pi@raspberrypi.local</code></li>
+      <li>Default password is <code class="language-plaintext highlighter-rouge">raspberry</code>.</li>
+      <li>Type <code class="language-plaintext highlighter-rouge">yes</code> to accept the certificate thumbprint.</li>
     </ul>
   </li>
-  <li>After you are connected, there are a few things that need to be set, run <code class="highlighter-rouge">raspi-config</code> and update the following:
+  <li>After you are connected, there are a few things that need to be set, run <code class="language-plaintext highlighter-rouge">raspi-config</code> and update the following:
     <ul>
-      <li><strong>CHANGE THE DEFAULT PASSWORD</strong> else anyone can now <code class="highlighter-rouge">ssh</code> to your taplist board with the default credentials!</li>
-      <li>Under <code class="highlighter-rouge">Boot Options</code> select <code class="highlighter-rouge">Desktop/CLI</code> and then select <code class="highlighter-rouge">Console Autologin</code>.</li>
+      <li><strong>CHANGE THE DEFAULT PASSWORD</strong> else anyone can now <code class="language-plaintext highlighter-rouge">ssh</code> to your taplist board with the default credentials!</li>
+      <li>Under <code class="language-plaintext highlighter-rouge">Boot Options</code> select <code class="language-plaintext highlighter-rouge">Desktop/CLI</code> and then select <code class="language-plaintext highlighter-rouge">Console Autologin</code>.</li>
       <li>Lastly configure the wifi.</li>
     </ul>
   </li>
   <li>You are now connected to your wifi, and can update the system:
     <ul>
-      <li><code class="highlighter-rouge">sudo apt-get update -y</code></li>
-      <li><code class="highlighter-rouge">sudo apt-get upgrade -y</code></li>
-      <li><code class="highlighter-rouge">sudo apt-get dist-upgrade -y</code></li>
+      <li><code class="language-plaintext highlighter-rouge">sudo apt-get update -y</code></li>
+      <li><code class="language-plaintext highlighter-rouge">sudo apt-get upgrade -y</code></li>
+      <li><code class="language-plaintext highlighter-rouge">sudo apt-get dist-upgrade -y</code></li>
     </ul>
   </li>
   <li>Now, install the minimum X Server Environment for Chromium:
     <ul>
-      <li><code class="highlighter-rouge">sudo apt-get install --no-install-recommends xserver-xorg x11-xserver-utils xinit openbox</code></li>
-      <li><code class="highlighter-rouge">sudo apt-get install --no-install-recommends chromium-browser</code></li>
+      <li><code class="language-plaintext highlighter-rouge">sudo apt-get install --no-install-recommends xserver-xorg x11-xserver-utils xinit openbox</code></li>
+      <li><code class="language-plaintext highlighter-rouge">sudo apt-get install --no-install-recommends chromium-browser</code></li>
     </ul>
   </li>
-  <li>You need to configure the auto start commands, and to do this, you will have to use a terminal based editor, like <code class="highlighter-rouge">nano</code> or <code class="highlighter-rouge">vi</code>.  I prefer <code class="highlighter-rouge">nano</code>:
+  <li>You need to configure the auto start commands, and to do this, you will have to use a terminal based editor, like <code class="language-plaintext highlighter-rouge">nano</code> or <code class="language-plaintext highlighter-rouge">vi</code>.  I prefer <code class="language-plaintext highlighter-rouge">nano</code>:
     <ul>
-      <li><code class="highlighter-rouge">sudo nano /etc/xdg/openbox/autostart</code></li>
+      <li><code class="language-plaintext highlighter-rouge">sudo nano /etc/xdg/openbox/autostart</code></li>
     </ul>
   </li>
   <li>
     <p>Replace the entire contents of the file with this:</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Disable any form of screen saver / screen blanking / power management
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Disable any form of screen saver / screen blanking / power management
 xset s off
 xset s noblank
 xset -dpms
@@ -188,12 +188,12 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
   </li>
   <li>You need to configure X Server to autostart and boot and load the display web page.
     <ul>
-      <li><code class="highlighter-rouge">nano ~/.bash_profile</code></li>
-      <li>Add this to the file: <code class="highlighter-rouge">[[ -z $DISPLAY &amp;&amp; $XDG_VTNR -eq 1 ]] &amp;&amp; startx -- -nocursor</code></li>
+      <li><code class="language-plaintext highlighter-rouge">nano ~/.bash_profile</code></li>
+      <li>Add this to the file: <code class="language-plaintext highlighter-rouge">[[ -z $DISPLAY &amp;&amp; $XDG_VTNR -eq 1 ]] &amp;&amp; startx -- -nocursor</code></li>
       <li>Save and close the file.</li>
     </ul>
   </li>
-  <li>Lastly shut you Raspberry Pi Zero down <code class="highlighter-rouge">sudo shutdown now</code> and go attach it to your monitor.  You do not need to attach any peripherals, on its next boot, it will autologin as the <code class="highlighter-rouge">Pi</code> user, and start up <code class="highlighter-rouge">Chromium</code> and navigate to https://www.taplist.io/display.  The very first time this boots, there will be a code on the screen that you need to go to https://taplist.io/activate and enter in.</li>
+  <li>Lastly shut you Raspberry Pi Zero down <code class="language-plaintext highlighter-rouge">sudo shutdown now</code> and go attach it to your monitor.  You do not need to attach any peripherals, on its next boot, it will autologin as the <code class="language-plaintext highlighter-rouge">Pi</code> user, and start up <code class="language-plaintext highlighter-rouge">Chromium</code> and navigate to https://www.taplist.io/display.  The very first time this boots, there will be a code on the screen that you need to go to https://taplist.io/activate and enter in.</li>
 </ol>
 
 <p>WHEW!  Thats it, hopefully you made it this far, and ended up with something like this <img src="/images/2019-04-26-taplist-pi-zero/taplist.jpg" alt="Taplist" /></p>
