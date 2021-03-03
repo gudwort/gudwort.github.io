@@ -114,7 +114,9 @@ RuleCollectionTypes : {Appx, Dll, Exe, Msi…}
 
 <p>So wow, thats great info there, looks like all the conditions are in the <code class="language-plaintext highlighter-rouge">RuleCollections</code> property, lets dig in and see what info is in there.</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-AppLockerPolicy</span><span class="w"> </span><span class="nt">-Effective</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">Select-Object</span><span class="w"> </span><span class="nt">-ExpandProperty</span><span class="w"> </span><span class="nx">RuleCollections</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">Select-Object</span><span class="w"> </span><span class="nt">-First</span><span class="w"> </span><span class="nx">1</span><span class="w"> </span><span class="nt">-Property</span><span class="w"> </span><span class="o">*</span><span class="w">
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-AppLockerPolicy</span><span class="w"> </span><span class="nt">-Effective</span><span class="w"> </span><span class="o">|</span><span class="w"> 
+    </span><span class="nf">Select-Object</span><span class="w"> </span><span class="nt">-ExpandProperty</span><span class="w"> </span><span class="nx">RuleCollections</span><span class="w"> </span><span class="o">|</span><span class="w"> 
+    </span><span class="nf">Select-Object</span><span class="w"> </span><span class="nt">-First</span><span class="w"> </span><span class="nx">1</span><span class="w"> </span><span class="nt">-Property</span><span class="w"> </span><span class="o">*</span><span class="w">
 </span></code></pre></div></div>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Capacity       : 4
 Count          : 1
@@ -126,7 +128,10 @@ SyncRoot       : {Microsoft.Security.ApplicationId.PolicyManagement.PolicyModel.
 
 <p>So, nothing, like literally nothing…am I missing something?  Maybe in SyncRoot?</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-AppLockerPolicy</span><span class="w"> </span><span class="nt">-Effective</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">Select-Object</span><span class="w"> </span><span class="nt">-ExpandProperty</span><span class="w"> </span><span class="nx">RuleCollections</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">Select-Object</span><span class="w"> </span><span class="nt">-First</span><span class="w"> </span><span class="nx">1</span><span class="w"> </span><span class="nt">-ExpandProperty</span><span class="w"> </span><span class="nx">SyncRoot</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">Select-Object</span><span class="w"> </span><span class="nt">-Property</span><span class="w"> </span><span class="o">*</span><span class="w">
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-AppLockerPolicy</span><span class="w"> </span><span class="nt">-Effective</span><span class="w"> </span><span class="o">|</span><span class="w"> 
+    </span><span class="nf">Select-Object</span><span class="w"> </span><span class="nt">-ExpandProperty</span><span class="w"> </span><span class="nx">RuleCollections</span><span class="w"> </span><span class="o">|</span><span class="w"> 
+    </span><span class="nf">Select-Object</span><span class="w"> </span><span class="nt">-First</span><span class="w"> </span><span class="nx">1</span><span class="w"> </span><span class="nt">-ExpandProperty</span><span class="w"> </span><span class="nx">SyncRoot</span><span class="w"> </span><span class="o">|</span><span class="w"> 
+    </span><span class="nf">Select-Object</span><span class="w"> </span><span class="nt">-Property</span><span class="w"> </span><span class="o">*</span><span class="w">
 </span></code></pre></div></div>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Length
 ------
@@ -135,7 +140,8 @@ SyncRoot       : {Microsoft.Security.ApplicationId.PolicyManagement.PolicyModel.
 
 <p><em>Length 79</em>?  So all this is doing is just giving me a string?  And the <em>value</em> of that string is just the object type name?  Like WTF is going on?  So then I tried diving into that other property, the <code class="language-plaintext highlighter-rouge">RuleCollectionTypes</code> maybe?  Seems like a long shot for sure:</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-AppLockerPolicy</span><span class="w"> </span><span class="nt">-Effective</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">select</span><span class="w"> </span><span class="nt">-ExpandProperty</span><span class="w"> </span><span class="nx">RuleCollectionTypes</span><span class="w">
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-AppLockerPolicy</span><span class="w"> </span><span class="nt">-Effective</span><span class="w"> </span><span class="o">|</span><span class="w"> 
+    </span><span class="nf">Select-Object</span><span class="w"> </span><span class="nt">-ExpandProperty</span><span class="w"> </span><span class="nx">RuleCollectionTypes</span><span class="w">
 </span></code></pre></div></div>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Appx
 Dll
@@ -159,9 +165,12 @@ AppLockerPolicy
 
 <p>Hey, look at that, an actual true Xml object that can be manipulated like any other Xml document.  So, from what I can tell, the only <em>real option</em> you have here is to just spit out the Xml string to your clipboard and then paste it in a text editor and the use the find function to look for any rule or condition you maybe after. If you are just trying to be quick anyway.  But that still seems like the worst solution ever!  So, I decided to make a PowerShell function that would parse the Xml for you into usable, and more importantly, readable objects.  This also gave me an excuse to spend some time in the IDE, which I jumped on, as I don’t get to do that near as much as I used to.</p>
 
+<hr />
+
 <p>So, the <strong>TLDR</strong>: I created a cmdlet called <code class="language-plaintext highlighter-rouge">ConvertFrom-AppLockerPolicyXml</code>.  This will take in Xml generated from <code class="language-plaintext highlighter-rouge">Get-AppLockerPolicy</code> and convert it to usable objects.  It also does a few other things under the hood, such as converting the <code class="language-plaintext highlighter-rouge">UserOrGroupSid</code> property to the corresponding user or group name, it also bundles all the <code class="language-plaintext highlighter-rouge">Conditions</code> and <code class="language-plaintext highlighter-rouge">Exceptions</code> into a single properties:</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-AppLockerPolicy</span><span class="w"> </span><span class="nt">-Effective</span><span class="w"> </span><span class="nt">-Xml</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">ConvertFrom-AppLockerPolicyXml</span><span class="w">
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-AppLockerPolicy</span><span class="w"> </span><span class="nt">-Effective</span><span class="w"> </span><span class="nt">-Xml</span><span class="w"> </span><span class="o">|</span><span class="w"> 
+    </span><span class="nf">ConvertFrom-AppLockerPolicyXml</span><span class="w">
 </span></code></pre></div></div>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Id              : bef5d95f-da42-4e68-b3bc-06f9e683891f
 Name            : All My Stuff
@@ -176,7 +185,9 @@ Exceptions      :
 
 <p>And you can dive into the Conditions if you want or need to:</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-AppLockerPolicy</span><span class="w"> </span><span class="nt">-Effective</span><span class="w"> </span><span class="nt">-Xml</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">ConvertFrom-AppLockerPolicyXml</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">Select-Object</span><span class="w"> </span><span class="nt">-First</span><span class="w"> </span><span class="nx">1</span><span class="w"> </span><span class="nt">-ExpandProperty</span><span class="w"> </span><span class="nx">Conditions</span><span class="w">
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-AppLockerPolicy</span><span class="w"> </span><span class="nt">-Effective</span><span class="w"> </span><span class="nt">-Xml</span><span class="w"> </span><span class="o">|</span><span class="w"> 
+    </span><span class="nf">ConvertFrom-AppLockerPolicyXml</span><span class="w"> </span><span class="o">|</span><span class="w"> 
+    </span><span class="nf">Select-Object</span><span class="w"> </span><span class="nt">-First</span><span class="w"> </span><span class="nx">1</span><span class="w"> </span><span class="nt">-ExpandProperty</span><span class="w"> </span><span class="nx">Conditions</span><span class="w">
 </span></code></pre></div></div>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ConditionType: FilePathCondition
 Path: %OSDRIVE%\AllMyStuff\*
@@ -184,7 +195,8 @@ Path: %OSDRIVE%\AllMyStuff\*
 
 <p>Mind you these are broad and very fake outputs here, but I think you get the idea.  I did use PowerShell Classes to make it easy to cast to custom objects, in my case, hundreds of rule objects.  So you need at least PowerShell 5.1.  I Did all my development and testing for this in pwsh v7.1.2.  And one other bonus from classes is I like that my <em>custom</em> (casted really) objects have valid descriptive type names:</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="nf">Get-AppLockerPolicy</span><span class="w"> </span><span class="nt">-Effective</span><span class="w"> </span><span class="nt">-Xml</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">ConvertFrom-AppLockerPolicyXml</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="nf">GetType</span><span class="p">()</span><span class="w">
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="nf">Get-AppLockerPolicy</span><span class="w"> </span><span class="nt">-Effective</span><span class="w"> </span><span class="nt">-Xml</span><span class="w"> </span><span class="o">|</span><span class="w"> 
+    </span><span class="nf">ConvertFrom-AppLockerPolicyXml</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="nf">GetType</span><span class="p">()</span><span class="w">
 </span></code></pre></div></div>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>IsPublic IsSerial Name                                     BaseType
 -------- -------- ----                                     --------

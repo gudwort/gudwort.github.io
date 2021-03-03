@@ -57,7 +57,9 @@ RuleCollectionTypes : {Appx, Dll, Exe, Msi…}
 So wow, thats great info there, looks like all the conditions are in the `RuleCollections` property, lets dig in and see what info is in there.
 
 ```powershell
-Get-AppLockerPolicy -Effective | Select-Object -ExpandProperty RuleCollections | Select-Object -First 1 -Property *
+Get-AppLockerPolicy -Effective | 
+    Select-Object -ExpandProperty RuleCollections | 
+    Select-Object -First 1 -Property *
 ```
 ```
 Capacity       : 4
@@ -71,7 +73,10 @@ SyncRoot       : {Microsoft.Security.ApplicationId.PolicyManagement.PolicyModel.
 So, nothing, like literally nothing...am I missing something?  Maybe in SyncRoot?
 
 ```powershell
-Get-AppLockerPolicy -Effective | Select-Object -ExpandProperty RuleCollections | Select-Object -First 1 -ExpandProperty SyncRoot | Select-Object -Property *
+Get-AppLockerPolicy -Effective | 
+    Select-Object -ExpandProperty RuleCollections | 
+    Select-Object -First 1 -ExpandProperty SyncRoot | 
+    Select-Object -Property *
 ```
 ```
 Length
@@ -82,7 +87,8 @@ Length
 _Length 79_?  So all this is doing is just giving me a string?  And the _value_ of that string is just the object type name?  Like WTF is going on?  So then I tried diving into that other property, the `RuleCollectionTypes` maybe?  Seems like a long shot for sure:
 
 ```powershell
-Get-AppLockerPolicy -Effective | select -ExpandProperty RuleCollectionTypes
+Get-AppLockerPolicy -Effective | 
+    Select-Object -ExpandProperty RuleCollectionTypes
 ```
 ```
 Appx
@@ -110,10 +116,13 @@ AppLockerPolicy
 
 Hey, look at that, an actual true Xml object that can be manipulated like any other Xml document.  So, from what I can tell, the only _real option_ you have here is to just spit out the Xml string to your clipboard and then paste it in a text editor and the use the find function to look for any rule or condition you maybe after. If you are just trying to be quick anyway.  But that still seems like the worst solution ever!  So, I decided to make a PowerShell function that would parse the Xml for you into usable, and more importantly, readable objects.  This also gave me an excuse to spend some time in the IDE, which I jumped on, as I don't get to do that near as much as I used to.
 
+---
+
 So, the **TLDR**: I created a cmdlet called `ConvertFrom-AppLockerPolicyXml`.  This will take in Xml generated from `Get-AppLockerPolicy` and convert it to usable objects.  It also does a few other things under the hood, such as converting the `UserOrGroupSid` property to the corresponding user or group name, it also bundles all the `Conditions` and `Exceptions` into a single properties:
 
 ```powershell
-Get-AppLockerPolicy -Effective -Xml | ConvertFrom-AppLockerPolicyXml
+Get-AppLockerPolicy -Effective -Xml | 
+    ConvertFrom-AppLockerPolicyXml
 ```
 ```
 Id              : bef5d95f-da42-4e68-b3bc-06f9e683891f
@@ -130,7 +139,9 @@ Exceptions      :
 And you can dive into the Conditions if you want or need to:
 
 ```powershell
-Get-AppLockerPolicy -Effective -Xml | ConvertFrom-AppLockerPolicyXml | Select-Object -First 1 -ExpandProperty Conditions
+Get-AppLockerPolicy -Effective -Xml | 
+    ConvertFrom-AppLockerPolicyXml | 
+    Select-Object -First 1 -ExpandProperty Conditions
 ```
 ```
 ConditionType: FilePathCondition
@@ -140,7 +151,8 @@ Path: %OSDRIVE%\AllMyStuff\*
 Mind you these are broad and very fake outputs here, but I think you get the idea.  I did use PowerShell Classes to make it easy to cast to custom objects, in my case, hundreds of rule objects.  So you need at least PowerShell 5.1.  I Did all my development and testing for this in pwsh v7.1.2.  And one other bonus from classes is I like that my _custom_ (casted really) objects have valid descriptive type names:
 
 ```powershell
-(Get-AppLockerPolicy -Effective -Xml | ConvertFrom-AppLockerPolicyXml)[0].GetType()
+(Get-AppLockerPolicy -Effective -Xml | 
+    ConvertFrom-AppLockerPolicyXml)[0].GetType()
 ```
 ```
 IsPublic IsSerial Name                                     BaseType
