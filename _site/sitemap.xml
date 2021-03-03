@@ -8,14 +8,147 @@
 	
 		
 		<item>
-			<title>Building Hyper-V Nodes with Dsc</title>
-			<description>&lt;p&gt;I have been managing Hyper-V clusters at my job for the better part of 3 years.  This was a new role for me.  I had done small amounts of Hyper-V here and there in the past, but never managing Failover Clusters or large numbers of production VMs.  Over the past few years, I have gone through a number of configurations, starting with one very large 20 node Hyper-V cluster, and a 4 node Scale Out File Server to host the storage for the VMs.  After having some bad luck with that setup, namely with the SOFS portion, I implemented smaller 4 node clusters with direct attached SAS disk.  This has been our standard “Hyper-V Failover Cluster Configuration” for the past year or so.&lt;/p&gt;
+			<title>ConvertFrom-AppLockerPolicyXml</title>
+			<description>&lt;p&gt;Hey-Oh!  Its been a while!  Even though I’ve been locked at home for the past year, I haven’t published any new content in forever.  Well, life has been pretty boring so I haven’t come across much worth sharing, and I’m also lazy.  But I do have something today finally worth blerg’n about.  So anyway, away we go!&lt;/p&gt;
 
-&lt;p&gt;But, change is coming, as it always does, and upgrades will be bringing in new switching, with much less available ports then before, and a Fiber Attached Pure Array.  So, with another round of Hyper-V Failover Cluster Node rebuilds on the horizon, I wanted to automate some of this, and I thought it would be a good time to get involved with some Dsc to do so.&lt;/p&gt;
+&lt;p&gt;So, in my not so distant past, I was rolling out Windows AppLocker to our organization, I did get it out to most sites, but other stuff came up, other projects, yada yada yada, and I never got it all the way finished.  Now, its back on the todo list, and one of my peers is working on finishing it up.  Anyway, I am assisting with the KB transfer, and I’m also helping to troubleshoot issues that come up as he moves forward.  Well a few days back I was helping him out, and I was on the users computer, who was having a program being blocked that should not have been.  It was based on a recent exception we had made, so I wanted to verify the new policy was in fact being applied from within the GPO.  So, I started using the AppLocker PowerShell cmdlets.  Long story short, what a disappointment those are.&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nf&quot;&gt;Get-Command&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Name&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;*AppLocker*&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;CommandType     Name                                               Version    Source
+-----------     ----                                               -------    ------
+Function        Get-AppLockerFileInformation                       1.0        AppLocker
+Function        Get-AppLockerPolicy                                1.0        AppLocker
+Function        New-AppLockerPolicy                                1.0        AppLocker
+Function        Set-AppLockerPolicy                                1.0        AppLocker
+Function        Test-AppLockerPolicy                               1.0        AppLocker
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Wow, a lot to choose from there right.  Also I think &lt;a href=&quot;https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/applocker/applocker-overview&quot;&gt;AppLocker&lt;/a&gt; came out with Windows 7, SP1 maybe, and these are still v1……anyway.  I was pretty sure the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Get-AppLockerPolicy&lt;/code&gt; cmdlet is going to be the one I want, so I can see exactly what rules are being applied.  So, I did the obvious thing right?  &lt;em&gt;wink wink&lt;/em&gt;.  I ran &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Get-Help&lt;/code&gt; and checked out the Syntax”:&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nf&quot;&gt;Get-Help&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Name&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Get-AppLockerPolicy&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SYNTAX
+    Get-AppLockerPolicy -Local [-Xml] [&amp;lt;CommonParameters&amp;gt;]
+
+    Get-AppLockerPolicy -Domain -Ldap &amp;lt;string&amp;gt; [-Xml] [&amp;lt;CommonParameters&amp;gt;]
+
+    Get-AppLockerPolicy -Effective [-Xml] [&amp;lt;CommonParameters&amp;gt;]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Ok, so it looks like you can either get the Domain or Local policy, or the Effective policy, which would be the combination of both I would guess.  So lets do that and see what is actually being applied.&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nf&quot;&gt;Get-AppLockerPolicy&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Effective&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;RunspaceId          : a3c075e3-c5c8-4120-8f37-b69d9deb38af
+Version             : 1
+RuleCollections     : {Microsoft.Security.ApplicationId.PolicyManagement.PolicyModel.FilePublisherRule, ,
+                      Microsoft.Security.ApplicationId.PolicyManagement.PolicyModel.FilePublisherRule
+                      Microsoft.Security.ApplicationId.PolicyManagement.PolicyModel.FilePublisherRule
+                      Microsoft.Security.ApplicationId.PolicyManagement.PolicyModel.FilePublisherRule
+                      Microsoft.Security.ApplicationId.PolicyManagement.PolicyModel.FilePublisherRule
+                      Microsoft.Security.ApplicationId.PolicyManagement.PolicyModel.FileHashRule…}
+RuleCollectionTypes : {Appx, Dll, Exe, Msi…}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;So wow, thats great info there, looks like all the conditions are in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;RuleCollections&lt;/code&gt; property, lets dig in and see what info is in there.&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nf&quot;&gt;Get-AppLockerPolicy&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Effective&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Select-Object&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-ExpandProperty&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;RuleCollections&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Select-Object&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-First&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Property&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Capacity       : 4
+Count          : 1
+IsFixedSize    : False
+IsReadOnly     : False
+IsSynchronized : False
+SyncRoot       : {Microsoft.Security.ApplicationId.PolicyManagement.PolicyModel.FilePublisherRule}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;So, nothing, like literally nothing…am I missing something?  Maybe in SyncRoot?&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nf&quot;&gt;Get-AppLockerPolicy&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Effective&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Select-Object&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-ExpandProperty&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;RuleCollections&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Select-Object&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-First&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-ExpandProperty&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;SyncRoot&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Select-Object&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Property&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Length
+------
+    79
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;Length 79&lt;/em&gt;?  So all this is doing is just giving me a string?  And the &lt;em&gt;value&lt;/em&gt; of that string is just the object type name?  Like WTF is going on?  So then I tried diving into that other property, the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;RuleCollectionTypes&lt;/code&gt; maybe?  Seems like a long shot for sure:&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nf&quot;&gt;Get-AppLockerPolicy&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Effective&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-ExpandProperty&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;RuleCollectionTypes&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Appx&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Dll&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Exe&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Msi&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;JFC!  Where are the RULES!  &lt;em&gt;Insert Batman meme here…GIVE EM TO ME!&lt;/em&gt;  I guess lets try that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-Xml&lt;/code&gt; parameter, I mean, what other options are there…(see help output above, there are none):&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nf&quot;&gt;Get-AppLockerPolicy&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Effective&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Xml&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Not going to paste the out of that here, because its huge.  But its not even true &lt;em&gt;Xml&lt;/em&gt;, its just a string that has all the Xml tags, so you still have to cast it to Xml yourself:&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Xml&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;](&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Get-AppLockerPolicy&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Effective&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Xml&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;AppLockerPolicy
+---------------
+AppLockerPolicy
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Hey, look at that, an actual true Xml object that can be manipulated like any other Xml document.  So, from what I can tell, the only &lt;em&gt;real option&lt;/em&gt; you have here is to just spit out the Xml string to your clipboard and then paste it in a text editor and the use the find function to look for any rule or condition you maybe after. If you are just trying to be quick anyway.  But that still seems like the worst solution ever!  So, I decided to make a PowerShell function that would parse the Xml for you into usable, and more importantly, readable objects.  This also gave me an excuse to spend some time in the IDE, which I jumped on, as I don’t get to do that near as much as I used to.&lt;/p&gt;
+
+&lt;p&gt;So, the &lt;strong&gt;TLDR&lt;/strong&gt;: I created a cmdlet called &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ConvertFrom-AppLockerPolicyXml&lt;/code&gt;.  This will take in Xml generated from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Get-AppLockerPolicy&lt;/code&gt; and convert it to usable objects.  It also does a few other things under the hood, such as converting the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;UserOrGroupSid&lt;/code&gt; property to the corresponding user or group name, it also bundles all the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Conditions&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Exceptions&lt;/code&gt; into a single properties:&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nf&quot;&gt;Get-AppLockerPolicy&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Effective&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Xml&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ConvertFrom-AppLockerPolicyXml&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Id              : bef5d95f-da42-4e68-b3bc-06f9e683891f
+Name            : All My Stuff
+Description     :
+Type            : Exe
+EnforcementMode : AuditOnly
+UserOrGroup     : domain\tomohulk
+Action          : Allow
+Conditions      : {FilePathCondition}
+Exceptions      :
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And you can dive into the Conditions if you want or need to:&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nf&quot;&gt;Get-AppLockerPolicy&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Effective&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Xml&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ConvertFrom-AppLockerPolicyXml&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Select-Object&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-First&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-ExpandProperty&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Conditions&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ConditionType: FilePathCondition
+Path: %OSDRIVE%\AllMyStuff\*
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Mind you these are broad and very fake outputs here, but I think you get the idea.  I did use PowerShell Classes to make it easy to cast to custom objects, in my case, hundreds of rule objects.  So you need at least PowerShell 5.1.  I Did all my development and testing for this in pwsh v7.1.2.  And one other bonus from classes is I like that my &lt;em&gt;custom&lt;/em&gt; (casted really) objects have valid descriptive type names:&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Get-AppLockerPolicy&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Effective&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Xml&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ConvertFrom-AppLockerPolicyXml&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;IsPublic IsSerial Name                                     BaseType
+-------- -------- ----                                     --------
+True     False    AppLockerRule                            System.Object
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And when I say &lt;em&gt;casting&lt;/em&gt; I mean it.  There really isn’t much &lt;em&gt;logic&lt;/em&gt; to this.  It just iterates and then passes in the Xml nodes to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;AppLockerRule&lt;/code&gt; class, and lets the class definition do all the heavy lifting and format the output.  Here is the only &lt;em&gt;executing code&lt;/em&gt; really (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$Xml&lt;/code&gt; being the Xml string from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Get-AppLockerPolicy -Xml&lt;/code&gt;):&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kr&quot;&gt;foreach&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$fileType&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;@(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Appx&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Dll&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Exe&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Msi&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Script&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$rules&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$Xml&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;AppLockerPolicy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;SelectNodes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;//RuleCollection[@Type='&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$fileType&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;']&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;foreach&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ruleType&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;@(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;FilePublisherRule&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;FilePathRule&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;FileHashRule&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;foreach&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$rule&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;@(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$rules&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ruleType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;AppLockerRule&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]::&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$rules&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;EnforcementMode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$rules&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$rule&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Cheers, and enjoy!&lt;/p&gt;
+
+&lt;script src=&quot;https://gist.github.com/e92ff6e8d85862cb0e8a5b69774e38b3.js&quot;&gt; &lt;/script&gt;
+
 </description>
-			<pubDate>Tue, 04 Feb 2020 00:00:00 +0000</pubDate>
-			<link>http://0.0.0.0:4000/building-hyper-v-nodes-with-dsc/</link>
-			<guid isPermaLink="true">http://0.0.0.0:4000/building-hyper-v-nodes-with-dsc/</guid>
+			<pubDate>Tue, 02 Mar 2021 00:00:00 -0600</pubDate>
+			<link>http://0.0.0.0:4000/convertfrom-applockerpolicyxml/</link>
+			<guid isPermaLink="true">http://0.0.0.0:4000/convertfrom-applockerpolicyxml/</guid>
 		</item>
 		
 	
@@ -45,7 +178,7 @@
 
 &lt;p&gt;Thats it!  Pour one for me, cheers!&lt;/p&gt;
 </description>
-			<pubDate>Wed, 21 Aug 2019 00:00:00 +0000</pubDate>
+			<pubDate>Wed, 21 Aug 2019 00:00:00 -0500</pubDate>
 			<link>http://0.0.0.0:4000/motorizing-your-grain-mill/</link>
 			<guid isPermaLink="true">http://0.0.0.0:4000/motorizing-your-grain-mill/</guid>
 		</item>
@@ -127,7 +260,7 @@
 
 &lt;p&gt;Thats it, cheers!&lt;/p&gt;
 </description>
-			<pubDate>Wed, 14 Aug 2019 00:00:00 +0000</pubDate>
+			<pubDate>Wed, 14 Aug 2019 00:00:00 -0500</pubDate>
 			<link>http://0.0.0.0:4000/nobody-got-time-for-that/</link>
 			<guid isPermaLink="true">http://0.0.0.0:4000/nobody-got-time-for-that/</guid>
 		</item>
@@ -196,7 +329,7 @@
 
 &lt;p&gt;And thats it, good to go!  Cheers.&lt;/p&gt;
 </description>
-			<pubDate>Mon, 05 Aug 2019 00:00:00 +0000</pubDate>
+			<pubDate>Mon, 05 Aug 2019 00:00:00 -0500</pubDate>
 			<link>http://0.0.0.0:4000/replacing-failed-storage-pool-hdd/</link>
 			<guid isPermaLink="true">http://0.0.0.0:4000/replacing-failed-storage-pool-hdd/</guid>
 		</item>
@@ -300,7 +433,7 @@
 &lt;script src=&quot;https://gist.github.com/4ddb9a0e8feb3768c742b5cf867a0cb8.js&quot;&gt; &lt;/script&gt;
 
 </description>
-			<pubDate>Thu, 25 Jul 2019 00:00:00 +0000</pubDate>
+			<pubDate>Thu, 25 Jul 2019 00:00:00 -0500</pubDate>
 			<link>http://0.0.0.0:4000/installing-pki-ssl-certificate-on-hpe-ilo/</link>
 			<guid isPermaLink="true">http://0.0.0.0:4000/installing-pki-ssl-certificate-on-hpe-ilo/</guid>
 		</item>
@@ -412,7 +545,7 @@ gcode:
 &lt;script src=&quot;https://gist.github.com/bd4955ba105b653bb81680927b4d1f87.js&quot;&gt; &lt;/script&gt;
 
 </description>
-			<pubDate>Tue, 04 Jun 2019 00:00:00 +0000</pubDate>
+			<pubDate>Tue, 04 Jun 2019 00:00:00 -0500</pubDate>
 			<link>http://0.0.0.0:4000/using-bltouch-with-klipper-and-the-ender3/</link>
 			<guid isPermaLink="true">http://0.0.0.0:4000/using-bltouch-with-klipper-and-the-ender3/</guid>
 		</item>
@@ -451,7 +584,7 @@ gcode:
 
 &lt;p&gt;Thats it.  And I’m sure the patrons of your homemade beer will have much praise to give on how fresh and clean your homebrew has become.  Cheers!&lt;/p&gt;
 </description>
-			<pubDate>Thu, 09 May 2019 00:00:00 +0000</pubDate>
+			<pubDate>Thu, 09 May 2019 00:00:00 -0500</pubDate>
 			<link>http://0.0.0.0:4000/klean-yer-keezer-lines/</link>
 			<guid isPermaLink="true">http://0.0.0.0:4000/klean-yer-keezer-lines/</guid>
 		</item>
@@ -487,7 +620,7 @@ gcode:
 &lt;h3 id=&quot;sources&quot;&gt;Sources&lt;/h3&gt;
 &lt;p&gt;https://beer.thegremlyn.com/2017/03/15/i-built-a-keg-washer-you-should-too/&lt;/p&gt;
 </description>
-			<pubDate>Tue, 07 May 2019 00:00:00 +0000</pubDate>
+			<pubDate>Tue, 07 May 2019 00:00:00 -0500</pubDate>
 			<link>http://0.0.0.0:4000/cip-diy-keg-washer/</link>
 			<guid isPermaLink="true">http://0.0.0.0:4000/cip-diy-keg-washer/</guid>
 		</item>
@@ -670,7 +803,7 @@ Layout diagram (I wasn’t able to find a 3D model of the AC-DC 5V PSU, that goe
 &lt;h2 id=&quot;time-for-a-cold-one&quot;&gt;Time for a Cold One&lt;/h2&gt;
 &lt;p&gt;Whew, you did it!  Nice work!  Go pour yourself a cold one, I know I’m going too, sorry if I missed anything, this was a pretty intense walk through.  Cheers!&lt;/p&gt;
 </description>
-			<pubDate>Wed, 01 May 2019 00:00:00 +0000</pubDate>
+			<pubDate>Wed, 01 May 2019 00:00:00 -0500</pubDate>
 			<link>http://0.0.0.0:4000/piless-brewpi/</link>
 			<guid isPermaLink="true">http://0.0.0.0:4000/piless-brewpi/</guid>
 		</item>
@@ -818,7 +951,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
   &lt;li&gt;https://taplist.io/help/raspberry-pi-setup&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-			<pubDate>Fri, 26 Apr 2019 00:00:00 +0000</pubDate>
+			<pubDate>Fri, 26 Apr 2019 00:00:00 -0500</pubDate>
 			<link>http://0.0.0.0:4000/taplist-pi-zero/</link>
 			<guid isPermaLink="true">http://0.0.0.0:4000/taplist-pi-zero/</guid>
 		</item>
@@ -858,7 +991,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
 
 &lt;p&gt;&lt;img src=&quot;/images/2019-04-17-mixed-ferm-neipa-first-attempt/beer.jpg&quot; alt=&quot;Beer&quot; /&gt;&lt;/p&gt;
 </description>
-			<pubDate>Wed, 17 Apr 2019 00:00:00 +0000</pubDate>
+			<pubDate>Wed, 17 Apr 2019 00:00:00 -0500</pubDate>
 			<link>http://0.0.0.0:4000/mixed-ferm-neipa-first-attempt/</link>
 			<guid isPermaLink="true">http://0.0.0.0:4000/mixed-ferm-neipa-first-attempt/</guid>
 		</item>
@@ -973,16 +1106,16 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
   
     &lt;article class=&quot;post&quot;&gt;
 
-      &lt;h1&gt;&lt;a href=&quot;/building-hyper-v-nodes-with-dsc/&quot;&gt;Building Hyper-V Nodes with Dsc&lt;/a&gt;&lt;/h1&gt;
+      &lt;h1&gt;&lt;a href=&quot;/convertfrom-applockerpolicyxml/&quot;&gt;ConvertFrom-AppLockerPolicyXml&lt;/a&gt;&lt;/h1&gt;
 
       &lt;div class=&quot;entry&quot;&gt;
-        &lt;i&gt;Tales from my experiences using Dsc to build Hyper-V Failover Cluster Nodes.&lt;/i&gt;
-        &lt;p&gt;I have been managing Hyper-V clusters at my job for the better part of 3 years.  This was a new role for me.  I had done small amounts of Hyper-V here and there in the past, but never managing Failover Clusters or large numbers of production VMs.  Over the past few years, I have gone through a number of configurations, starting with one very large 20 node Hyper-V cluster, and a 4 node Scale Out File Server to host the storage for the VMs.  After having some bad luck with that setup, namely with the SOFS portion, I implemented smaller 4 node clusters with direct attached SAS disk.  This has been our standard “Hyper-V Failover Cluster Configuration” for the past year or so.&lt;/p&gt;
+        &lt;i&gt;Convert the terrible output choices from Get-AppLockerPolicy to something worth a damn.&lt;/i&gt;
+        &lt;p&gt;Hey-Oh!  Its been a while!  Even though I’ve been locked at home for the past year, I haven’t published any new content in forever.  Well, life has been pretty boring so I haven’t come across much worth sharing, and I’m also lazy.  But I do have something today finally worth blerg’n about.  So anyway, away we go!&lt;/p&gt;
 
 
       &lt;/div&gt;
 
-      &lt;a href=&quot;/building-hyper-v-nodes-with-dsc/&quot; class=&quot;read-more&quot;&gt;Read More&lt;/a&gt;
+      &lt;a href=&quot;/convertfrom-applockerpolicyxml/&quot; class=&quot;read-more&quot;&gt;Read More&lt;/a&gt;
     &lt;/article&gt;
   
     &lt;article class=&quot;post&quot;&gt;
@@ -1092,12 +1225,12 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
   
     {
     
-      &quot;title&quot;    : &quot;Building Hyper-V Nodes with Dsc&quot;,
-      &quot;url&quot;      : &quot;/building-hyper-v-nodes-with-dsc/&quot;,
+      &quot;title&quot;    : &quot;ConvertFrom-AppLockerPolicyXml&quot;,
+      &quot;url&quot;      : &quot;/convertfrom-applockerpolicyxml/&quot;,
       &quot;category&quot; : &quot;powershell&quot;,
-      &quot;tags&quot;     : &quot;powershell, server, windows, dsc&quot;,
-      &quot;date&quot;     : &quot;2020-02-04 00:00:00 +0000&quot;,
-      &quot;description&quot; : &quot;Tales from my experiences using Dsc to build Hyper-V Failover Cluster Nodes.&quot;
+      &quot;tags&quot;     : &quot;powershell, windows&quot;,
+      &quot;date&quot;     : &quot;2021-03-02 00:00:00 -0600&quot;,
+      &quot;description&quot; : &quot;Convert the terrible output choices from Get-AppLockerPolicy to something worth a damn.&quot;
       
     } ,
   
@@ -1107,7 +1240,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &quot;url&quot;      : &quot;/motorizing-your-grain-mill/&quot;,
       &quot;category&quot; : &quot;homebrewing&quot;,
       &quot;tags&quot;     : &quot;homebrewing, diy&quot;,
-      &quot;date&quot;     : &quot;2019-08-21 00:00:00 +0000&quot;,
+      &quot;date&quot;     : &quot;2019-08-21 00:00:00 -0500&quot;,
       &quot;description&quot; : &quot;How to turn your hand powered grain mill into a motorized one.&quot;
       
     } ,
@@ -1118,7 +1251,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &quot;url&quot;      : &quot;/nobody-got-time-for-that/&quot;,
       &quot;category&quot; : &quot;homebrewing&quot;,
       &quot;tags&quot;     : &quot;homebrewing&quot;,
-      &quot;date&quot;     : &quot;2019-08-14 00:00:00 +0000&quot;,
+      &quot;date&quot;     : &quot;2019-08-14 00:00:00 -0500&quot;,
       &quot;description&quot; : &quot;45 minute mash, no boil, Kveik HaziBoi, grain to glass in 5 days.&quot;
       
     } ,
@@ -1129,7 +1262,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &quot;url&quot;      : &quot;/replacing-failed-storage-pool-hdd/&quot;,
       &quot;category&quot; : &quot;powershell&quot;,
       &quot;tags&quot;     : &quot;powershell, windows, server&quot;,
-      &quot;date&quot;     : &quot;2019-08-05 00:00:00 +0000&quot;,
+      &quot;date&quot;     : &quot;2019-08-05 00:00:00 -0500&quot;,
       &quot;description&quot; : &quot;Replacing a failed hard disk drive in Windows Server Storage Spaces Storage Pool.&quot;
       
     } ,
@@ -1140,7 +1273,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &quot;url&quot;      : &quot;/installing-pki-ssl-certificate-on-hpe-ilo/&quot;,
       &quot;category&quot; : &quot;powershell&quot;,
       &quot;tags&quot;     : &quot;powershell&quot;,
-      &quot;date&quot;     : &quot;2019-07-25 00:00:00 +0000&quot;,
+      &quot;date&quot;     : &quot;2019-07-25 00:00:00 -0500&quot;,
       &quot;description&quot; : &quot;Automating the process of creating a CSR and signing it with an Internal CA and installing it using PowerShell.&quot;
       
     } ,
@@ -1151,7 +1284,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &quot;url&quot;      : &quot;/using-bltouch-with-klipper-and-the-ender3/&quot;,
       &quot;category&quot; : &quot;3dprinting&quot;,
       &quot;tags&quot;     : &quot;3dprinting, klipper&quot;,
-      &quot;date&quot;     : &quot;2019-06-04 00:00:00 +0000&quot;,
+      &quot;date&quot;     : &quot;2019-06-04 00:00:00 -0500&quot;,
       &quot;description&quot; : &quot;How to make your BLTouch Sensor work with the Klipper firmware and the Crealty Ender3.&quot;
       
     } ,
@@ -1162,7 +1295,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &quot;url&quot;      : &quot;/klean-yer-keezer-lines/&quot;,
       &quot;category&quot; : &quot;homebrewing&quot;,
       &quot;tags&quot;     : &quot;keezer, diy, 3dprinting&quot;,
-      &quot;date&quot;     : &quot;2019-05-09 00:00:00 +0000&quot;,
+      &quot;date&quot;     : &quot;2019-05-09 00:00:00 -0500&quot;,
       &quot;description&quot; : &quot;How to easily clean and rinse your keezer beverage lines.&quot;
       
     } ,
@@ -1173,7 +1306,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &quot;url&quot;      : &quot;/cip-diy-keg-washer/&quot;,
       &quot;category&quot; : &quot;homebrewing&quot;,
       &quot;tags&quot;     : &quot;keezer, diy&quot;,
-      &quot;date&quot;     : &quot;2019-05-07 00:00:00 +0000&quot;,
+      &quot;date&quot;     : &quot;2019-05-07 00:00:00 -0500&quot;,
       &quot;description&quot; : &quot;Clean your kegs, the easy way.&quot;
       
     } ,
@@ -1184,7 +1317,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &quot;url&quot;      : &quot;/piless-brewpi/&quot;,
       &quot;category&quot; : &quot;homebrewing&quot;,
       &quot;tags&quot;     : &quot;homebrewing, raspberrypi, 3dprinting&quot;,
-      &quot;date&quot;     : &quot;2019-05-01 00:00:00 +0000&quot;,
+      &quot;date&quot;     : &quot;2019-05-01 00:00:00 -0500&quot;,
       &quot;description&quot; : &quot;Building a BrewPi without a Raspberry Pi using the BrewPiLess implementation.&quot;
       
     } ,
@@ -1195,7 +1328,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &quot;url&quot;      : &quot;/taplist-pi-zero/&quot;,
       &quot;category&quot; : &quot;homebrewing&quot;,
       &quot;tags&quot;     : &quot;homebrewing, raspberrypi, keezer&quot;,
-      &quot;date&quot;     : &quot;2019-04-26 00:00:00 +0000&quot;,
+      &quot;date&quot;     : &quot;2019-04-26 00:00:00 -0500&quot;,
       &quot;description&quot; : &quot;A walk through for creating a digital taplist with Taplist.io and Raspberry Pi Zero.&quot;
       
     } ,
@@ -1206,7 +1339,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &quot;url&quot;      : &quot;/mixed-ferm-neipa-first-attempt/&quot;,
       &quot;category&quot; : &quot;homebrewing&quot;,
       &quot;tags&quot;     : &quot;homebrewing&quot;,
-      &quot;date&quot;     : &quot;2019-04-17 00:00:00 +0000&quot;,
+      &quot;date&quot;     : &quot;2019-04-17 00:00:00 -0500&quot;,
       &quot;description&quot; : &quot;An overview of creating a mixed fermentation NEIPA.&quot;
       
     } 
@@ -1258,13 +1391,11 @@ SimpleJekyllSearch({
 
 &lt;p&gt;&lt;a href=&quot;/tag/windows&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;windows&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;/tag/server&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;server&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
-
 &lt;p&gt;&lt;a href=&quot;/tag/raspberrypi&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;raspberrypi&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;/tag/klipper&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;klipper&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/tag/server&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;server&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;/tag/dsc&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;dsc&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/tag/klipper&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;klipper&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
 
 </description>
 				<pubDate></pubDate>

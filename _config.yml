@@ -1,5 +1,6 @@
 #
 # This file contains configuration flags to customize your site
+# docker command to test: docker run -v $(pwd):/srv/jekyll -p 4000:4000 -it jekyll/jekyll:3.8.6 jekyll serve
 #
 
 # Name of your site (displayed in the header)

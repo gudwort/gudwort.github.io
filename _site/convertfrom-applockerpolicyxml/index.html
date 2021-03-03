@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>ConvertFrom-AppLockerPolicyXml – tŏmōhulk – Homebrewer, Father, Husband, Nerd</title>
+
+  <meta charset="utf-8" />
+<meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+
+
+<meta name="description" content="Hey-Oh!  Its been a while!  Even though I’ve been locked at home for the past year, I haven’t published any new content in forever.  Well, life has been pretty boring so I haven’t come across much worth sharing, and I’m also lazy.  But I do have something today finally worth blerg’n about.  So anyway, away we go!
+
+" />
+<meta property="og:description" content="Hey-Oh!  Its been a while!  Even though I’ve been locked at home for the past year, I haven’t published any new content in forever.  Well, life has been pretty boring so I haven’t come across much worth sharing, and I’m also lazy.  But I do have something today finally worth blerg’n about.  So anyway, away we go!
+
+" />
+
+<meta name="author" content="" />
+
+
+<meta property="og:title" content="ConvertFrom-AppLockerPolicyXml" />
+<meta property="twitter:title" content="ConvertFrom-AppLockerPolicyXml" />
+
+  
+    
+
+
+
+
+
+
+  
+
+  <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  <link rel="stylesheet" type="text/css" href="/style.css" />
+  <link rel="alternate" type="application/rss+xml" title=" - Homebrewer, Father, Husband, Nerd"
+    href="/feed.xml" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+    integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+  <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+</head>
+
+<body>
+  <div class="wrapper-masthead">
+    <div class="container">
+      <header class="masthead clearfix">
+        <a href="/" class="site-avatar"><img src="https://github.com/tomohulk.png?size=500" /></a>
+
+        <div class="site-info">
+          <h1 class="site-name"><a href="/">tŏmōhulk</a></h1>
+          <p class="site-description">Homebrewer, Father, Husband, Nerd</p>
+        </div>
+
+        <nav>
+          <a href="/">Blog</a>
+          <a href="/about">About</a>
+          <a href="/search">Search</a>
+        </nav>
+      </header>
+    </div>
+  </div>
+
+  <div id="main" role="main" class="container">
+    <article class="post">
+  <h1>ConvertFrom-AppLockerPolicyXml</h1>
+
+  <div class="entry">
+    <i>Convert the terrible output choices from Get-AppLockerPolicy to something worth a damn.</i>
+    <p>Hey-Oh!  Its been a while!  Even though I’ve been locked at home for the past year, I haven’t published any new content in forever.  Well, life has been pretty boring so I haven’t come across much worth sharing, and I’m also lazy.  But I do have something today finally worth blerg’n about.  So anyway, away we go!</p>
+
+<p>So, in my not so distant past, I was rolling out Windows AppLocker to our organization, I did get it out to most sites, but other stuff came up, other projects, yada yada yada, and I never got it all the way finished.  Now, its back on the todo list, and one of my peers is working on finishing it up.  Anyway, I am assisting with the KB transfer, and I’m also helping to troubleshoot issues that come up as he moves forward.  Well a few days back I was helping him out, and I was on the users computer, who was having a program being blocked that should not have been.  It was based on a recent exception we had made, so I wanted to verify the new policy was in fact being applied from within the GPO.  So, I started using the AppLocker PowerShell cmdlets.  Long story short, what a disappointment those are.</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-Command</span><span class="w"> </span><span class="nt">-Name</span><span class="w"> </span><span class="s2">"*AppLocker*"</span><span class="w">
+</span></code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CommandType     Name                                               Version    Source
+-----------     ----                                               -------    ------
+Function        Get-AppLockerFileInformation                       1.0        AppLocker
+Function        Get-AppLockerPolicy                                1.0        AppLocker
+Function        New-AppLockerPolicy                                1.0        AppLocker
+Function        Set-AppLockerPolicy                                1.0        AppLocker
+Function        Test-AppLockerPolicy                               1.0        AppLocker
+</code></pre></div></div>
+
+<p>Wow, a lot to choose from there right.  Also I think <a href="https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/applocker/applocker-overview">AppLocker</a> came out with Windows 7, SP1 maybe, and these are still v1……anyway.  I was pretty sure the <code class="language-plaintext highlighter-rouge">Get-AppLockerPolicy</code> cmdlet is going to be the one I want, so I can see exactly what rules are being applied.  So, I did the obvious thing right?  <em>wink wink</em>.  I ran <code class="language-plaintext highlighter-rouge">Get-Help</code> and checked out the Syntax”:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-Help</span><span class="w"> </span><span class="nt">-Name</span><span class="w"> </span><span class="nx">Get-AppLockerPolicy</span><span class="w">
+</span></code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SYNTAX
+    Get-AppLockerPolicy -Local [-Xml] [&lt;CommonParameters&gt;]
+
+    Get-AppLockerPolicy -Domain -Ldap &lt;string&gt; [-Xml] [&lt;CommonParameters&gt;]
+
+    Get-AppLockerPolicy -Effective [-Xml] [&lt;CommonParameters&gt;]
+</code></pre></div></div>
+
+<p>Ok, so it looks like you can either get the Domain or Local policy, or the Effective policy, which would be the combination of both I would guess.  So lets do that and see what is actually being applied.</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-AppLockerPolicy</span><span class="w"> </span><span class="nt">-Effective</span><span class="w">
+</span></code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RunspaceId          : a3c075e3-c5c8-4120-8f37-b69d9deb38af
+Version             : 1
+RuleCollections     : {Microsoft.Security.ApplicationId.PolicyManagement.PolicyModel.FilePublisherRule, ,
+                      Microsoft.Security.ApplicationId.PolicyManagement.PolicyModel.FilePublisherRule
+                      Microsoft.Security.ApplicationId.PolicyManagement.PolicyModel.FilePublisherRule
+                      Microsoft.Security.ApplicationId.PolicyManagement.PolicyModel.FilePublisherRule
+                      Microsoft.Security.ApplicationId.PolicyManagement.PolicyModel.FilePublisherRule
+                      Microsoft.Security.ApplicationId.PolicyManagement.PolicyModel.FileHashRule…}
+RuleCollectionTypes : {Appx, Dll, Exe, Msi…}
+</code></pre></div></div>
+
+<p>So wow, thats great info there, looks like all the conditions are in the <code class="language-plaintext highlighter-rouge">RuleCollections</code> property, lets dig in and see what info is in there.</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-AppLockerPolicy</span><span class="w"> </span><span class="nt">-Effective</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">Select-Object</span><span class="w"> </span><span class="nt">-ExpandProperty</span><span class="w"> </span><span class="nx">RuleCollections</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">Select-Object</span><span class="w"> </span><span class="nt">-First</span><span class="w"> </span><span class="nx">1</span><span class="w"> </span><span class="nt">-Property</span><span class="w"> </span><span class="o">*</span><span class="w">
+</span></code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Capacity       : 4
+Count          : 1
+IsFixedSize    : False
+IsReadOnly     : False
+IsSynchronized : False
+SyncRoot       : {Microsoft.Security.ApplicationId.PolicyManagement.PolicyModel.FilePublisherRule}
+</code></pre></div></div>
+
+<p>So, nothing, like literally nothing…am I missing something?  Maybe in SyncRoot?</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-AppLockerPolicy</span><span class="w"> </span><span class="nt">-Effective</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">Select-Object</span><span class="w"> </span><span class="nt">-ExpandProperty</span><span class="w"> </span><span class="nx">RuleCollections</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">Select-Object</span><span class="w"> </span><span class="nt">-First</span><span class="w"> </span><span class="nx">1</span><span class="w"> </span><span class="nt">-ExpandProperty</span><span class="w"> </span><span class="nx">SyncRoot</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">Select-Object</span><span class="w"> </span><span class="nt">-Property</span><span class="w"> </span><span class="o">*</span><span class="w">
+</span></code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Length
+------
+    79
+</code></pre></div></div>
+
+<p><em>Length 79</em>?  So all this is doing is just giving me a string?  And the <em>value</em> of that string is just the object type name?  Like WTF is going on?  So then I tried diving into that other property, the <code class="language-plaintext highlighter-rouge">RuleCollectionTypes</code> maybe?  Seems like a long shot for sure:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-AppLockerPolicy</span><span class="w"> </span><span class="nt">-Effective</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">select</span><span class="w"> </span><span class="nt">-ExpandProperty</span><span class="w"> </span><span class="nx">RuleCollectionTypes</span><span class="w">
+</span><span class="nf">Appx</span><span class="w">
+</span><span class="nf">Dll</span><span class="w">
+</span><span class="nf">Exe</span><span class="w">
+</span><span class="nf">Msi</span><span class="w">
+</span></code></pre></div></div>
+
+<p>JFC!  Where are the RULES!  <em>Insert Batman meme here…GIVE EM TO ME!</em>  I guess lets try that <code class="language-plaintext highlighter-rouge">-Xml</code> parameter, I mean, what other options are there…(see help output above, there are none):</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-AppLockerPolicy</span><span class="w"> </span><span class="nt">-Effective</span><span class="w"> </span><span class="nt">-Xml</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Not going to paste the out of that here, because its huge.  But its not even true <em>Xml</em>, its just a string that has all the Xml tags, so you still have to cast it to Xml yourself:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="kt">Xml</span><span class="p">](</span><span class="nf">Get-AppLockerPolicy</span><span class="w"> </span><span class="nt">-Effective</span><span class="w"> </span><span class="nt">-Xml</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>AppLockerPolicy
+---------------
+AppLockerPolicy
+</code></pre></div></div>
+
+<p>Hey, look at that, an actual true Xml object that can be manipulated like any other Xml document.  So, from what I can tell, the only <em>real option</em> you have here is to just spit out the Xml string to your clipboard and then paste it in a text editor and the use the find function to look for any rule or condition you maybe after. If you are just trying to be quick anyway.  But that still seems like the worst solution ever!  So, I decided to make a PowerShell function that would parse the Xml for you into usable, and more importantly, readable objects.  This also gave me an excuse to spend some time in the IDE, which I jumped on, as I don’t get to do that near as much as I used to.</p>
+
+<p>So, the <strong>TLDR</strong>: I created a cmdlet called <code class="language-plaintext highlighter-rouge">ConvertFrom-AppLockerPolicyXml</code>.  This will take in Xml generated from <code class="language-plaintext highlighter-rouge">Get-AppLockerPolicy</code> and convert it to usable objects.  It also does a few other things under the hood, such as converting the <code class="language-plaintext highlighter-rouge">UserOrGroupSid</code> property to the corresponding user or group name, it also bundles all the <code class="language-plaintext highlighter-rouge">Conditions</code> and <code class="language-plaintext highlighter-rouge">Exceptions</code> into a single properties:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-AppLockerPolicy</span><span class="w"> </span><span class="nt">-Effective</span><span class="w"> </span><span class="nt">-Xml</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">ConvertFrom-AppLockerPolicyXml</span><span class="w">
+</span></code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Id              : bef5d95f-da42-4e68-b3bc-06f9e683891f
+Name            : All My Stuff
+Description     :
+Type            : Exe
+EnforcementMode : AuditOnly
+UserOrGroup     : domain\tomohulk
+Action          : Allow
+Conditions      : {FilePathCondition}
+Exceptions      :
+</code></pre></div></div>
+
+<p>And you can dive into the Conditions if you want or need to:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-AppLockerPolicy</span><span class="w"> </span><span class="nt">-Effective</span><span class="w"> </span><span class="nt">-Xml</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">ConvertFrom-AppLockerPolicyXml</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">Select-Object</span><span class="w"> </span><span class="nt">-First</span><span class="w"> </span><span class="nx">1</span><span class="w"> </span><span class="nt">-ExpandProperty</span><span class="w"> </span><span class="nx">Conditions</span><span class="w">
+</span></code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ConditionType: FilePathCondition
+Path: %OSDRIVE%\AllMyStuff\*
+</code></pre></div></div>
+
+<p>Mind you these are broad and very fake outputs here, but I think you get the idea.  I did use PowerShell Classes to make it easy to cast to custom objects, in my case, hundreds of rule objects.  So you need at least PowerShell 5.1.  I Did all my development and testing for this in pwsh v7.1.2.  And one other bonus from classes is I like that my <em>custom</em> (casted really) objects have valid descriptive type names:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="nf">Get-AppLockerPolicy</span><span class="w"> </span><span class="nt">-Effective</span><span class="w"> </span><span class="nt">-Xml</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">ConvertFrom-AppLockerPolicyXml</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="nf">GetType</span><span class="p">()</span><span class="w">
+</span></code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>IsPublic IsSerial Name                                     BaseType
+-------- -------- ----                                     --------
+True     False    AppLockerRule                            System.Object
+</code></pre></div></div>
+
+<p>And when I say <em>casting</em> I mean it.  There really isn’t much <em>logic</em> to this.  It just iterates and then passes in the Xml nodes to the <code class="language-plaintext highlighter-rouge">AppLockerRule</code> class, and lets the class definition do all the heavy lifting and format the output.  Here is the only <em>executing code</em> really (<code class="language-plaintext highlighter-rouge">$Xml</code> being the Xml string from <code class="language-plaintext highlighter-rouge">Get-AppLockerPolicy -Xml</code>):</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">foreach</span><span class="w"> </span><span class="p">(</span><span class="nv">$fileType</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="p">@(</span><span class="s2">"Appx"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Dll"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Exe"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Msi"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Script"</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nv">$rules</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$Xml</span><span class="o">.</span><span class="nf">AppLockerPolicy</span><span class="o">.</span><span class="nf">SelectNodes</span><span class="p">(</span><span class="s2">"//RuleCollection[@Type='</span><span class="nv">$fileType</span><span class="s2">']"</span><span class="p">)</span><span class="w">
+    </span><span class="kr">foreach</span><span class="w"> </span><span class="p">(</span><span class="nv">$ruleType</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="p">@(</span><span class="s2">"FilePublisherRule"</span><span class="p">,</span><span class="w"> </span><span class="s2">"FilePathRule"</span><span class="p">,</span><span class="w"> </span><span class="s2">"FileHashRule"</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="kr">foreach</span><span class="w"> </span><span class="p">(</span><span class="nv">$rule</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="p">@(</span><span class="nv">$rules</span><span class="err">.</span><span class="nv">$ruleType</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="p">[</span><span class="kt">AppLockerRule</span><span class="p">]::</span><span class="nf">new</span><span class="p">(</span><span class="nv">$rules</span><span class="o">.</span><span class="nf">EnforcementMode</span><span class="p">,</span><span class="w"> </span><span class="nv">$rules</span><span class="o">.</span><span class="nf">Type</span><span class="p">,</span><span class="w"> </span><span class="nv">$rule</span><span class="p">)</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Cheers, and enjoy!</p>
+
+<script src="https://gist.github.com/e92ff6e8d85862cb0e8a5b69774e38b3.js"> </script>
+
+
+  </div>
+
+  <div>Tags: 
+    
+      
+      <a href="/tag/powershell"><code class="highlighter-rouge"><nobr>powershell</nobr></code>&nbsp;</a>
+    
+      
+      <a href="/tag/windows"><code class="highlighter-rouge"><nobr>windows</nobr></code>&nbsp;</a>
+    
+  </div>
+
+  
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+
+	    var disqus_shortname = 'tomohulk';
+
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+
+
+  <div class="date">
+    Written on March  2, 2021
+  </div>
+</article>
+
+  </div>
+
+  <div class="wrapper-footer">
+    <div class="container">
+      <footer class="footer">
+        <!-- Add the Email icon to footer if _config.yml has the email value specified. -->
+
+
+<!-- Add the Facebook icon to footer if _config.yml has the facebook value specified. -->
+
+
+<!-- Add the Flickr icon to footer if _config.yml has the flickr value specified. -->
+
+
+<!-- Add the GitHub icon to footer if _config.yml has the github value specified. -->
+
+    <a href="https://github.com/tomohulk" target="_blank"><i class="fab fa-github fa-lg"></i></a>
+
+
+<!-- Add the Instagram icon to footer if _config.yml has the email value specified. -->
+
+    <a href="https://instagram.com/tomohulk" target="_blank"><i class="fab fa-instagram fa-lg"></i></a>
+
+
+<!-- Add the LinkedIn icon to footer if _config.yml has the linkedin value specified. -->
+
+    <a href="https://www.linkedin.com/in/tomohulk" target="_blank"><i class="fab fa-linkedin-in fa-lg"></i></a>
+
+
+<!-- Add the Twitter icon to footer if _config.yml has the twitter value specified. -->
+
+    <a href="https://www.twitter.com/tomohulk" target="_blank"><i class="fab fa-twitter fa-lg"></i></a>
+
+
+<!-- Add the Stack Overflow icon to footer if _config.yml has the stackoverflow value specified. -->
+
+    <a href="http://stackoverflow.com/users/691551/tomohulk" target="_blank"><i class="fab fa-stack-overflow fa-lg"></i></a>
+
+
+<!-- Add the YouTube icon to footer if _config.yml has the youtube value specified. -->
+
+    <a href="https://youtube.com/channel/UCdezPgvhJ605nxJYSrNXRGg" target="_blank"><i class="fab fa-youtube fa-lg"></i></a>
+
+
+<!-- Add the Reddit icon to footer if _config.yml has the reddit value specified. -->
+
+    <a href="https://www.reddit.com/user/tomohulk" target="_blank"><i class="fab fa-reddit fa-lg"></i></a>
+
+
+<!-- Add the Beer icon to footer if _config.yml has the taplistio value specified. -->
+
+    <a href="https://taplist.io/taplist-963267" target="_blank"><i class="fas fa-beer fa-lg"></i></a>
+
+
+<!-- Add the Drafting Compass icon to footer if _config.yml has the thingiverse value specified. -->
+
+    <a href="https://www.thingiverse.com/tomohulk/designs" target="_blank"><i class="fas fa-drafting-compass fa-lg"></i></a>
+
+
+<!-- Always add the rss feed icon. -->
+<a href="/feed.xml"><i class="fas fa-rss fa-lg"></i></a>
+
+      </footer>
+    </div>
+  </div>
+
+  
+<!-- Google Analytics -->
+<script>
+	window.ga = window.ga || function () { (ga.q = ga.q || []).push(arguments) }; ga.l = +new Date;
+	// ga() objects ...
+	ga('create', 'UA-142482838-1', 'auto');
+	ga('send', 'pageview', {
+		'page': '/convertfrom-applockerpolicyxml/',
+		'title': 'ConvertFrom-AppLockerPolicyXml'
+});
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+</body>
+
+</html>
