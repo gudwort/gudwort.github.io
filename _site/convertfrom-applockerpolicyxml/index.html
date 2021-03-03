@@ -69,7 +69,7 @@
   <h1>ConvertFrom-AppLockerPolicyXml</h1>
 
   <div class="entry">
-    <i>Convert the terrible output choices from Get-AppLockerPolicy to something worth a damn.</i>
+    <i>Convert the terrible output from Get-AppLockerPolicy to something worth a damn.</i>
     <p>Hey-Oh!  Its been a while!  Even though I’ve been locked at home for the past year, I haven’t published any new content in forever.  Well, life has been pretty boring so I haven’t come across much worth sharing, and I’m also lazy.  But I do have something today finally worth blerg’n about.  So anyway, away we go!</p>
 
 <p>So, in my not so distant past, I was rolling out Windows AppLocker to our organization, I did get it out to most sites, but other stuff came up, other projects, yada yada yada, and I never got it all the way finished.  Now, its back on the todo list, and one of my peers is working on finishing it up.  Anyway, I am assisting with the KB transfer, and I’m also helping to troubleshoot issues that come up as he moves forward.  Well a few days back I was helping him out, and I was on the users computer, who was having a program being blocked that should not have been.  It was based on a recent exception we had made, so I wanted to verify the new policy was in fact being applied from within the GPO.  So, I started using the AppLocker PowerShell cmdlets.  Long story short, what a disappointment those are.</p>
@@ -136,11 +136,12 @@ SyncRoot       : {Microsoft.Security.ApplicationId.PolicyManagement.PolicyModel.
 <p><em>Length 79</em>?  So all this is doing is just giving me a string?  And the <em>value</em> of that string is just the object type name?  Like WTF is going on?  So then I tried diving into that other property, the <code class="language-plaintext highlighter-rouge">RuleCollectionTypes</code> maybe?  Seems like a long shot for sure:</p>
 
 <div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-AppLockerPolicy</span><span class="w"> </span><span class="nt">-Effective</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">select</span><span class="w"> </span><span class="nt">-ExpandProperty</span><span class="w"> </span><span class="nx">RuleCollectionTypes</span><span class="w">
-</span><span class="nf">Appx</span><span class="w">
-</span><span class="nf">Dll</span><span class="w">
-</span><span class="nf">Exe</span><span class="w">
-</span><span class="nf">Msi</span><span class="w">
 </span></code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Appx
+Dll
+Exe
+Msi
+</code></pre></div></div>
 
 <p>JFC!  Where are the RULES!  <em>Insert Batman meme here…GIVE EM TO ME!</em>  I guess lets try that <code class="language-plaintext highlighter-rouge">-Xml</code> parameter, I mean, what other options are there…(see help output above, there are none):</p>
 
@@ -262,8 +263,6 @@ True     False    AppLockerRule                            System.Object
 
 
 <!-- Add the Instagram icon to footer if _config.yml has the email value specified. -->
-
-    <a href="https://instagram.com/tomohulk" target="_blank"><i class="fab fa-instagram fa-lg"></i></a>
 
 
 <!-- Add the LinkedIn icon to footer if _config.yml has the linkedin value specified. -->

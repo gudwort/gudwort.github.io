@@ -253,6 +253,7 @@ PLATFORMS
 
 DEPENDENCIES
   github-pages
+  jekyll-gist
   jekyll-paginate
   kramdown (>= 2.3.0)
 

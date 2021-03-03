@@ -164,3 +164,4 @@ foreach ($fileType in @("Appx", "Dll", "Exe", "Msi", "Script")) {
 Cheers, and enjoy!
 
 {% gist e92ff6e8d85862cb0e8a5b69774e38b3 %}
+

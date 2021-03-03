@@ -7,7 +7,7 @@
       "category" : "powershell",
       "tags"     : "powershell, windows",
       "date"     : "2021-03-02 00:00:00 -0600",
-      "description" : "Convert the terrible output choices from Get-AppLockerPolicy to something worth a damn."
+      "description" : "Convert the terrible output from Get-AppLockerPolicy to something worth a damn."
       
     } ,
   
