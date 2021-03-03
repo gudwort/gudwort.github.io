@@ -2,7 +2,7 @@
 layout: post
 title: ConvertFrom-AppLockerPolicyXml
 category: powershell
-description: Convert the terrible output choices from Get-AppLockerPolicy to something worth a damn.
+description: Convert the terrible output from Get-AppLockerPolicy to something worth a damn.
 tags: powershell windows
 ---
 
@@ -83,6 +83,8 @@ _Length 79_?  So all this is doing is just giving me a string?  And the _value_ 
 
 ```powershell
 Get-AppLockerPolicy -Effective | select -ExpandProperty RuleCollectionTypes
+```
+```
 Appx
 Dll
 Exe
