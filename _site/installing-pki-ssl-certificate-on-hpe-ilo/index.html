@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Installing PKI SSL Certificate on HPE iLO – tŏmōhulk – Homebrewer, Father, Husband, Nerd</title>
+  <title>Installing PKI SSL Certificate on HPE iLO – tŏmōhulk – Father, Husband, Metal Head, Homebrewer</title>
 
   <meta charset="utf-8" />
 <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
@@ -37,7 +37,7 @@
       <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
   <link rel="stylesheet" type="text/css" href="/style.css" />
-  <link rel="alternate" type="application/rss+xml" title=" - Homebrewer, Father, Husband, Nerd"
+  <link rel="alternate" type="application/rss+xml" title=" - Father, Husband, Metal Head, Homebrewer"
     href="/feed.xml" />
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
     integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
@@ -52,7 +52,7 @@
 
         <div class="site-info">
           <h1 class="site-name"><a href="/">tŏmōhulk</a></h1>
-          <p class="site-description">Homebrewer, Father, Husband, Nerd</p>
+          <p class="site-description">Father, Husband, Metal Head, Homebrewer</p>
         </div>
 
         <nav>
@@ -132,7 +132,7 @@
 
 <p>If you want you can set default parameter values in the script, so your really only have to change the <code class="language-plaintext highlighter-rouge">iLOName</code>.</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">New-HPEiLOPKICertifacte.ps1</span><span class="w"> </span><span class="nt">-iLOName</span><span class="w"> </span><span class="nx">myHPEiLO.tomohulk.io</span><span class="w"> </span><span class="nt">-Credential</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="nf">Get-Credential</span><span class="w"> </span><span class="p">)</span><span class="w">
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">New-HPEiLOPKICertifacte.ps1</span><span class="w"> </span><span class="nt">-iLOName</span><span class="w"> </span><span class="nx">myHPEiLO.tomohulk.io</span><span class="w"> </span><span class="nt">-Credential</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">Get-Credential</span><span class="w"> </span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p>The workflow of the cmdlet is pretty straight forward:</p>
@@ -149,11 +149,11 @@
 
 <p>This cmdlet accepts pipeline input for the <code class="language-plaintext highlighter-rouge">iLOName</code> as well as a <code class="language-plaintext highlighter-rouge">StringArray</code>, so as long as they have the same credentials, you can complete this on multiple systems at once:</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">@(</span><span class="s2">"ilo1"</span><span class="p">,</span><span class="w"> </span><span class="s2">"ilo2"</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">New-HPEiLOPKICertificate</span><span class="w"> </span><span class="nt">-Credential</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="nf">Get-Credential</span><span class="w"> </span><span class="p">)</span><span class="w">
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">@(</span><span class="s2">"ilo1"</span><span class="p">,</span><span class="w"> </span><span class="s2">"ilo2"</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">New-HPEiLOPKICertificate</span><span class="w"> </span><span class="nt">-Credential</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">Get-Credential</span><span class="w"> </span><span class="p">)</span><span class="w">
 
 </span><span class="c"># or</span><span class="w">
 
-</span><span class="nf">New-HPEiLOCertificate</span><span class="w"> </span><span class="nt">-iLOName</span><span class="w"> </span><span class="s2">"ilo1"</span><span class="p">,</span><span class="w"> </span><span class="s2">"ilo2"</span><span class="w"> </span><span class="nt">-Credential</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="nf">Get-Credential</span><span class="w"> </span><span class="p">)</span><span class="w">
+</span><span class="n">New-HPEiLOCertificate</span><span class="w"> </span><span class="nt">-iLOName</span><span class="w"> </span><span class="s2">"ilo1"</span><span class="p">,</span><span class="w"> </span><span class="s2">"ilo2"</span><span class="w"> </span><span class="nt">-Credential</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">Get-Credential</span><span class="w"> </span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p>Thats pretty much it, after the iLO resets and you refresh the page, you will see your connection is now <em>secure</em>.</p>
