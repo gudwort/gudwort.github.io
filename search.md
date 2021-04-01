@@ -6,7 +6,7 @@ permalink: /search/
 
 <!-- Html Elements for Search -->
 <div id="search-container">
-<i class="fas fa-search"></i><input type="text" id="search-input" placeholder="search posts...">
+<i class="fas fa-search"></i><input type="text" id="search-input" placeholder="search posts..." style="width: 96%;">
 <ul id="results-container"></ul>
 </div>
 
@@ -34,5 +34,5 @@ SimpleJekyllSearch({
 {% for temptag in sortedtemptags %}
   {% assign tagitems = temptag | split: '#' %}
   {% capture tagname %}{{ tagitems[1] }}{% endcapture %}
-  <a href="/tag/{{ tagname }}"><code class="highlighter-rouge"><nobr>{{ tagname }}</nobr></code>&nbsp;</a>
+  <ul><li><a href="/tag/{{ tagname }}">{{ tagname }}</a></li></ul>
 {% endfor %}

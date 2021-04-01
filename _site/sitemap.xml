@@ -1372,7 +1372,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
 				<title>Search</title>
 				<description>&lt;!-- Html Elements for Search --&gt;
 &lt;div id=&quot;search-container&quot;&gt;
-&lt;i class=&quot;fas fa-search&quot;&gt;&lt;/i&gt;&lt;input type=&quot;text&quot; id=&quot;search-input&quot; placeholder=&quot;search posts...&quot; /&gt;
+&lt;i class=&quot;fas fa-search&quot;&gt;&lt;/i&gt;&lt;input type=&quot;text&quot; id=&quot;search-input&quot; placeholder=&quot;search posts...&quot; style=&quot;width: 96%;&quot; /&gt;
 &lt;ul id=&quot;results-container&quot;&gt;&lt;/ul&gt;
 &lt;/div&gt;
 
@@ -1392,23 +1392,23 @@ SimpleJekyllSearch({
 
 &lt;h3&gt;Tags&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&quot;/tag/homebrewing&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;homebrewing&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;&lt;li&gt;&lt;a href=&quot;/tag/homebrewing&quot;&gt;homebrewing&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 
-&lt;p&gt;&lt;a href=&quot;/tag/powershell&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;powershell&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;&lt;li&gt;&lt;a href=&quot;/tag/powershell&quot;&gt;powershell&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 
-&lt;p&gt;&lt;a href=&quot;/tag/keezer&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;keezer&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;&lt;li&gt;&lt;a href=&quot;/tag/keezer&quot;&gt;keezer&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 
-&lt;p&gt;&lt;a href=&quot;/tag/diy&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;diy&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;&lt;li&gt;&lt;a href=&quot;/tag/diy&quot;&gt;diy&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 
-&lt;p&gt;&lt;a href=&quot;/tag/3dprinting&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;3dprinting&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;&lt;li&gt;&lt;a href=&quot;/tag/3dprinting&quot;&gt;3dprinting&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 
-&lt;p&gt;&lt;a href=&quot;/tag/windows&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;windows&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;&lt;li&gt;&lt;a href=&quot;/tag/windows&quot;&gt;windows&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 
-&lt;p&gt;&lt;a href=&quot;/tag/raspberrypi&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;raspberrypi&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;&lt;li&gt;&lt;a href=&quot;/tag/raspberrypi&quot;&gt;raspberrypi&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 
-&lt;p&gt;&lt;a href=&quot;/tag/server&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;server&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;&lt;li&gt;&lt;a href=&quot;/tag/server&quot;&gt;server&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 
-&lt;p&gt;&lt;a href=&quot;/tag/klipper&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;nobr&gt;klipper&lt;/nobr&gt;&lt;/code&gt; &lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;&lt;li&gt;&lt;a href=&quot;/tag/klipper&quot;&gt;klipper&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 
 </description>
 				<pubDate></pubDate>
