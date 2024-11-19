@@ -6,7 +6,7 @@
       "url"      : "/convertfrom-applockerpolicyxml/",
       "category" : "powershell",
       "tags"     : "powershell, windows",
-      "date"     : "2021-03-02 00:00:00 -0600",
+      "date"     : "2021-03-02 00:00:00 +0000",
       "description" : "Convert the terrible output from Get-AppLockerPolicy to something worth a damn."
       
     } ,
@@ -17,7 +17,7 @@
       "url"      : "/motorizing-your-grain-mill/",
       "category" : "homebrewing",
       "tags"     : "homebrewing, diy",
-      "date"     : "2019-08-21 00:00:00 -0500",
+      "date"     : "2019-08-21 00:00:00 +0000",
       "description" : "How to turn your hand powered grain mill into a motorized one."
       
     } ,
@@ -28,7 +28,7 @@
       "url"      : "/nobody-got-time-for-that/",
       "category" : "homebrewing",
       "tags"     : "homebrewing",
-      "date"     : "2019-08-14 00:00:00 -0500",
+      "date"     : "2019-08-14 00:00:00 +0000",
       "description" : "45 minute mash, no boil, Kveik HaziBoi, grain to glass in 5 days."
       
     } ,
@@ -39,7 +39,7 @@
       "url"      : "/replacing-failed-storage-pool-hdd/",
       "category" : "powershell",
       "tags"     : "powershell, windows, server",
-      "date"     : "2019-08-05 00:00:00 -0500",
+      "date"     : "2019-08-05 00:00:00 +0000",
       "description" : "Replacing a failed hard disk drive in Windows Server Storage Spaces Storage Pool."
       
     } ,
@@ -50,7 +50,7 @@
       "url"      : "/installing-pki-ssl-certificate-on-hpe-ilo/",
       "category" : "powershell",
       "tags"     : "powershell",
-      "date"     : "2019-07-25 00:00:00 -0500",
+      "date"     : "2019-07-25 00:00:00 +0000",
       "description" : "Automating the process of creating a CSR and signing it with an Internal CA and installing it using PowerShell."
       
     } ,
@@ -61,7 +61,7 @@
       "url"      : "/using-bltouch-with-klipper-and-the-ender3/",
       "category" : "3dprinting",
       "tags"     : "3dprinting, klipper",
-      "date"     : "2019-06-04 00:00:00 -0500",
+      "date"     : "2019-06-04 00:00:00 +0000",
       "description" : "How to make your BLTouch Sensor work with the Klipper firmware and the Crealty Ender3."
       
     } ,
@@ -72,7 +72,7 @@
       "url"      : "/klean-yer-keezer-lines/",
       "category" : "homebrewing",
       "tags"     : "keezer, diy, 3dprinting",
-      "date"     : "2019-05-09 00:00:00 -0500",
+      "date"     : "2019-05-09 00:00:00 +0000",
       "description" : "How to easily clean and rinse your keezer beverage lines."
       
     } ,
@@ -83,7 +83,7 @@
       "url"      : "/cip-diy-keg-washer/",
       "category" : "homebrewing",
       "tags"     : "keezer, diy",
-      "date"     : "2019-05-07 00:00:00 -0500",
+      "date"     : "2019-05-07 00:00:00 +0000",
       "description" : "Clean your kegs, the easy way."
       
     } ,
@@ -94,7 +94,7 @@
       "url"      : "/piless-brewpi/",
       "category" : "homebrewing",
       "tags"     : "homebrewing, raspberrypi, 3dprinting",
-      "date"     : "2019-05-01 00:00:00 -0500",
+      "date"     : "2019-05-01 00:00:00 +0000",
       "description" : "Building a BrewPi without a Raspberry Pi using the BrewPiLess implementation."
       
     } ,
@@ -105,7 +105,7 @@
       "url"      : "/taplist-pi-zero/",
       "category" : "homebrewing",
       "tags"     : "homebrewing, raspberrypi, keezer",
-      "date"     : "2019-04-26 00:00:00 -0500",
+      "date"     : "2019-04-26 00:00:00 +0000",
       "description" : "A walk through for creating a digital taplist with Taplist.io and Raspberry Pi Zero."
       
     } ,
@@ -116,7 +116,7 @@
       "url"      : "/mixed-ferm-neipa-first-attempt/",
       "category" : "homebrewing",
       "tags"     : "homebrewing",
-      "date"     : "2019-04-17 00:00:00 -0500",
+      "date"     : "2019-04-17 00:00:00 +0000",
       "description" : "An overview of creating a mixed fermentation NEIPA."
       
     } 

@@ -145,7 +145,7 @@ True     False    AppLockerRule                            System.Object
 &lt;p&gt;And when I say &lt;em&gt;casting&lt;/em&gt; I mean it.  There really isn’t much &lt;em&gt;logic&lt;/em&gt; to this.  It just iterates and then passes in the Xml nodes to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;AppLockerRule&lt;/code&gt; class, and lets the class definition do all the heavy lifting and format the output.  Here is the only &lt;em&gt;executing code&lt;/em&gt; really (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$Xml&lt;/code&gt; being the Xml string from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Get-AppLockerPolicy -Xml&lt;/code&gt;):&lt;/p&gt;
 
 &lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kr&quot;&gt;foreach&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$fileType&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;@(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Appx&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Dll&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Exe&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Msi&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Script&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$rules&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$Xml&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;AppLockerPolicy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;SelectNodes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;//RuleCollection[@Type='&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$fileType&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;']&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$rules&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$Xml&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;AppLockerPolicy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;SelectNodes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;//RuleCollection[@Type=&apos;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$fileType&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&apos;]&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
     &lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;foreach&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ruleType&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;@(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;FilePublisherRule&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;FilePathRule&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;FileHashRule&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
         &lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;foreach&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$rule&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;@(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$rules&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ruleType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
             &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AppLockerRule&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$rules&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;EnforcementMode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$rules&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$rule&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
@@ -159,7 +159,7 @@ True     False    AppLockerRule                            System.Object
 &lt;script src=&quot;https://gist.github.com/e92ff6e8d85862cb0e8a5b69774e38b3.js&quot;&gt; &lt;/script&gt;
 
 </description>
-			<pubDate>Tue, 02 Mar 2021 00:00:00 -0600</pubDate>
+			<pubDate>Tue, 02 Mar 2021 00:00:00 +0000</pubDate>
 			<link>http://0.0.0.0:4000/convertfrom-applockerpolicyxml/</link>
 			<guid isPermaLink="true">http://0.0.0.0:4000/convertfrom-applockerpolicyxml/</guid>
 		</item>
@@ -191,7 +191,7 @@ True     False    AppLockerRule                            System.Object
 
 &lt;p&gt;Thats it!  Pour one for me, cheers!&lt;/p&gt;
 </description>
-			<pubDate>Wed, 21 Aug 2019 00:00:00 -0500</pubDate>
+			<pubDate>Wed, 21 Aug 2019 00:00:00 +0000</pubDate>
 			<link>http://0.0.0.0:4000/motorizing-your-grain-mill/</link>
 			<guid isPermaLink="true">http://0.0.0.0:4000/motorizing-your-grain-mill/</guid>
 		</item>
@@ -273,7 +273,7 @@ True     False    AppLockerRule                            System.Object
 
 &lt;p&gt;Thats it, cheers!&lt;/p&gt;
 </description>
-			<pubDate>Wed, 14 Aug 2019 00:00:00 -0500</pubDate>
+			<pubDate>Wed, 14 Aug 2019 00:00:00 +0000</pubDate>
 			<link>http://0.0.0.0:4000/nobody-got-time-for-that/</link>
 			<guid isPermaLink="true">http://0.0.0.0:4000/nobody-got-time-for-that/</guid>
 		</item>
@@ -301,7 +301,7 @@ True     False    AppLockerRule                            System.Object
 
 &lt;p&gt;So, this next part tends to vary between JBOD models, but to actually &lt;em&gt;identify&lt;/em&gt; the failed HDD for physical replacement, there are a few things you can do, first off, you can actually trigger the slots LED to indicate the failed drive:&lt;/p&gt;
 
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# This command assumes you already completed the previous command and 'Retired' the failed disks.&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# This command assumes you already completed the previous command and &apos;Retired&apos; the failed disks.&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
 &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Get-PhysicalDisk&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-Usage&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Retired&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Enable-PhysicalDiskIdentification&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
@@ -331,7 +331,7 @@ True     False    AppLockerRule                            System.Object
 
 &lt;p&gt;Be sure to disable the LED identification:&lt;/p&gt;
 
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# I always just run this on against all the disks, it won't hurt anything for the ones where its not enabled.&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# I always just run this on against all the disks, it won&apos;t hurt anything for the ones where its not enabled.&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
 &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Get-PhysicalDisk&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Disable-PhysicalDiskIdentification&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
@@ -342,7 +342,7 @@ True     False    AppLockerRule                            System.Object
 
 &lt;p&gt;And thats it, good to go!  Cheers.&lt;/p&gt;
 </description>
-			<pubDate>Mon, 05 Aug 2019 00:00:00 -0500</pubDate>
+			<pubDate>Mon, 05 Aug 2019 00:00:00 +0000</pubDate>
 			<link>http://0.0.0.0:4000/replacing-failed-storage-pool-hdd/</link>
 			<guid isPermaLink="true">http://0.0.0.0:4000/replacing-failed-storage-pool-hdd/</guid>
 		</item>
@@ -446,7 +446,7 @@ True     False    AppLockerRule                            System.Object
 &lt;script src=&quot;https://gist.github.com/4ddb9a0e8feb3768c742b5cf867a0cb8.js&quot;&gt; &lt;/script&gt;
 
 </description>
-			<pubDate>Thu, 25 Jul 2019 00:00:00 -0500</pubDate>
+			<pubDate>Thu, 25 Jul 2019 00:00:00 +0000</pubDate>
 			<link>http://0.0.0.0:4000/installing-pki-ssl-certificate-on-hpe-ilo/</link>
 			<guid isPermaLink="true">http://0.0.0.0:4000/installing-pki-ssl-certificate-on-hpe-ilo/</guid>
 		</item>
@@ -558,7 +558,7 @@ gcode:
 &lt;script src=&quot;https://gist.github.com/bd4955ba105b653bb81680927b4d1f87.js&quot;&gt; &lt;/script&gt;
 
 </description>
-			<pubDate>Tue, 04 Jun 2019 00:00:00 -0500</pubDate>
+			<pubDate>Tue, 04 Jun 2019 00:00:00 +0000</pubDate>
 			<link>http://0.0.0.0:4000/using-bltouch-with-klipper-and-the-ender3/</link>
 			<guid isPermaLink="true">http://0.0.0.0:4000/using-bltouch-with-klipper-and-the-ender3/</guid>
 		</item>
@@ -597,7 +597,7 @@ gcode:
 
 &lt;p&gt;Thats it.  And I’m sure the patrons of your homemade beer will have much praise to give on how fresh and clean your homebrew has become.  Cheers!&lt;/p&gt;
 </description>
-			<pubDate>Thu, 09 May 2019 00:00:00 -0500</pubDate>
+			<pubDate>Thu, 09 May 2019 00:00:00 +0000</pubDate>
 			<link>http://0.0.0.0:4000/klean-yer-keezer-lines/</link>
 			<guid isPermaLink="true">http://0.0.0.0:4000/klean-yer-keezer-lines/</guid>
 		</item>
@@ -633,7 +633,7 @@ gcode:
 &lt;h3 id=&quot;sources&quot;&gt;Sources&lt;/h3&gt;
 &lt;p&gt;https://beer.thegremlyn.com/2017/03/15/i-built-a-keg-washer-you-should-too/&lt;/p&gt;
 </description>
-			<pubDate>Tue, 07 May 2019 00:00:00 -0500</pubDate>
+			<pubDate>Tue, 07 May 2019 00:00:00 +0000</pubDate>
 			<link>http://0.0.0.0:4000/cip-diy-keg-washer/</link>
 			<guid isPermaLink="true">http://0.0.0.0:4000/cip-diy-keg-washer/</guid>
 		</item>
@@ -816,7 +816,7 @@ Layout diagram (I wasn’t able to find a 3D model of the AC-DC 5V PSU, that goe
 &lt;h2 id=&quot;time-for-a-cold-one&quot;&gt;Time for a Cold One&lt;/h2&gt;
 &lt;p&gt;Whew, you did it!  Nice work!  Go pour yourself a cold one, I know I’m going too, sorry if I missed anything, this was a pretty intense walk through.  Cheers!&lt;/p&gt;
 </description>
-			<pubDate>Wed, 01 May 2019 00:00:00 -0500</pubDate>
+			<pubDate>Wed, 01 May 2019 00:00:00 +0000</pubDate>
 			<link>http://0.0.0.0:4000/piless-brewpi/</link>
 			<guid isPermaLink="true">http://0.0.0.0:4000/piless-brewpi/</guid>
 		</item>
@@ -936,9 +936,9 @@ xset -dpms
 setxkbmap -option terminate:ctrl_alt_bksp
 
 # Start Chromium in kiosk mode
-sed -i 's/&quot;exited_cleanly&quot;:false/&quot;exited_cleanly&quot;:true/' ~/.config/chromium/'Local State'
-sed -i 's/&quot;exited_cleanly&quot;:false/&quot;exited_cleanly&quot;:true/; s/&quot;exit_type&quot;:&quot;[^&quot;]\+&quot;/&quot;exit_type&quot;:&quot;Normal&quot;/' ~/.config/chromium/Default/Preferences
-chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
+sed -i &apos;s/&quot;exited_cleanly&quot;:false/&quot;exited_cleanly&quot;:true/&apos; ~/.config/chromium/&apos;Local State&apos;
+sed -i &apos;s/&quot;exited_cleanly&quot;:false/&quot;exited_cleanly&quot;:true/; s/&quot;exit_type&quot;:&quot;[^&quot;]\+&quot;/&quot;exit_type&quot;:&quot;Normal&quot;/&apos; ~/.config/chromium/Default/Preferences
+chromium-browser --disable-infobars --kiosk &apos;https://www.taplist.io/display&apos;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
   &lt;/li&gt;
   &lt;li&gt;You need to configure X Server to autostart and boot and load the display web page.
@@ -964,7 +964,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
   &lt;li&gt;https://taplist.io/help/raspberry-pi-setup&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-			<pubDate>Fri, 26 Apr 2019 00:00:00 -0500</pubDate>
+			<pubDate>Fri, 26 Apr 2019 00:00:00 +0000</pubDate>
 			<link>http://0.0.0.0:4000/taplist-pi-zero/</link>
 			<guid isPermaLink="true">http://0.0.0.0:4000/taplist-pi-zero/</guid>
 		</item>
@@ -1004,7 +1004,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
 
 &lt;p&gt;&lt;img src=&quot;/images/2019-04-17-mixed-ferm-neipa-first-attempt/beer.jpg&quot; alt=&quot;Beer&quot; /&gt;&lt;/p&gt;
 </description>
-			<pubDate>Wed, 17 Apr 2019 00:00:00 -0500</pubDate>
+			<pubDate>Wed, 17 Apr 2019 00:00:00 +0000</pubDate>
 			<link>http://0.0.0.0:4000/mixed-ferm-neipa-first-attempt/</link>
 			<guid isPermaLink="true">http://0.0.0.0:4000/mixed-ferm-neipa-first-attempt/</guid>
 		</item>
@@ -1242,7 +1242,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &quot;url&quot;      : &quot;/convertfrom-applockerpolicyxml/&quot;,
       &quot;category&quot; : &quot;powershell&quot;,
       &quot;tags&quot;     : &quot;powershell, windows&quot;,
-      &quot;date&quot;     : &quot;2021-03-02 00:00:00 -0600&quot;,
+      &quot;date&quot;     : &quot;2021-03-02 00:00:00 +0000&quot;,
       &quot;description&quot; : &quot;Convert the terrible output from Get-AppLockerPolicy to something worth a damn.&quot;
       
     } ,
@@ -1253,7 +1253,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &quot;url&quot;      : &quot;/motorizing-your-grain-mill/&quot;,
       &quot;category&quot; : &quot;homebrewing&quot;,
       &quot;tags&quot;     : &quot;homebrewing, diy&quot;,
-      &quot;date&quot;     : &quot;2019-08-21 00:00:00 -0500&quot;,
+      &quot;date&quot;     : &quot;2019-08-21 00:00:00 +0000&quot;,
       &quot;description&quot; : &quot;How to turn your hand powered grain mill into a motorized one.&quot;
       
     } ,
@@ -1264,7 +1264,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &quot;url&quot;      : &quot;/nobody-got-time-for-that/&quot;,
       &quot;category&quot; : &quot;homebrewing&quot;,
       &quot;tags&quot;     : &quot;homebrewing&quot;,
-      &quot;date&quot;     : &quot;2019-08-14 00:00:00 -0500&quot;,
+      &quot;date&quot;     : &quot;2019-08-14 00:00:00 +0000&quot;,
       &quot;description&quot; : &quot;45 minute mash, no boil, Kveik HaziBoi, grain to glass in 5 days.&quot;
       
     } ,
@@ -1275,7 +1275,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &quot;url&quot;      : &quot;/replacing-failed-storage-pool-hdd/&quot;,
       &quot;category&quot; : &quot;powershell&quot;,
       &quot;tags&quot;     : &quot;powershell, windows, server&quot;,
-      &quot;date&quot;     : &quot;2019-08-05 00:00:00 -0500&quot;,
+      &quot;date&quot;     : &quot;2019-08-05 00:00:00 +0000&quot;,
       &quot;description&quot; : &quot;Replacing a failed hard disk drive in Windows Server Storage Spaces Storage Pool.&quot;
       
     } ,
@@ -1286,7 +1286,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &quot;url&quot;      : &quot;/installing-pki-ssl-certificate-on-hpe-ilo/&quot;,
       &quot;category&quot; : &quot;powershell&quot;,
       &quot;tags&quot;     : &quot;powershell&quot;,
-      &quot;date&quot;     : &quot;2019-07-25 00:00:00 -0500&quot;,
+      &quot;date&quot;     : &quot;2019-07-25 00:00:00 +0000&quot;,
       &quot;description&quot; : &quot;Automating the process of creating a CSR and signing it with an Internal CA and installing it using PowerShell.&quot;
       
     } ,
@@ -1297,7 +1297,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &quot;url&quot;      : &quot;/using-bltouch-with-klipper-and-the-ender3/&quot;,
       &quot;category&quot; : &quot;3dprinting&quot;,
       &quot;tags&quot;     : &quot;3dprinting, klipper&quot;,
-      &quot;date&quot;     : &quot;2019-06-04 00:00:00 -0500&quot;,
+      &quot;date&quot;     : &quot;2019-06-04 00:00:00 +0000&quot;,
       &quot;description&quot; : &quot;How to make your BLTouch Sensor work with the Klipper firmware and the Crealty Ender3.&quot;
       
     } ,
@@ -1308,7 +1308,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &quot;url&quot;      : &quot;/klean-yer-keezer-lines/&quot;,
       &quot;category&quot; : &quot;homebrewing&quot;,
       &quot;tags&quot;     : &quot;keezer, diy, 3dprinting&quot;,
-      &quot;date&quot;     : &quot;2019-05-09 00:00:00 -0500&quot;,
+      &quot;date&quot;     : &quot;2019-05-09 00:00:00 +0000&quot;,
       &quot;description&quot; : &quot;How to easily clean and rinse your keezer beverage lines.&quot;
       
     } ,
@@ -1319,7 +1319,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &quot;url&quot;      : &quot;/cip-diy-keg-washer/&quot;,
       &quot;category&quot; : &quot;homebrewing&quot;,
       &quot;tags&quot;     : &quot;keezer, diy&quot;,
-      &quot;date&quot;     : &quot;2019-05-07 00:00:00 -0500&quot;,
+      &quot;date&quot;     : &quot;2019-05-07 00:00:00 +0000&quot;,
       &quot;description&quot; : &quot;Clean your kegs, the easy way.&quot;
       
     } ,
@@ -1330,7 +1330,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &quot;url&quot;      : &quot;/piless-brewpi/&quot;,
       &quot;category&quot; : &quot;homebrewing&quot;,
       &quot;tags&quot;     : &quot;homebrewing, raspberrypi, 3dprinting&quot;,
-      &quot;date&quot;     : &quot;2019-05-01 00:00:00 -0500&quot;,
+      &quot;date&quot;     : &quot;2019-05-01 00:00:00 +0000&quot;,
       &quot;description&quot; : &quot;Building a BrewPi without a Raspberry Pi using the BrewPiLess implementation.&quot;
       
     } ,
@@ -1341,7 +1341,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &quot;url&quot;      : &quot;/taplist-pi-zero/&quot;,
       &quot;category&quot; : &quot;homebrewing&quot;,
       &quot;tags&quot;     : &quot;homebrewing, raspberrypi, keezer&quot;,
-      &quot;date&quot;     : &quot;2019-04-26 00:00:00 -0500&quot;,
+      &quot;date&quot;     : &quot;2019-04-26 00:00:00 +0000&quot;,
       &quot;description&quot; : &quot;A walk through for creating a digital taplist with Taplist.io and Raspberry Pi Zero.&quot;
       
     } ,
@@ -1352,7 +1352,7 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
       &quot;url&quot;      : &quot;/mixed-ferm-neipa-first-attempt/&quot;,
       &quot;category&quot; : &quot;homebrewing&quot;,
       &quot;tags&quot;     : &quot;homebrewing&quot;,
-      &quot;date&quot;     : &quot;2019-04-17 00:00:00 -0500&quot;,
+      &quot;date&quot;     : &quot;2019-04-17 00:00:00 +0000&quot;,
       &quot;description&quot; : &quot;An overview of creating a mixed fermentation NEIPA.&quot;
       
     } 
@@ -1382,9 +1382,9 @@ chromium-browser --disable-infobars --kiosk 'https://www.taplist.io/display'
 &lt;!-- Configuration --&gt;
 &lt;script&gt;
 SimpleJekyllSearch({
-  searchInput: document.getElementById('search-input'),
-  resultsContainer: document.getElementById('results-container'),
-  json: '/search.json'
+  searchInput: document.getElementById(&apos;search-input&apos;),
+  resultsContainer: document.getElementById(&apos;results-container&apos;),
+  json: &apos;/search.json&apos;
 })
 &lt;/script&gt;
 
@@ -1568,7 +1568,7 @@ img {
   background: $darkGray;
 }
 
-// Nicolas Gallagher's micro clearfix hack
+// Nicolas Gallagher&apos;s micro clearfix hack
 // http://nicolasgallagher.com/micro-clearfix-hack/
 .clearfix:before,
 .clearfix:after {
@@ -1790,6 +1790,10 @@ footer {
 	
 		
 			
+		
+	
+		
+			
 			<item>
 				<title></title>
 				<description>&lt;div class=&quot;posts&quot;&gt;
@@ -1811,13 +1815,13 @@ footer {
   &lt;div class=&quot;pager&quot;&gt;
   {% if paginator.total_pages &gt; 1 %}
     {% if paginator.previous_page %}
-        &lt;a href=&quot;{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}&quot;&gt;Newer Posts&lt;/a&gt;
+        &lt;a href=&quot;{{ paginator.previous_page_path | prepend: site.baseurl | replace: &apos;//&apos;, &apos;/&apos; }}&quot;&gt;Newer Posts&lt;/a&gt;
         {% if paginator.next_page %}
           | 
         {% endif %}
     {% endif %}
     {% if paginator.next_page %}
-        &lt;a href=&quot;{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}&quot;&gt;Older Posts&lt;/a&gt;
+        &lt;a href=&quot;{{ paginator.next_page_path | prepend: site.baseurl | replace: &apos;//&apos;, &apos;/&apos; }}&quot;&gt;Older Posts&lt;/a&gt;
     {% endif %}
   {% endif %}
   &lt;/div&gt;
@@ -1853,13 +1857,13 @@ footer {
   &lt;div class=&quot;pager&quot;&gt;
   {% if paginator.total_pages &gt; 1 %}
     {% if paginator.previous_page %}
-        &lt;a href=&quot;{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}&quot;&gt;Newer Posts&lt;/a&gt;
+        &lt;a href=&quot;{{ paginator.previous_page_path | prepend: site.baseurl | replace: &apos;//&apos;, &apos;/&apos; }}&quot;&gt;Newer Posts&lt;/a&gt;
         {% if paginator.next_page %}
           | 
         {% endif %}
     {% endif %}
     {% if paginator.next_page %}
-        &lt;a href=&quot;{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}&quot;&gt;Older Posts&lt;/a&gt;
+        &lt;a href=&quot;{{ paginator.next_page_path | prepend: site.baseurl | replace: &apos;//&apos;, &apos;/&apos; }}&quot;&gt;Older Posts&lt;/a&gt;
     {% endif %}
   {% endif %}
   &lt;/div&gt;
@@ -1895,13 +1899,13 @@ footer {
   &lt;div class=&quot;pager&quot;&gt;
   {% if paginator.total_pages &gt; 1 %}
     {% if paginator.previous_page %}
-        &lt;a href=&quot;{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}&quot;&gt;Newer Posts&lt;/a&gt;
+        &lt;a href=&quot;{{ paginator.previous_page_path | prepend: site.baseurl | replace: &apos;//&apos;, &apos;/&apos; }}&quot;&gt;Newer Posts&lt;/a&gt;
         {% if paginator.next_page %}
           | 
         {% endif %}
     {% endif %}
     {% if paginator.next_page %}
-        &lt;a href=&quot;{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}&quot;&gt;Older Posts&lt;/a&gt;
+        &lt;a href=&quot;{{ paginator.next_page_path | prepend: site.baseurl | replace: &apos;//&apos;, &apos;/&apos; }}&quot;&gt;Older Posts&lt;/a&gt;
     {% endif %}
   {% endif %}
   &lt;/div&gt;
@@ -1911,10 +1915,6 @@ footer {
 				<link>http://0.0.0.0:4000/page4/</link>
 				<guid isPermaLink="true">http://0.0.0.0:4000/page4/</guid>
 			</item>
-			
-		
-	
-		
 			
 		
 	

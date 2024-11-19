@@ -1,12 +1,7 @@
 #
 # This file contains configuration flags to customize your site
-# docker command to test:
-#docker run -v $(pwd):/srv/jekyll \     
-#    -p 4000:4000 \
-#    -it \
-#    jekyll/jekyll:3.8.6 \
-#    jekyll serve
-#
+
+encoding: utf-8
 
 # Name of your site (displayed in the header)
 title: tŏmōhulk
@@ -30,11 +25,12 @@ footer-links:
   instagram:
   reddit: tomohulk
   linkedin: tomohulk
-  twitter: tomohulk
+  twitter:
+  threads: tomohulk
   stackoverflow: users/691551/tomohulk
   youtube: UCdezPgvhJ605nxJYSrNXRGg
   taplistio: 963267
-  thingiverse: tomohulk
+  printables: tomohulk
 
 # Enter your Disqus shortname (not your username) to enable commenting on posts
 # You can find your shortname on the Settings page of your Disqus account
