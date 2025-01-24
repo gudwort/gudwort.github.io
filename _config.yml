@@ -26,7 +26,7 @@ footer-links:
   reddit: tomohulk
   linkedin: tomohulk
   twitter:
-  threads: tomohulk
+  bluesky: tomohulk.bsky.social
   stackoverflow: users/691551/tomohulk
   youtube: UCdezPgvhJ605nxJYSrNXRGg
   taplistio: 963267
@@ -88,3 +88,5 @@ exclude:
   - LICENSE
   - README.md
   - CNAME
+  - docker-compose.yml
+  - dockerfile
